@@ -1,0 +1,266 @@
+[
+  {
+    "test_file": "test-engine-capabilities.R",
+    "line": 20,
+    "export": "assert_gp3ml_engine_available",
+    "expected_fragment": "Unknown gp3ml engine"
+  },
+  {
+    "test_file": "test-feature-provenance-manifest.R",
+    "line": 206,
+    "export": "create_gazepoint_feature_manifest",
+    "expected_fragment": "feature_a"
+  },
+  {
+    "test_file": "test-feature-provenance-manifest.R",
+    "line": 214,
+    "export": "create_gazepoint_feature_manifest",
+    "expected_fragment": "validation print method reports status"
+  },
+  {
+    "test_file": "test-feature-provenance-manifest.R",
+    "line": 223,
+    "export": "create_gazepoint_feature_manifest",
+    "expected_fragment": "Overall status: PASS"
+  },
+  {
+    "test_file": "test-feature-provenance-manifest.R",
+    "line": 237,
+    "export": "validate_gazepoint_feature_manifest",
+    "expected_fragment": "feature manifests can be written to CSV"
+  },
+  {
+    "test_file": "test-feature-provenance-manifest.R",
+    "line": 311,
+    "export": "create_gazepoint_feature_manifest",
+    "expected_fragment": "issues"
+  },
+  {
+    "test_file": "test-feature-provenance-manifest.R",
+    "line": 360,
+    "export": "write_gazepoint_feature_manifest_csv",
+    "expected_fragment": ".csv extension"
+  },
+  {
+    "test_file": "test-feature-provenance-manifest.R",
+    "line": 370,
+    "export": "write_gazepoint_feature_manifest_csv",
+    "expected_fragment": ".csv extension"
+  },
+  {
+    "test_file": "test-governed-modeling-core.R",
+    "line": 52,
+    "export": "declare_gazepoint_task",
+    "expected_fragment": "mean_pupil"
+  },
+  {
+    "test_file": "test-governed-modeling-core.R",
+    "line": 271,
+    "export": "fit_gazepoint_deep_model",
+    "expected_fragment": "Install `keras3`"
+  },
+  {
+    "test_file": "test-group-aware-resampling.R",
+    "line": 215,
+    "export": "create_gazepoint_group_folds",
+    "expected_fragment": "must pass validation"
+  },
+  {
+    "test_file": "test-group-aware-resampling.R",
+    "line": 227,
+    "export": "create_gazepoint_group_folds",
+    "expected_fragment": "Required grouping identifiers"
+  },
+  {
+    "test_file": "test-group-aware-resampling.R",
+    "line": 237,
+    "export": "create_gazepoint_group_folds",
+    "expected_fragment": "outcome"
+  },
+  {
+    "test_file": "test-group-aware-resampling.R",
+    "line": 247,
+    "export": "create_gazepoint_group_folds",
+    "expected_fragment": "trial folds require sufficient units per participant"
+  },
+  {
+    "test_file": "test-group-aware-resampling.R",
+    "line": 257,
+    "export": "create_gazepoint_feature_manifest",
+    "expected_fragment": "fixation_duration"
+  },
+  {
+    "test_file": "test-group-aware-resampling.R",
+    "line": 287,
+    "export": "create_gazepoint_group_folds",
+    "expected_fragment": "Overall status: PASS"
+  },
+  {
+    "test_file": "test-group-aware-resampling.R",
+    "line": 331,
+    "export": "write_gazepoint_group_folds_csv",
+    "expected_fragment": "directory separators"
+  },
+  {
+    "test_file": "test-group-aware-resampling.R",
+    "line": 339,
+    "export": "write_gazepoint_group_folds_csv",
+    "expected_fragment": "directory separators"
+  },
+  {
+    "test_file": "test-group-aware-resampling.R",
+    "line": 344,
+    "export": "write_gazepoint_group_folds_csv",
+    "expected_fragment": "directory separators"
+  },
+  {
+    "test_file": "test-group-aware-splitting.R",
+    "line": 308,
+    "export": "split_gazepoint_ml_data",
+    "expected_fragment": "new_participants"
+  },
+  {
+    "test_file": "test-group-aware-splitting.R",
+    "line": 325,
+    "export": "split_gazepoint_ml_data",
+    "expected_fragment": "pupil_change"
+  },
+  {
+    "test_file": "test-group-aware-splitting.R",
+    "line": 348,
+    "export": "split_gazepoint_ml_data",
+    "expected_fragment": "Required grouping identifiers"
+  },
+  {
+    "test_file": "test-group-aware-splitting.R",
+    "line": 365,
+    "export": "create_gazepoint_feature_manifest",
+    "expected_fragment": "fixation_duration"
+  },
+  {
+    "test_file": "test-group-aware-splitting.R",
+    "line": 404,
+    "export": "split_gazepoint_ml_data",
+    "expected_fragment": "pupil_change"
+  },
+  {
+    "test_file": "test-group-aware-splitting.R",
+    "line": 425,
+    "export": "split_gazepoint_ml_data",
+    "expected_fragment": "participant_id"
+  },
+  {
+    "test_file": "test-group-aware-splitting.R",
+    "line": 443,
+    "export": "split_gazepoint_ml_data",
+    "expected_fragment": "Identifier columns"
+  },
+  {
+    "test_file": "test-group-aware-splitting.R",
+    "line": 460,
+    "export": "split_gazepoint_ml_data",
+    "expected_fragment": "fail"
+  },
+  {
+    "test_file": "test-group-aware-splitting.R",
+    "line": 586,
+    "export": "write_gazepoint_ml_split_csv",
+    "expected_fragment": "directory separators"
+  },
+  {
+    "test_file": "test-group-aware-splitting.R",
+    "line": 603,
+    "export": "write_gazepoint_ml_split_csv",
+    "expected_fragment": "directory separators"
+  },
+  {
+    "test_file": "test-group-aware-splitting.R",
+    "line": 613,
+    "export": "write_gazepoint_ml_split_csv",
+    "expected_fragment": "directory separators"
+  },
+  {
+    "test_file": "test-leakage-audit.R",
+    "line": 365,
+    "export": "",
+    "expected_fragment": "Overall status: PASS"
+  },
+  {
+    "test_file": "test-leakage-audit.R",
+    "line": 371,
+    "export": "",
+    "expected_fragment": "Non-passing checks: 0"
+  },
+  {
+    "test_file": "test-leakage-audit.R",
+    "line": 383,
+    "export": "write_gazepoint_ml_leakage_audit_csv",
+    "expected_fragment": ".csv"
+  },
+  {
+    "test_file": "test-leakage-audit.R",
+    "line": 444,
+    "export": "write_gazepoint_ml_leakage_audit_csv",
+    "expected_fragment": ".txt"
+  },
+  {
+    "test_file": "test-leakage-audit.R",
+    "line": 468,
+    "export": "write_gazepoint_ml_leakage_audit_csv",
+    "expected_fragment": "Output directory does not exist"
+  },
+  {
+    "test_file": "test-leakage-audit.R",
+    "line": 477,
+    "export": "write_gazepoint_ml_leakage_audit_csv",
+    "expected_fragment": "Output directory does not exist"
+  },
+  {
+    "test_file": "test-leakage-audit.R",
+    "line": 492,
+    "export": "write_gazepoint_ml_leakage_audit_csv",
+    "expected_fragment": "Output directory does not exist"
+  },
+  {
+    "test_file": "test-model-tuning.R",
+    "line": 36,
+    "export": "create_gazepoint_tuning_grid",
+    "expected_fragment": "failed tuning candidates remain in the comparison"
+  },
+  {
+    "test_file": "test-resampling-diagnostics.R",
+    "line": 387,
+    "export": "diagnose_gazepoint_group_folds",
+    "expected_fragment": "gazepoint_group_folds"
+  },
+  {
+    "test_file": "test-resampling-diagnostics.R",
+    "line": 410,
+    "export": "diagnose_gazepoint_group_folds",
+    "expected_fragment": "gazepoint_fold_diagnostics"
+  },
+  {
+    "test_file": "test-resampling-diagnostics.R",
+    "line": 415,
+    "export": "diagnose_gazepoint_group_folds",
+    "expected_fragment": "Unknown diagnostic tables"
+  },
+  {
+    "test_file": "test-resampling-diagnostics.R",
+    "line": 423,
+    "export": "diagnose_gazepoint_group_folds",
+    "expected_fragment": "all generalization targets produce passing diagnostics"
+  },
+  {
+    "test_file": "test-resampling-diagnostics.R",
+    "line": 432,
+    "export": "diagnose_gazepoint_group_folds",
+    "expected_fragment": "all generalization targets produce passing diagnostics"
+  },
+  {
+    "test_file": "test-resampling-diagnostics.R",
+    "line": 437,
+    "export": "diagnose_gazepoint_group_folds",
+    "expected_fragment": "all generalization targets produce passing diagnostics"
+  }
+]

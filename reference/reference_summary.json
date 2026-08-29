@@ -1,0 +1,15 @@
+{
+  "r_reference_version": "0.3.0",
+  "exports": 127,
+  "stable_exports": 71,
+  "experimental_exports": 56,
+  "stable_public_classes": 38,
+  "r_source_files": 38,
+  "rd_files": 154,
+  "vignettes": 20,
+  "r_test_files": 32,
+  "print_methods": 49,
+  "plot_methods": 16,
+  "rd_example_topics": 49,
+  "explicit_expect_error_contracts": 44
+}
