@@ -1,0 +1,22 @@
+[
+  "analysis-plan-governance.Rmd",
+  "api-stability-contracts.Rmd",
+  "assigned-condition-discrimination.Rmd",
+  "contaminated-manifest-leakage.Rmd",
+  "cross-package-interoperability.Rmd",
+  "dataset-shift-and-robustness.Rmd",
+  "decision-governance.Rmd",
+  "external-validation-reporting.Rmd",
+  "governance-standards-profile.Rmd",
+  "group-aware-conformal-prediction.Rmd",
+  "integrated-research-workflow.Rmd",
+  "nested-grouped-resampling.Rmd",
+  "observed-behavioral-endpoint.Rmd",
+  "optional-engine-portability.Rmd",
+  "participant-generalization.Rmd",
+  "participant-stimulus-generalization.Rmd",
+  "portable-research-artifacts.Rmd",
+  "recording-quality-review.Rmd",
+  "reproducibility-hardening.Rmd",
+  "stimulus-generalization.Rmd"
+]

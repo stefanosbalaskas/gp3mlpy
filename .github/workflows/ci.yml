@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches: [main, source-tree]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  core:
+    name: core-${{ matrix.os }}-py${{ matrix.python }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ['3.11', '3.12', '3.13']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install core and test dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Run test suite
+        env:
+          MPLBACKEND: Agg
+        run: python -m pytest -q
+
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e ".[dev]"
+      - name: Ruff lint
+        run: ruff check src tests examples
+      - name: Ruff format
+        run: ruff format --check src tests examples
+      - name: Public typing
+        run: mypy src/gp3mlpy
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e ".[docs]"
+      - run: mkdocs build --strict
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - run: python -m pip install build twine
+      - run: python -m build
+      - run: python -m twine check dist/*
+      - name: Install built wheel and verify frozen API
+        shell: bash
+        run: |
+          set -euo pipefail
+          wheel=$(find dist -maxdepth 1 -name '*.whl' -print -quit)
+          python -m venv /tmp/gp3mlpy-wheel
+          /tmp/gp3mlpy-wheel/bin/python -m pip install "$wheel"
+          cd /tmp
+          /tmp/gp3mlpy-wheel/bin/python - <<'PY'
+          import gp3mlpy
+          exports = gp3mlpy.gp3ml_api_contracts().exports
+          assert len(exports) == 127
+          assert int((exports['stability'] == 'stable').sum()) == 71
+          assert int((exports['stability'] == 'experimental').sum()) == 56
+          assert gp3mlpy.r_reference_version == '0.3.0'
+          print('installed-wheel API smoke: PASS')
+          PY
