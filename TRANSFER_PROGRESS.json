@@ -1,0 +1,9 @@
+{
+  "branch": "source-payload-verified",
+  "archive_sha256": "b157739893aa1d28f1e687d5bedaeb2b66f13e0d842944da83aaeccad450933d",
+  "chunk_count": 42,
+  "verified_committed_chunks": 9,
+  "verified_range": "000-008",
+  "next_chunk": "009",
+  "note": "Only blobs whose Git SHA exactly matches the frozen local manifest are referenced by this tree. Failed or mismatched upload attempts remain unreachable from this commit."
+}
