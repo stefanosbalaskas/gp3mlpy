@@ -30,12 +30,12 @@ jobs:
           gzip -dc .runtime_payload/__init__.pyi.gz > src/gp3mlpy/__init__.pyi
           gzip -dc .runtime_payload/_reference_docs.py.gz > src/gp3mlpy/_reference_docs.py
           cat > /tmp/gp3mlpy-runtime.sha256 <<'EOF'
-          d060e7eec112e6ab56228f6dff42dbe6dd48d3f958da70438991a837ee979fd8  src/gp3mlpy/external_validation.py
-          441978bc15cdf78fb9e04db1ff474701cc71ed350069a51cf1f178d1a6ca38b1  src/gp3mlpy/model_tuning.py
-          19df472ce62b23ccb2de2fc62aa22eea4464e02c6bc8959dd2666a3218414c68  src/gp3mlpy/nested_resampling.py
-          bf6ff39a58d2681ed957c2ba0f15b0778262030686352afc3f19c389d4111ebd  src/gp3mlpy/__init__.py
-          38f1481ec4ec47210eb8a5f96bc9ed38e5879a8f8ec6e60d406317207ebe34aa  src/gp3mlpy/__init__.pyi
-          947154c69b5c56f8e67f785f05f7134c75a9423379e6193fd0bc6ae2572bd473  src/gp3mlpy/_reference_docs.py
+          12e4c489a5827ba8984d9c2b73a8dd90b42ad81849177390b405fd33529b869b  src/gp3mlpy/external_validation.py
+          64b1efd181d055f557ca945a0c210bd0c275d9452f8bc029baf5b63dfc4fe02f  src/gp3mlpy/model_tuning.py
+          e6f657cebf5f5a2af227f117ad5c2c2b6ac0a2db73ecd05d1a4b77a4f3b6041a  src/gp3mlpy/nested_resampling.py
+          a416456974bf96b4bd886957dabc1744d867d31fde17e97594132de6f9769869  src/gp3mlpy/__init__.py
+          b54f24d968c1713140d771f41a84deb0b456a2c8e2c022e5d99a6d68f23f0531  src/gp3mlpy/__init__.pyi
+          3b4f45a4b6cad78d82217246cf425cd7614770f8ba53ac704770f375e4a10dde  src/gp3mlpy/_reference_docs.py
           EOF
           sha256sum -c /tmp/gp3mlpy-runtime.sha256
           python -m compileall -q src/gp3mlpy
