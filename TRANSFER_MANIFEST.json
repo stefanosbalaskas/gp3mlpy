@@ -4,7 +4,13 @@
   "base64_characters": 247836,
   "chunk_size": 6000,
   "chunk_count": 42,
-  "verified_committed_through": 9,
-  "chunk_009_storage": ["payload/chunk-009a", "payload/chunk-009b"],
-  "chunk_009_git_sha": "e310eb7ec6d3cd4b3c367c2eb769a34750edab01"
+  "verified_committed_through": 10,
+  "split_storage": {
+    "009": ["payload/chunk-009a", "payload/chunk-009b"],
+    "010": ["payload/chunk-010a", "payload/chunk-010b"]
+  },
+  "original_chunk_shas": {
+    "009": "e310eb7ec6d3cd4b3c367c2eb769a34750edab01",
+    "010": "1f7c4b318ab818a45a2d6f481ed686fd1a6bd243"
+  }
 }
