@@ -9,7 +9,7 @@
 <div class="gp-actions">
 <a href="key-concepts/">Start with the key concepts</a>
 <a href="articles/">Browse articles</a>
-<a href="reference/">Open the API map</a>
+<a href="api-map/">Open the API map</a>
 <a href="https://github.com/stefanosbalaskas/gp3mlpy">GitHub</a>
 </div>
 </div>
@@ -187,7 +187,7 @@ See [Decision governance](articles/decision-governance.md) and [Group-aware conf
 
 <div class="gp-card" markdown>
 ### I need a function quickly
-Use the [API map](reference/index.md) or the site search. All 127 compatibility exports have dedicated reference pages.
+Use the [workflow API map](api-map.md), the [complete alphabetical index](reference/index.md), or the site search. All 127 compatibility exports have dedicated reference pages.
 </div>
 
 </div>
