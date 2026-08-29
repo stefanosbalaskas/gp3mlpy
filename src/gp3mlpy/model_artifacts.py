@@ -3,7 +3,6 @@ from __future__ import annotations
 from copy import deepcopy
 from importlib import metadata
 import platform
-import re
 import subprocess
 from typing import Any
 

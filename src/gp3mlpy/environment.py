@@ -4,7 +4,6 @@ from collections.abc import Sequence
 from importlib import metadata
 from pathlib import Path
 from hashlib import sha256
-import os
 import platform
 import subprocess
 import sys

@@ -193,8 +193,8 @@ class GP3MLAnalysisPlan(_BaseGP3MLAnalysisPlan):
         super().__setattr__(name, value)
 
 # Preserve the R multiple-class contract for release model cards.
-_BaseReleaseModelCard = globals().get("GP3MLReleaseModelCard")
-class GP3MLReleaseModelCard(GP3MLModelCard):
+_BaseModelCard = globals()["GP3MLModelCard"]
+class GP3MLReleaseModelCard(_BaseModelCard):
     r_class = "gp3ml_release_model_card"
 
 class GP3MLEngine(GP3MLObject):

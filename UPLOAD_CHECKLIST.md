@@ -1,14 +1,23 @@
-# Manual upload checklist
+# gp3mlpy manual quality-fix checklist
 
-1. Extract the ZIP to a clean directory.
-2. Confirm `src/gp3mlpy/__init__.py`, `src/gp3mlpy/__init__.pyi`, and `src/gp3mlpy/py.typed` are present.
-3. Confirm `.github/workflows/ci.yml` is preserved.
-4. Do not copy any old `bootstrap/`, `.bootstrap`, `.runtime_payload/`, `__pycache__/`, or `.pytest_cache/` directories into the repository.
-5. Copy this snapshot over the target repository working tree.
-6. Run `python -m pytest -q` locally if desired.
-7. Commit the complete tree, e.g. `feat: publish complete gp3mlpy parity candidate`.
-8. Push to a staging branch first.
-9. Wait for GitHub Actions: core OS/Python matrix, Ruff, Mypy, MkDocs, package build, Twine, and installed-wheel smoke.
-10. Only merge/promote to `main` after the required CI jobs are green.
+1. Apply the correction bundle to `manual-parity-candidate`.
+2. Run `uv lock` so `uv.lock` is regenerated from the current `pyproject.toml`.
+3. Run `uv sync --extra dev --extra docs`.
+4. Run `powershell -ExecutionPolicy Bypass -File scripts\run_quality_gates.ps1`.
+5. Confirm:
+   - 40 tests pass;
+   - release validation reports 127 / 71 / 56 and R 0.3.0;
+   - Ruff reports no errors;
+   - mypy reports success for `src/gp3mlpy/__init__.pyi`;
+   - MkDocs strict build completes;
+   - wheel + sdist build;
+   - Twine checks both artifacts successfully.
+6. Run `git add -A` again after `uv lock` and all fixes.
+7. Review `git status --short`.
+8. Commit:
+   `fix: close parity candidate quality gates`
+9. Push:
+   `git push origin manual-parity-candidate`
+10. Wait for PR #1 GitHub Actions. Do not merge until all required checks are green.
 
-Use `FILE_MANIFEST.csv` to audit the uploaded file set and SHA-256 values.
+`r_parity_tested` remains false until genuine cross-language fixtures are run.

@@ -4,7 +4,7 @@ from collections.abc import Callable, Sequence
 from pathlib import Path
 import os
 import re
-from typing import Any, TypeVar
+from typing import TypeVar
 import pandas as pd
 
 from ._utils import write_tables

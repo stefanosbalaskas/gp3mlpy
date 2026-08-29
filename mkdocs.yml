@@ -7,6 +7,155 @@ theme:
   name: material
 nav:
   - Home: index.md
-  - API reference: reference/index.md
-  - Articles: articles/index.md
+  - Articles:
+      - Overview: articles/index.md
+      - analysis plan governance: articles/analysis-plan-governance.md
+      - api stability contracts: articles/api-stability-contracts.md
+      - assigned condition discrimination: articles/assigned-condition-discrimination.md
+      - contaminated manifest leakage: articles/contaminated-manifest-leakage.md
+      - cross package interoperability: articles/cross-package-interoperability.md
+      - dataset shift and robustness: articles/dataset-shift-and-robustness.md
+      - decision governance: articles/decision-governance.md
+      - external validation reporting: articles/external-validation-reporting.md
+      - governance standards profile: articles/governance-standards-profile.md
+      - group aware conformal prediction: articles/group-aware-conformal-prediction.md
+      - integrated research workflow: articles/integrated-research-workflow.md
+      - nested grouped resampling: articles/nested-grouped-resampling.md
+      - observed behavioral endpoint: articles/observed-behavioral-endpoint.md
+      - optional engine portability: articles/optional-engine-portability.md
+      - participant generalization: articles/participant-generalization.md
+      - participant stimulus generalization: articles/participant-stimulus-generalization.md
+      - portable research artifacts: articles/portable-research-artifacts.md
+      - recording quality review: articles/recording-quality-review.md
+      - reproducibility hardening: articles/reproducibility-hardening.md
+      - stimulus generalization: articles/stimulus-generalization.md
+  - API reference:
+      - Overview: reference/index.md
+      - apply gazepoint calibrator: reference/apply_gazepoint_calibrator.md
+      - apply gazepoint decision rule: reference/apply_gazepoint_decision_rule.md
+      - as gp3ml data: reference/as_gp3ml_data.md
+      - assert gp3ml engine available: reference/assert_gp3ml_engine_available.md
+      - assert gp3ml use case: reference/assert_gp3ml_use_case.md
+      - assess gazepoint calibration: reference/assess_gazepoint_calibration.md
+      - assess gazepoint conformal coverage: reference/assess_gazepoint_conformal_coverage.md
+      - audit gazepoint abstention: reference/audit_gazepoint_abstention.md
+      - audit gazepoint dataset shift: reference/audit_gazepoint_dataset_shift.md
+      - audit gazepoint group folds: reference/audit_gazepoint_group_folds.md
+      - audit gazepoint missingness shift: reference/audit_gazepoint_missingness_shift.md
+      - audit gazepoint ml leakage: reference/audit_gazepoint_ml_leakage.md
+      - audit gazepoint model robustness: reference/audit_gazepoint_model_robustness.md
+      - audit gazepoint nested resampling: reference/audit_gazepoint_nested_resampling.md
+      - audit gazepoint plan deviations: reference/audit_gazepoint_plan_deviations.md
+      - audit gazepoint reproducibility: reference/audit_gazepoint_reproducibility.md
+      - audit gp3ml api stability: reference/audit_gp3ml_api_stability.md
+      - audit gp3ml governance profile: reference/audit_gp3ml_governance_profile.md
+      - bake gazepoint preprocessor: reference/bake_gazepoint_preprocessor.md
+      - bootstrap gazepoint metrics: reference/bootstrap_gazepoint_metrics.md
+      - bootstrap gazepoint metrics by unit: reference/bootstrap_gazepoint_metrics_by_unit.md
+      - capture gazepoint environment: reference/capture_gazepoint_environment.md
+      - collect gazepoint fold predictions: reference/collect_gazepoint_fold_predictions.md
+      - combine gazepoint handoffs: reference/combine_gazepoint_handoffs.md
+      - compare gazepoint environments: reference/compare_gazepoint_environments.md
+      - compare gazepoint models: reference/compare_gazepoint_models.md
+      - create external validation report: reference/create_external_validation_report.md
+      - create gazepoint decision rule: reference/create_gazepoint_decision_rule.md
+      - create gazepoint feature manifest: reference/create_gazepoint_feature_manifest.md
+      - create gazepoint group folds: reference/create_gazepoint_group_folds.md
+      - create gazepoint handoff: reference/create_gazepoint_handoff.md
+      - create gazepoint model artifact: reference/create_gazepoint_model_artifact.md
+      - create gazepoint model card: reference/create_gazepoint_model_card.md
+      - create gazepoint nested folds: reference/create_gazepoint_nested_folds.md
+      - create gazepoint release evidence: reference/create_gazepoint_release_evidence.md
+      - create gazepoint release model card: reference/create_gazepoint_release_model_card.md
+      - create gazepoint reproducibility report: reference/create_gazepoint_reproducibility_report.md
+      - create gazepoint synthetic manifest: reference/create_gazepoint_synthetic_manifest.md
+      - create gazepoint synthetic task: reference/create_gazepoint_synthetic_task.md
+      - create gazepoint tuning grid: reference/create_gazepoint_tuning_grid.md
+      - create gp3ml governance profile: reference/create_gp3ml_governance_profile.md
+      - declare gazepoint analysis plan: reference/declare_gazepoint_analysis_plan.md
+      - declare gazepoint external dataset: reference/declare_gazepoint_external_dataset.md
+      - declare gazepoint task: reference/declare_gazepoint_task.md
+      - diagnose gazepoint group folds: reference/diagnose_gazepoint_group_folds.md
+      - evaluate external validation: reference/evaluate_external_validation.md
+      - evaluate gazepoint external transportability: reference/evaluate_gazepoint_external_transportability.md
+      - evaluate gazepoint feature stability: reference/evaluate_gazepoint_feature_stability.md
+      - evaluate gazepoint group folds: reference/evaluate_gazepoint_group_folds.md
+      - evaluate gazepoint missingness sensitivity: reference/evaluate_gazepoint_missingness_sensitivity.md
+      - evaluate gazepoint nested resampling: reference/evaluate_gazepoint_nested_resampling.md
+      - evaluate gazepoint seed stability: reference/evaluate_gazepoint_seed_stability.md
+      - evaluate gazepoint threshold stability: reference/evaluate_gazepoint_threshold_stability.md
+      - evaluate gazepoint thresholds: reference/evaluate_gazepoint_thresholds.md
+      - fit gazepoint calibrator: reference/fit_gazepoint_calibrator.md
+      - fit gazepoint conformal: reference/fit_gazepoint_conformal.md
+      - fit gazepoint deep model: reference/fit_gazepoint_deep_model.md
+      - fit gazepoint model: reference/fit_gazepoint_model.md
+      - fit gazepoint preprocessor: reference/fit_gazepoint_preprocessor.md
+      - gazepoint classification metrics: reference/gazepoint_classification_metrics.md
+      - gazepoint performance metrics: reference/gazepoint_performance_metrics.md
+      - gazepoint regression metrics: reference/gazepoint_regression_metrics.md
+      - gp3ml api contracts: reference/gp3ml_api_contracts.md
+      - gp3ml available engines: reference/gp3ml_available_engines.md
+      - gp3ml engine capabilities: reference/gp3ml_engine_capabilities.md
+      - gp3ml interop contracts: reference/gp3ml_interop_contracts.md
+      - gp3ml object schema: reference/gp3ml_object_schema.md
+      - gp3ml prohibited uses: reference/gp3ml_prohibited_uses.md
+      - integrate black box model: reference/integrate_black_box_model.md
+      - lock gazepoint analysis plan: reference/lock_gazepoint_analysis_plan.md
+      - normalize gazepoint artifact text: reference/normalize_gazepoint_artifact_text.md
+      - predict gazepoint interval: reference/predict_gazepoint_interval.md
+      - predict gazepoint set: reference/predict_gazepoint_set.md
+      - restore gazepoint model artifact: reference/restore_gazepoint_model_artifact.md
+      - select gazepoint model: reference/select_gazepoint_model.md
+      - select gazepoint threshold: reference/select_gazepoint_threshold.md
+      - simulate gazepoint governed data: reference/simulate_gazepoint_governed_data.md
+      - simulate gazepoint research handoffs: reference/simulate_gazepoint_research_handoffs.md
+      - split gazepoint ml data: reference/split_gazepoint_ml_data.md
+      - summarize gazepoint resample performance: reference/summarize_gazepoint_resample_performance.md
+      - summarize gazepoint resample uncertainty: reference/summarize_gazepoint_resample_uncertainty.md
+      - summarize gazepoint shift: reference/summarize_gazepoint_shift.md
+      - test gazepoint model portability: reference/test_gazepoint_model_portability.md
+      - train gazepoint classifier: reference/train_gazepoint_classifier.md
+      - tune gazepoint model: reference/tune_gazepoint_model.md
+      - validate gazepoint analysis plan: reference/validate_gazepoint_analysis_plan.md
+      - validate gazepoint conformal: reference/validate_gazepoint_conformal.md
+      - validate gazepoint decision rule: reference/validate_gazepoint_decision_rule.md
+      - validate gazepoint environment: reference/validate_gazepoint_environment.md
+      - validate gazepoint feature manifest: reference/validate_gazepoint_feature_manifest.md
+      - validate gazepoint fold diagnostics: reference/validate_gazepoint_fold_diagnostics.md
+      - validate gazepoint group folds: reference/validate_gazepoint_group_folds.md
+      - validate gazepoint handoff: reference/validate_gazepoint_handoff.md
+      - validate gazepoint ml roles: reference/validate_gazepoint_ml_roles.md
+      - validate gazepoint ml split: reference/validate_gazepoint_ml_split.md
+      - validate gazepoint model artifact: reference/validate_gazepoint_model_artifact.md
+      - validate gazepoint model tuning: reference/validate_gazepoint_model_tuning.md
+      - validate gazepoint nested evaluation: reference/validate_gazepoint_nested_evaluation.md
+      - validate gazepoint nested folds: reference/validate_gazepoint_nested_folds.md
+      - validate gazepoint release checksums: reference/validate_gazepoint_release_checksums.md
+      - validate gazepoint resample evaluation: reference/validate_gazepoint_resample_evaluation.md
+      - validate gazepoint research bundle: reference/validate_gazepoint_research_bundle.md
+      - validate gazepoint ro crate: reference/validate_gazepoint_ro_crate.md
+      - validate gazepoint target uncertainty: reference/validate_gazepoint_target_uncertainty.md
+      - validate gazepoint transportability: reference/validate_gazepoint_transportability.md
+      - validate gp3ml object contract: reference/validate_gp3ml_object_contract.md
+      - with gazepoint reproducible output: reference/with_gazepoint_reproducible_output.md
+      - write external validation report: reference/write_external_validation_report.md
+      - write gazepoint analysis plan: reference/write_gazepoint_analysis_plan.md
+      - write gazepoint feature manifest csv: reference/write_gazepoint_feature_manifest_csv.md
+      - write gazepoint fold diagnostics csv: reference/write_gazepoint_fold_diagnostics_csv.md
+      - write gazepoint group folds csv: reference/write_gazepoint_group_folds_csv.md
+      - write gazepoint ml leakage audit csv: reference/write_gazepoint_ml_leakage_audit_csv.md
+      - write gazepoint ml split csv: reference/write_gazepoint_ml_split_csv.md
+      - write gazepoint model card: reference/write_gazepoint_model_card.md
+      - write gazepoint model tuning: reference/write_gazepoint_model_tuning.md
+      - write gazepoint nested evaluation: reference/write_gazepoint_nested_evaluation.md
+      - write gazepoint release checksums: reference/write_gazepoint_release_checksums.md
+      - write gazepoint release model card: reference/write_gazepoint_release_model_card.md
+      - write gazepoint reproducibility audit: reference/write_gazepoint_reproducibility_audit.md
+      - write gazepoint reproducibility report: reference/write_gazepoint_reproducibility_report.md
+      - write gazepoint resample evaluation: reference/write_gazepoint_resample_evaluation.md
+      - write gazepoint ro crate: reference/write_gazepoint_ro_crate.md
+      - write gazepoint target uncertainty: reference/write_gazepoint_target_uncertainty.md
+      - write gazepoint transportability report: reference/write_gazepoint_transportability_report.md
+      - write gp3ml api contracts: reference/write_gp3ml_api_contracts.md
+      - write gp3ml governance profile: reference/write_gp3ml_governance_profile.md
 strict: true

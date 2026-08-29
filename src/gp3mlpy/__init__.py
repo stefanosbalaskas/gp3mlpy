@@ -1,3 +1,4 @@
+# ruff: noqa: F401
 """gp3mlpy: Python port of gp3ml 0.3.0."""
 from .exceptions import GP3MLError, OptionalDependencyError
 from .task_governance import (

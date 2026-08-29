@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from importlib import metadata
-from typing import Any
 
 import pandas as pd
 

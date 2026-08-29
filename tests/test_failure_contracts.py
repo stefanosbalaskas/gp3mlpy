@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 
 import gp3mlpy as gp
-from gp3mlpy import GP3MLError, OptionalDependencyError
+from gp3mlpy import GP3MLError
 
 
 def _data_manifest_task():

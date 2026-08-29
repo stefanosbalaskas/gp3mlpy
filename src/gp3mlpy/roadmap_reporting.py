@@ -23,7 +23,6 @@ from .objects import (
     GP3MLModelSelection,
     GP3MLReleaseEvidence,
     GP3MLReleaseModelCard,
-    GP3MLResampleEvaluation,
     GP3MLResampleUncertainty,
     GP3MLTargetUncertainty,
     GP3MLTransportabilityReport,
