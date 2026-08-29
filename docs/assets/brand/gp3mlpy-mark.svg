@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">gp3mlpy mark</title>
+  <desc id="desc">A hexagonal governance and modelling mark for gp3mlpy.</desc>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b2a4a"/>
+      <stop offset="1" stop-color="#145a8d"/>
+    </linearGradient>
+  </defs>
+  <path d="M256 24 454 138v236L256 488 58 374V138Z" fill="url(#g)"/>
+  <path d="M256 58 422 154v204L256 454 90 358V154Z" fill="none" stroke="#72c7f4" stroke-width="7" opacity=".7"/>
+  <g fill="none" stroke="#dff4ff" stroke-width="6" stroke-linecap="round">
+    <path d="M145 276c48-74 81-96 111-96s63 22 111 96"/>
+    <path d="M145 276c48 74 81 96 111 96s63-22 111-96"/>
+    <path d="M176 276h160" opacity=".75"/>
+  </g>
+  <g fill="#72c7f4">
+    <circle cx="145" cy="276" r="12"/>
+    <circle cx="256" cy="180" r="12"/>
+    <circle cx="367" cy="276" r="12"/>
+    <circle cx="256" cy="372" r="12"/>
+    <circle cx="256" cy="276" r="15"/>
+  </g>
+  <text x="256" y="128" text-anchor="middle" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="54" font-weight="750" fill="#fff">gp3ml</text>
+  <text x="256" y="327" text-anchor="middle" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="58" font-weight="800" fill="#fff">py</text>
+</svg>

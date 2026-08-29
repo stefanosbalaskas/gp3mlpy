@@ -39,9 +39,9 @@ jobs:
           python-version: '3.13'
       - run: python -m pip install -e ".[dev]"
       - name: Compile source
-        run: python -m compileall -q src/gp3mlpy tests
+        run: python -m compileall -q src/gp3mlpy tests scripts/build_doc_assets.py
       - name: Ruff semantic lint
-        run: ruff check src tests examples
+        run: ruff check src tests examples scripts/build_doc_assets.py
       - name: Public typing contract
         run: mypy --follow-imports=skip src/gp3mlpy/__init__.pyi
 
@@ -53,7 +53,12 @@ jobs:
         with:
           python-version: '3.13'
       - run: python -m pip install -e ".[docs]"
-      - run: mkdocs build --strict
+      - name: Generate documentation plot assets
+        env:
+          MPLBACKEND: Agg
+        run: python scripts/build_doc_assets.py
+      - name: Build strict documentation
+        run: mkdocs build --strict
 
   package:
     runs-on: ubuntu-latest

@@ -1,0 +1,220 @@
+:root {
+  --gp3ml-navy: #0b2a4a;
+  --gp3ml-blue: #145a8d;
+  --gp3ml-sky: #72c7f4;
+  --gp3ml-ice: #eef8fd;
+  --gp3ml-ink: #14202b;
+}
+
+.md-header {
+  background: linear-gradient(90deg, var(--gp3ml-navy), var(--gp3ml-blue));
+}
+
+.gp-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(220px, .7fr);
+  gap: 2rem;
+  align-items: center;
+  margin: 1rem 0 2.2rem;
+  padding: 2.2rem;
+  border: 1px solid rgba(20, 90, 141, .18);
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(11, 42, 74, .98), rgba(20, 90, 141, .92));
+  color: #fff;
+  box-shadow: 0 18px 45px rgba(11, 42, 74, .16);
+}
+
+.gp-hero h1,
+.gp-hero h2,
+.gp-hero p {
+  color: #fff;
+}
+
+.gp-hero h1 {
+  margin: 0 0 .45rem;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  letter-spacing: -.045em;
+}
+
+.gp-hero p {
+  max-width: 760px;
+  font-size: 1.08rem;
+  opacity: .94;
+}
+
+.gp-hero img {
+  width: min(100%, 250px);
+  display: block;
+  margin: auto;
+  filter: drop-shadow(0 16px 26px rgba(0, 0, 0, .18));
+}
+
+.gp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem;
+  margin-top: 1.15rem;
+}
+
+.gp-actions a {
+  display: inline-block;
+  padding: .58rem .9rem;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, .38);
+}
+
+.gp-actions a:first-child {
+  background: #fff;
+  color: var(--gp3ml-navy);
+}
+
+.gp-actions a:not(:first-child) {
+  color: #fff;
+}
+
+.gp-stats,
+.gp-card-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.gp-stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 1.25rem 0 2rem;
+}
+
+.gp-stat,
+.gp-card {
+  border: 1px solid rgba(20, 90, 141, .16);
+  border-radius: 16px;
+  background: var(--md-default-bg-color);
+  box-shadow: 0 7px 22px rgba(11, 42, 74, .06);
+}
+
+.gp-stat {
+  padding: 1rem;
+  text-align: center;
+}
+
+.gp-stat strong {
+  display: block;
+  color: var(--gp3ml-blue);
+  font-size: 1.55rem;
+  line-height: 1.1;
+}
+
+.gp-stat span {
+  display: block;
+  margin-top: .35rem;
+  font-size: .78rem;
+  text-transform: uppercase;
+  letter-spacing: .075em;
+  opacity: .72;
+}
+
+.gp-card-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 1rem 0 1.8rem;
+}
+
+.gp-card {
+  padding: 1.15rem 1.2rem;
+}
+
+.gp-card h3 {
+  margin-top: 0;
+}
+
+.gp-kicker {
+  color: var(--gp3ml-blue);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  font-size: .72rem;
+}
+
+.gp-pipeline {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: .7rem;
+  margin: 1rem 0 1.8rem;
+}
+
+.gp-step {
+  position: relative;
+  min-height: 110px;
+  padding: .9rem;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(114, 199, 244, .16), rgba(20, 90, 141, .04));
+  border: 1px solid rgba(20, 90, 141, .16);
+}
+
+.gp-step strong {
+  display: block;
+  color: var(--gp3ml-blue);
+  margin-bottom: .25rem;
+}
+
+.gp-step span {
+  font-size: .82rem;
+  line-height: 1.35;
+}
+
+.gp-plot-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1rem 0 2rem;
+}
+
+.gp-plot-card {
+  border: 1px solid rgba(20, 90, 141, .14);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--md-default-bg-color);
+}
+
+.gp-plot-card img {
+  width: 100%;
+  display: block;
+  background: #fff;
+}
+
+.gp-plot-card div {
+  padding: .8rem 1rem 1rem;
+}
+
+.gp-plot-card strong {
+  color: var(--gp3ml-blue);
+}
+
+.gp-note {
+  border-left: 4px solid var(--gp3ml-sky);
+  padding: .85rem 1rem;
+  background: rgba(114, 199, 244, .10);
+  border-radius: 0 10px 10px 0;
+}
+
+[data-md-color-scheme="slate"] .gp-stat,
+[data-md-color-scheme="slate"] .gp-card,
+[data-md-color-scheme="slate"] .gp-plot-card {
+  border-color: rgba(114, 199, 244, .18);
+}
+
+@media (max-width: 900px) {
+  .gp-hero { grid-template-columns: 1fr; }
+  .gp-hero img { max-width: 180px; }
+  .gp-stats { grid-template-columns: repeat(2, 1fr); }
+  .gp-card-grid { grid-template-columns: 1fr 1fr; }
+  .gp-pipeline { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .gp-hero { padding: 1.35rem; border-radius: 18px; }
+  .gp-stats,
+  .gp-card-grid,
+  .gp-plot-grid,
+  .gp-pipeline { grid-template-columns: 1fr; }
+}
