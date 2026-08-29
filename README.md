@@ -22,7 +22,8 @@ It is designed for **explicitly observed, non-sensitive outcomes and declared sc
 | Key concepts | https://stefanosbalaskas.github.io/gp3mlpy/key-concepts/ |
 | Plot gallery | https://stefanosbalaskas.github.io/gp3mlpy/plots/ |
 | Articles | https://stefanosbalaskas.github.io/gp3mlpy/articles/ |
-| API map | https://stefanosbalaskas.github.io/gp3mlpy/reference/ |
+| API map | https://stefanosbalaskas.github.io/gp3mlpy/api-map/ |
+| Complete API index | https://stefanosbalaskas.github.io/gp3mlpy/reference/ |
 | R reference package | https://CRAN.R-project.org/package=gp3ml |
 
 ## Frozen compatibility target
@@ -149,6 +150,7 @@ All 127 compatibility exports have dedicated reference pages. The 20 gp3ml 0.3.0
 Useful entry points:
 
 - [Key concepts](https://stefanosbalaskas.github.io/gp3mlpy/key-concepts/)
+- [Workflow API map](https://stefanosbalaskas.github.io/gp3mlpy/api-map/)
 - [Integrated research workflow](https://stefanosbalaskas.github.io/gp3mlpy/articles/integrated-research-workflow/)
 - [Participant generalization](https://stefanosbalaskas.github.io/gp3mlpy/articles/participant-generalization/)
 - [Nested grouped resampling](https://stefanosbalaskas.github.io/gp3mlpy/articles/nested-grouped-resampling/)
