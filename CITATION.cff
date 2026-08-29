@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: gp3mlpy
+message: "If you use gp3mlpy, please cite this software and the gp3ml R reference."
+type: software
+authors:
+  - family-names: Balaskas
+    given-names: Stefanos
+repository-code: https://github.com/stefanosbalaskas/gp3mlpy
+version: 0.1.0.dev0
+date-released: 2026-08-29
