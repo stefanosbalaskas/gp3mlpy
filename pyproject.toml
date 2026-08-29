@@ -57,3 +57,9 @@ select = ["F"]
 python_version = "3.11"
 warn_unused_configs = true
 ignore_missing_imports = true
+# The frozen public stub is checked as gp3mlpy's own contract. Do not couple
+# that gate to parser/version churn in third-party PEP 561 stubs (for example,
+# NumPy using Python 3.12 type-statement syntax while gp3mlpy still supports
+# Python 3.11). Runtime dependency compatibility is covered by the 3-OS x
+# Python 3.11-3.13 test matrix and installed-wheel smoke test.
+no_site_packages = true
