@@ -17,8 +17,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat bootstrap/part-* > /tmp/gp3mlpy_repo.tar.gz.b64
+          cat bootstrap/chunk-* > /tmp/gp3mlpy_repo.tar.gz.b64
+          test "$(wc -c < /tmp/gp3mlpy_repo.tar.gz.b64)" -eq 166952
           base64 --decode /tmp/gp3mlpy_repo.tar.gz.b64 > /tmp/gp3mlpy_repo.tar.gz
+          test "$(wc -c < /tmp/gp3mlpy_repo.tar.gz)" -eq 125213
           echo "65195655e3827f6af5a0f560e5017000c5e8f2444b6d5e9337ffa27209f7aa2e  /tmp/gp3mlpy_repo.tar.gz" | sha256sum -c -
           tar -xzf /tmp/gp3mlpy_repo.tar.gz -C .
       - name: Install core package
