@@ -1,0 +1,66 @@
+name: Restore exact runtime surface
+
+on:
+  push:
+    branches: [source-tree]
+    paths:
+      - '.runtime_payload/**'
+      - '.github/workflows/restore-runtime.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Restore exact wheel sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p src/gp3mlpy
+          gzip -dc .runtime_payload/external_validation.py.gz > src/gp3mlpy/external_validation.py
+          gzip -dc .runtime_payload/model_tuning.py.gz > src/gp3mlpy/model_tuning.py
+          gzip -dc .runtime_payload/nested_resampling.py.gz > src/gp3mlpy/nested_resampling.py
+          gzip -dc .runtime_payload/__init__.py.gz > src/gp3mlpy/__init__.py
+          gzip -dc .runtime_payload/__init__.pyi.gz > src/gp3mlpy/__init__.pyi
+          gzip -dc .runtime_payload/_reference_docs.py.gz > src/gp3mlpy/_reference_docs.py
+          cat > /tmp/gp3mlpy-runtime.sha256 <<'EOF'
+          d060e7eec112e6ab56228f6dff42dbe6dd48d3f958da70438991a837ee979fd8  src/gp3mlpy/external_validation.py
+          441978bc15cdf78fb9e04db1ff474701cc71ed350069a51cf1f178d1a6ca38b1  src/gp3mlpy/model_tuning.py
+          19df472ce62b23ccb2de2fc62aa22eea4464e02c6bc8959dd2666a3218414c68  src/gp3mlpy/nested_resampling.py
+          bf6ff39a58d2681ed957c2ba0f15b0778262030686352afc3f19c389d4111ebd  src/gp3mlpy/__init__.py
+          38f1481ec4ec47210eb8a5f96bc9ed38e5879a8f8ec6e60d406317207ebe34aa  src/gp3mlpy/__init__.pyi
+          947154c69b5c56f8e67f785f05f7134c75a9423379e6193fd0bc6ae2572bd473  src/gp3mlpy/_reference_docs.py
+          EOF
+          sha256sum -c /tmp/gp3mlpy-runtime.sha256
+          python -m compileall -q src/gp3mlpy
+      - name: Install and verify frozen API
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+          python - <<'PY'
+          import gp3mlpy
+          registry = gp3mlpy.gp3ml_api_contracts()
+          assert len(registry.exports) == 127, len(registry.exports)
+          assert int((registry.exports['stability'] == 'stable').sum()) == 71
+          assert int((registry.exports['stability'] == 'experimental').sum()) == 56
+          assert gp3mlpy.r_reference_version == '0.3.0'
+          print('gp3mlpy runtime/API smoke: PASS')
+          PY
+      - name: Commit restored runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .runtime_payload .github/workflows/restore-runtime.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'feat: complete gp3mlpy runtime surface'
+          git push origin HEAD:source-tree
