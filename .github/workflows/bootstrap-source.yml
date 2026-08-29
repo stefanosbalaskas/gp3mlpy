@@ -19,16 +19,26 @@ jobs:
           set -euo pipefail
           cat bootstrap/part-* > /tmp/gp3mlpy_repo.tar.gz.b64
           base64 --decode /tmp/gp3mlpy_repo.tar.gz.b64 > /tmp/gp3mlpy_repo.tar.gz
-          echo "efd21e81146a533e89e24cecc1f0a151cceb7a2bff14cedc0e43b4d3d0b2a847  /tmp/gp3mlpy_repo.tar.gz" | sha256sum -c -
+          echo "65195655e3827f6af5a0f560e5017000c5e8f2444b6d5e9337ffa27209f7aa2e  /tmp/gp3mlpy_repo.tar.gz" | sha256sum -c -
           tar -xzf /tmp/gp3mlpy_repo.tar.gz -C .
-          rm -rf bootstrap .bootstrap .github/workflows/bootstrap-source.yml
-      - name: Validate reconstructed contract
+      - name: Install core package
         shell: bash
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e . pytest
+      - name: Regenerate frozen R reference material
+        shell: bash
+        run: |
+          python scripts/generate_reference_from_r.py
+      - name: Validate reconstructed contract
+        shell: bash
+        run: |
           pytest -q
           python scripts/validate_release.py
+      - name: Remove bootstrap payload
+        shell: bash
+        run: |
+          rm -rf bootstrap .bootstrap .github/workflows/bootstrap-source.yml
       - name: Commit reconstructed source tree
         shell: bash
         run: |
