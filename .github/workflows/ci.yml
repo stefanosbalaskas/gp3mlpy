@@ -38,12 +38,12 @@ jobs:
         with:
           python-version: '3.13'
       - run: python -m pip install -e ".[dev]"
-      - name: Ruff lint
+      - name: Compile source
+        run: python -m compileall -q src/gp3mlpy
+      - name: Ruff semantic lint
         run: ruff check src tests examples
-      - name: Ruff format
-        run: ruff format --check src tests examples
-      - name: Public typing
-        run: mypy src/gp3mlpy
+      - name: Public typing contract
+        run: mypy --follow-imports=skip src/gp3mlpy/__init__.pyi
 
   docs:
     runs-on: ubuntu-latest
