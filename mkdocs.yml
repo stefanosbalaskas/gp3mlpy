@@ -99,5 +99,5 @@ nav:
           - Cross-package interoperability: articles/cross-package-interoperability.md
           - Optional-engine portability: articles/optional-engine-portability.md
   - API reference:
-      - Workflow map: reference/guide.md
+      - Workflow map: api-map.md
       - Complete alphabetical index: reference/index.md
