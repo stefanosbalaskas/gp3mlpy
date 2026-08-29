@@ -1,6 +1,6 @@
 {
   "archive_sha256": "b157739893aa1d28f1e687d5bedaeb2b66f13e0d842944da83aaeccad450933d",
-  "verified_original_chunks_through": 12,
-  "verified_original_chunk_count": 13,
+  "verified_original_chunks_through": 14,
+  "verified_original_chunk_count": 15,
   "storage_note": "Chunks 009 onward may be stored as independently verified a/b halves; lexicographic concatenation restores each original 6000-character chunk."
 }
