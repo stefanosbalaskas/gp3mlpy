@@ -23,9 +23,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl --fail --location --retry 3 \
-            https://cran.r-project.org/src/contrib/Archive/gp3ml/gp3ml_0.3.0.tar.gz \
-            --output /tmp/gp3ml_0.3.0.tar.gz
+          CURRENT='https://cran.r-project.org/src/contrib/gp3ml_0.3.0.tar.gz'
+          ARCHIVE='https://cran.r-project.org/src/contrib/Archive/gp3ml/gp3ml_0.3.0.tar.gz'
+          curl --fail --location --retry 3 "$CURRENT" --output /tmp/gp3ml_0.3.0.tar.gz || \
+            curl --fail --location --retry 3 "$ARCHIVE" --output /tmp/gp3ml_0.3.0.tar.gz
           echo '02c0beb5f7cec99f23ec19c46b82e66f299ca15400fb96f5f56bfe22b3c987bc  /tmp/gp3ml_0.3.0.tar.gz' | sha256sum -c -
           mkdir -p /tmp/gp3ml-r
           tar -xzf /tmp/gp3ml_0.3.0.tar.gz -C /tmp/gp3ml-r
