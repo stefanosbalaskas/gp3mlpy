@@ -1,0 +1,76 @@
+name: Generate frozen reference layer
+
+on:
+  push:
+    branches: [source-tree]
+    paths:
+      - 'scripts/generate_reference_layer.py'
+      - '.github/workflows/generate-reference.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Fetch and verify gp3ml 0.3.0
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 \
+            https://cran.r-project.org/src/contrib/Archive/gp3ml/gp3ml_0.3.0.tar.gz \
+            --output /tmp/gp3ml_0.3.0.tar.gz
+          echo '02c0beb5f7cec99f23ec19c46b82e66f299ca15400fb96f5f56bfe22b3c987bc  /tmp/gp3ml_0.3.0.tar.gz' | sha256sum -c -
+          mkdir -p /tmp/gp3ml-r
+          tar -xzf /tmp/gp3ml_0.3.0.tar.gz -C /tmp/gp3ml-r
+      - name: Generate source-derived documentation and inventories
+        run: python scripts/generate_reference_layer.py /tmp/gp3ml-r/gp3ml .
+      - name: Verify frozen inventory counts
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          expected = {
+              'r_reference_version': '0.3.0',
+              'exports': 127,
+              'stable_exports': 71,
+              'experimental_exports': 56,
+              'stable_public_classes': 38,
+              'r_source_files': 38,
+              'rd_files': 154,
+              'vignettes': 20,
+              'r_test_files': 32,
+              'print_methods': 49,
+              'plot_methods': 16,
+              'rd_example_topics': 49,
+              'explicit_expect_error_contracts': 44,
+          }
+          got = json.loads(Path('reference/reference_summary.json').read_text())
+          assert got == expected, (got, expected)
+          PY
+      - name: Install package and test dependencies
+        run: python -m pip install -e '.[dev]'
+      - name: Run source-grounded tests
+        env:
+          MPLBACKEND: Agg
+        run: python -m pytest -q
+      - name: Commit generated reference layer
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add reference docs examples
+          if git diff --cached --quiet; then
+            echo 'Reference layer already current.'
+            exit 0
+          fi
+          git commit -m 'docs: generate frozen gp3ml 0.3.0 reference layer'
+          git push origin HEAD:source-tree
