@@ -82,6 +82,6 @@ def assert_gp3ml_engine_available(engine: str, check_keras_backend: bool = False
     item = row.iloc[0]
     if not bool(item.package_available):
         raise GP3MLError(f"Engine `{engine}` requires optional package `{item.package}`, which is not installed.")
-    if engine == "keras3" and check_keras_backend and item.backend_ready is not True:
+    if engine == "keras3" and check_keras_backend and not bool(item.backend_ready):
         raise GP3MLError("`keras3` is installed but a usable backend was not confirmed. Configure a supported Keras backend before fitting.")
     return True
