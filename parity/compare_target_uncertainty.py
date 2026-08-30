@@ -31,13 +31,30 @@ SECTION_BY_FUNCTION = {
     "write_gazepoint_target_uncertainty": "writer_cases",
 }
 
+_EMPTY_FAILURE_COLUMN_SHAPES = {(), ("replicate", "error")}
+_EMPTY_FAILURE_COLUMN_SUFFIXES = (
+    "failure_columns",
+    "failures.columns",
+    "failures.table.columns",
+)
+
 
 def _numeric(value: Any) -> bool:
     return isinstance(value, numbers.Real) and not isinstance(value, bool)
 
 
+def _empty_failure_columns_equivalent(left: Any, right: Any, path: str) -> bool:
+    if not path.endswith(_EMPTY_FAILURE_COLUMN_SUFFIXES):
+        return False
+    if not isinstance(left, list) or not isinstance(right, list):
+        return False
+    return tuple(left) in _EMPTY_FAILURE_COLUMN_SHAPES and tuple(right) in _EMPTY_FAILURE_COLUMN_SHAPES
+
+
 def _compare(left: Any, right: Any, path: str, *, tol: float = 1e-12) -> list[str]:
     errors: list[str] = []
+    if _empty_failure_columns_equivalent(left, right, path):
+        return errors
     if isinstance(left, dict) and isinstance(right, dict):
         if set(left) != set(right):
             only_left = sorted(set(left) - set(right))
