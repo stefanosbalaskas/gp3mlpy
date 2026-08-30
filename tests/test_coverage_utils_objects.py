@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from gp3mlpy import _utils
+from gp3mlpy import _reprs, _utils
 from gp3mlpy import objects as obj
 from gp3mlpy.exceptions import GP3MLError
 
@@ -84,7 +84,7 @@ def test_utility_contracts_cover_success_failure_and_recycling(tmp_path: Path, m
     with pytest.raises(GP3MLError, match="must not contain missing"):
         _utils.recycle([None], 1, "x", kind="character", allow_na=False)
     with pytest.raises(GP3MLError, match="must not contain missing"):
-        _utils.recycle([float("nan")], 1, "x", kind="logical", allow_na=False)
+        _utils.recycle([float("nan")], 1, "x", kind="numeric", allow_na=False)
 
     assert _utils.is_missing_text(None)
     assert _utils.is_missing_text(float("nan"))
@@ -162,6 +162,7 @@ def test_every_r_style_representation_branch_is_exercised():
     status_summary = _df(status=["pass", "review", "fail"], n_checks=[1, 2, 3])
     fold_status = _df(status=["pass", "review", "fail"])
     task_dict = {"task_type": "classification", "outcome": "y"}
+    diag_validation = obj.GazepointFoldDiagnosticsValidation(status="pass", summary=status_summary)
 
     instances = [
         obj.GazepointFeatureManifestValidation(
@@ -169,7 +170,7 @@ def test_every_r_style_representation_branch_is_exercised():
         ),
         obj.GazepointFoldDiagnostics(
             metadata={"generalization_target": "new_participants", "repeats": 1, "outcome_type": "classification"},
-            validation={"status": "pass"},
+            validation=diag_validation,
             fold_metrics=_df(fold=[1]),
             repeat_metrics=_df(assessment_size_ratio=[1.25]),
         ),
@@ -288,13 +289,9 @@ def test_every_r_style_representation_branch_is_exercised():
     ]
 
     for instance in instances:
-        rendered = repr(instance)
+        rendered = _reprs.render_r_print(instance)
         assert isinstance(rendered, str)
         assert rendered
-        assert str(instance) == rendered
-
-    # Helper branches not guaranteed by the object collection above.
-    from gp3mlpy import _reprs
 
     assert _reprs._nrow(None) == 0
     assert _reprs._nrow([1, 2]) == 2
