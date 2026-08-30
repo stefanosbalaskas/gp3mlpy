@@ -121,6 +121,27 @@ jobs:
           parity/results/python-leakage.json
           parity/results/leakage-report.json
 
+      - name: Execute Python splitting fixtures
+        run: >-
+          python parity/run_python_splitting.py
+          parity/fixtures/splitting.json
+          parity/results/python-splitting.json
+
+      - name: Execute R splitting fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_splitting.R
+          parity/fixtures/splitting.json
+          parity/results/r-splitting.json
+
+      - name: Compare splitting behavior
+        run: >-
+          python parity/compare_splitting.py
+          parity/fixtures/splitting.json
+          parity/results/r-splitting.json
+          parity/results/python-splitting.json
+          parity/results/splitting-report.json
+
       - name: Build stable API parity matrix
         run: >-
           python parity/build_matrix.py
@@ -132,6 +153,8 @@ jobs:
           parity/results/governance-report.json
           parity/leakage_cases.csv
           parity/results/leakage-report.json
+          parity/splitting_cases.csv
+          parity/results/splitting-report.json
 
       - name: Upload parity evidence
         if: always()
