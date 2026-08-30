@@ -100,6 +100,27 @@ jobs:
           parity/results/python-governance.json
           parity/results/governance-report.json
 
+      - name: Execute Python leakage fixtures
+        run: >-
+          python parity/run_python_leakage.py
+          parity/fixtures/leakage.json
+          parity/results/python-leakage.json
+
+      - name: Execute R leakage fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_leakage.R
+          parity/fixtures/leakage.json
+          parity/results/r-leakage.json
+
+      - name: Compare leakage behavior
+        run: >-
+          python parity/compare_leakage.py
+          parity/fixtures/leakage.json
+          parity/results/r-leakage.json
+          parity/results/python-leakage.json
+          parity/results/leakage-report.json
+
       - name: Build stable API parity matrix
         run: >-
           python parity/build_matrix.py
@@ -109,6 +130,8 @@ jobs:
           parity/results/core-report.json
           parity/governance_cases.csv
           parity/results/governance-report.json
+          parity/leakage_cases.csv
+          parity/results/leakage-report.json
 
       - name: Upload parity evidence
         if: always()

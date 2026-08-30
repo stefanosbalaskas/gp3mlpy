@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "r_reference": {
+    "package": "gp3ml",
+    "version": "0.3.0",
+    "tag": "v0.3.0",
+    "commit": "0e23684f32a44417827aa0e7fee9fefc9e6c35d3",
+    "archive_sha256": "04c5fdb017c63ecbf6f5e85c29fff6492880201a2f2aa5c3c1d3fe998e60bae6"
+  },
+  "numeric_tolerance": {"absolute": 1e-12, "relative": 1e-12},
+  "audit_cases": [
+    {"id": "leakage_clean_new_participants", "kind": "clean", "generalization_target": "new_participants"},
+    {"id": "leakage_participant_overlap", "kind": "participant_overlap", "generalization_target": "new_participants"},
+    {"id": "leakage_known_participant_trials", "kind": "known_participant_trials", "generalization_target": "new_trials_known_participants"},
+    {"id": "leakage_participant_trial_overlap", "kind": "participant_trial_overlap", "generalization_target": "new_trials_known_participants"},
+    {"id": "leakage_reused_trial_labels", "kind": "reused_trial_labels", "generalization_target": "new_participants"},
+    {"id": "leakage_exact_row_overlap", "kind": "exact_row_overlap", "generalization_target": "new_participants"},
+    {"id": "leakage_duplicate_within", "kind": "duplicate_within", "generalization_target": "new_participants"},
+    {"id": "leakage_role_failures", "kind": "role_failures", "generalization_target": "new_participants"},
+    {"id": "leakage_identifier_like", "kind": "identifier_like", "generalization_target": "new_participants"},
+    {"id": "leakage_missing_participant", "kind": "missing_participant", "generalization_target": "new_participants"},
+    {"id": "leakage_mismatched_columns_error", "kind": "mismatched_columns_error", "generalization_target": "new_participants"},
+    {"id": "leakage_missing_predictor_error", "kind": "missing_predictor_error", "generalization_target": "new_participants"},
+    {"id": "leakage_empty_partition_error", "kind": "empty_partition_error", "generalization_target": "new_participants"}
+  ],
+  "writer_cases": [
+    {"id": "leakage_writer_issues", "kind": "issues"},
+    {"id": "leakage_writer_checks", "kind": "checks"},
+    {"id": "leakage_writer_bad_extension", "kind": "bad_extension"}
+  ]
+}
