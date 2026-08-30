@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import json
 import math
 import numbers
@@ -10,6 +11,66 @@ from typing import Any
 
 def _numeric(value: Any) -> bool:
     return isinstance(value, numbers.Real) and not isinstance(value, bool)
+
+
+def _normalize_escaped_quotes(message: str) -> str:
+    """Normalize literal R backslashes that only escape displayed double quotes."""
+    previous = None
+    while message != previous:
+        previous = message
+        message = message.replace('\\"', '"')
+    return message
+
+
+def _coverage_signature(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Compare damaged coverage by count pattern, not RNG-dependent source identity."""
+    counts: dict[tuple[Any, Any, Any, Any], int] = {}
+    for row in rows:
+        key = (
+            row.get("repeat"),
+            row.get("n_analysis"),
+            row.get("n_assessment"),
+            row.get("n_excluded"),
+        )
+        counts[key] = counts.get(key, 0) + 1
+    result = [
+        {
+            "repeat": key[0],
+            "n_analysis": key[1],
+            "n_assessment": key[2],
+            "n_excluded": key[3],
+            "n_rows": count,
+        }
+        for key, count in counts.items()
+    ]
+    return sorted(
+        result,
+        key=lambda row: (
+            str(row["repeat"]),
+            str(row["n_analysis"]),
+            str(row["n_assessment"]),
+            str(row["n_excluded"]),
+        ),
+    )
+
+
+def _normalize_case(group: str, case_id: str, value: Any) -> Any:
+    normalized = copy.deepcopy(value)
+    if group == "errors" and isinstance(normalized, dict):
+        message = normalized.get("message")
+        if isinstance(message, str):
+            normalized["message"] = _normalize_escaped_quotes(message)
+    if (
+        group == "validations"
+        and case_id == "validation_assignment_damage"
+        and isinstance(normalized, dict)
+    ):
+        payload = normalized.get("value")
+        if isinstance(payload, dict):
+            coverage = payload.get("assessment_coverage")
+            if isinstance(coverage, list):
+                payload["assessment_coverage"] = _coverage_signature(coverage)
+    return normalized
 
 
 def _compare(left: Any, right: Any, *, atol: float, rtol: float, path: str) -> list[str]:
@@ -93,9 +154,11 @@ def main() -> int:
         r_cases = r_result.get(group, {})
         py_cases = py_result.get(group, {})
         for case_id in sorted(set(r_cases) | set(py_cases)):
+            left = _normalize_case(group, case_id, r_cases.get(case_id))
+            right = _normalize_case(group, case_id, py_cases.get(case_id))
             errors = _compare(
-                r_cases.get(case_id),
-                py_cases.get(case_id),
+                left,
+                right,
                 atol=atol,
                 rtol=rtol,
                 path=f"{function_name}.{case_id}",
