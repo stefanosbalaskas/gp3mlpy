@@ -9,7 +9,7 @@ The gallery data are deliberately small synthetic documentation fixtures. They d
 ## Decision-threshold evaluation
 
 <div class="gp-plot-card">
-  <img src="assets/plots/threshold-evaluation.svg" alt="Balanced-accuracy curve across explicit decision thresholds">
+  <img src="../assets/plots/threshold-evaluation.svg" alt="Balanced-accuracy curve across explicit decision thresholds">
   <div><strong>Explicit threshold evaluation.</strong> Candidate thresholds are declared by the analyst; the plot visualizes the resulting metric surface rather than choosing a hidden optimum.</div>
 </div>
 
@@ -32,7 +32,7 @@ Related API: [`evaluate_gazepoint_thresholds`](reference/evaluate_gazepoint_thre
 ## Predictor-distribution shift
 
 <div class="gp-plot-card">
-  <img src="assets/plots/dataset-shift.svg" alt="Horizontal bars showing predictor shift magnitude">
+  <img src="../assets/plots/dataset-shift.svg" alt="Horizontal bars showing predictor shift magnitude">
   <div><strong>Dataset-shift audit.</strong> Numeric predictors are summarized with standardized differences; categorical predictors use a distribution statistic. Shift is reported separately from outcome prevalence, calibration, and performance.</div>
 </div>
 
@@ -51,7 +51,7 @@ Related API: [`audit_gazepoint_dataset_shift`](reference/audit_gazepoint_dataset
 ## Engine portability
 
 <div class="gp-plot-card">
-  <img src="assets/plots/engine-capabilities.svg" alt="Engine availability by gp3ml engine label">
+  <img src="../assets/plots/engine-capabilities.svg" alt="Engine availability by gp3ml engine label">
   <div><strong>Engine capability audit.</strong> Core engines and optional backends are made visible so portability assumptions are not buried inside model fitting.</div>
 </div>
 
@@ -68,7 +68,7 @@ Related API: [`gp3ml_engine_capabilities`](reference/gp3ml_engine_capabilities.m
 ## Governance evidence
 
 <div class="gp-plot-card">
-  <img src="assets/plots/governance-profile.svg" alt="Counts of governance controls with pass review and fail status">
+  <img src="../assets/plots/governance-profile.svg" alt="Counts of governance controls with pass review and fail status">
   <div><strong>Governance profile audit.</strong> Controls with available evidence and controls requiring review are surfaced directly rather than collapsed into one opaque score.</div>
 </div>
 
