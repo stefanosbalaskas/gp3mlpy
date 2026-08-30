@@ -33,23 +33,18 @@ from gp3mlpy import splitting as sp
 from gp3mlpy import task_governance as tg
 from gp3mlpy.exceptions import GP3MLError
 from gp3mlpy.objects import (
-    GazepointFeatureManifestValidation,
     GazepointFoldDiagnostics,
     GazepointGroupFolds,
     GP3MLAnalysisPlan,
-    GP3MLCalibrationAssessment,
     GP3MLMetricUncertainty,
-    GP3MLModel,
     GP3MLModelArtifact,
-    GP3MLModelSelection,
     GP3MLModelTuning,
     GP3MLNestedEvaluation,
     GP3MLObject,
-    GP3MLResampleEvaluation,
     GP3MLResampleUncertainty,
     GP3MLStabilityEvaluation,
     GP3MLTargetUncertainty,
-    GP3MLTask,
+    GP3MLThresholdEvaluation,
 )
 
 
@@ -114,7 +109,10 @@ def test_repr_helpers_residual_paths(monkeypatch):
     leakage.r_class = "gazepoint_ml_leakage_audit"
     assert "0 analysis; 0 assessment" in reps.render_r_print(leakage)
 
-    # Exercise the non-callable branch in the import-time reference-doc attachment loop.
+    _, _, _, folds = _folds()
+    leakage_audit = next(iter(folds.folds.values())).leakage_audit
+    assert "Non-passing checks" in lk._repr(leakage_audit)
+
     docs = importlib.import_module("gp3mlpy._reference_docs")
     original = dict(docs.REFERENCE_DOCS)
     docs.REFERENCE_DOCS["definitely_missing_doc_target"] = "coverage"
@@ -150,11 +148,20 @@ def test_api_environment_feature_and_task_residuals(monkeypatch):
 
     data, task, _ = _classification_fixture()
     assert "type:" in tg._task_repr(task)
-    assert met.gazepoint_performance_metrics(task, data[task.outcome], probability=None).shape[0] == 1
+    with pytest.raises(GP3MLError, match="probability"):
+        met.gazepoint_performance_metrics(task, data[task.outcome], probability=None)
+
     one_class = data.iloc[:4].copy()
     one_class[task.outcome] = pd.Categorical(["A"] * 4, categories=["A", "B"])
+    monkeypatch.setattr(
+        met,
+        "gazepoint_performance_metrics",
+        lambda *args, **kwargs: pd.DataFrame([{"n": 4, "accuracy": 1.0}]),
+    )
     with pytest.raises(GP3MLError, match="two observed classes"):
-        met.bootstrap_gazepoint_metrics(task, one_class[task.outcome], probability=[0.2] * 4, bootstrap=2)
+        met.bootstrap_gazepoint_metrics(
+            task, one_class[task.outcome], probability=[0.2] * 4, bootstrap=2
+        )
 
 
 def test_calibration_preprocessing_and_model_engine_residuals(monkeypatch):
@@ -760,11 +767,14 @@ def test_governance_report_helpers_json_model_card_external_and_reproducibility(
     values = iter(["abc\n", "main\n", "\n"])
     monkeypatch.setattr(gr.subprocess, "run", lambda *args, **kwargs: GoodResult(next(values)))
     info = gr._git_info(tmp_path / "fake")
-    # No .git means the subprocess branch is intentionally skipped.
     assert info["commit"] is None
 
     reproducibility = gr.create_gazepoint_reproducibility_report(
-        objects={"model": model}, data=data, seeds={"fit": 1}, notes="note", project_path=tmp_path
+        objects={"model_contract": {"engine": model.engine, "training_hash": model.training_hash}},
+        data=data,
+        seeds={"fit": 1},
+        notes="note",
+        project_path=tmp_path,
     )
     assert reproducibility.notes == ["note"]
     with pytest.raises(GP3MLError, match="reproducibility report"):
@@ -816,14 +826,14 @@ def test_repro_rocrate_roadmap_and_robustness_residuals(tmp_path: Path):
         rob.evaluate_gazepoint_missingness_sensitivity({}, lambda **kwargs: {"x": 1})
 
     thresholds = pd.DataFrame({"threshold": [0.1, 0.15, 0.2, 0.5], "score": [1.0, 1.0, 1.0, 0.0]})
-    evaluation = gp.GP3MLThresholdEvaluation(thresholds=thresholds)
+    evaluation = GP3MLThresholdEvaluation(thresholds=thresholds)
     stable = rob.evaluate_gazepoint_threshold_stability(evaluation, "score", tolerance=0.0)
     assert stable.status == "stable"
-    review_eval = gp.GP3MLThresholdEvaluation(
+    review_eval = GP3MLThresholdEvaluation(
         thresholds=pd.DataFrame({"threshold": [0.1, 0.15], "score": [1.0, 1.0]})
     )
     assert rob.evaluate_gazepoint_threshold_stability(review_eval, "score", tolerance=0).status == "review"
-    unstable_eval = gp.GP3MLThresholdEvaluation(
+    unstable_eval = GP3MLThresholdEvaluation(
         thresholds=pd.DataFrame({"threshold": [0.1, 0.12], "score": [1.0, 1.0]})
     )
     assert rob.evaluate_gazepoint_threshold_stability(unstable_eval, "score", tolerance=0).status == "unstable"
@@ -841,7 +851,7 @@ def test_repro_rocrate_roadmap_and_robustness_residuals(tmp_path: Path):
     assert robust_audit.status == "review"
 
 
-def test_splitting_guard_tail_and_two_way_failure(monkeypatch):
+def test_splitting_guard_tail_and_two_way_failure():
     assert sp._scalar_column(None, "x") is None
     with pytest.raises(GP3MLError, match="column name"):
         sp._scalar_column(None, "x", False)
@@ -867,12 +877,19 @@ def test_splitting_guard_tail_and_two_way_failure(monkeypatch):
     counts = sp._group_counts(pd.DataFrame({"trial": ["a", "b"]}), partition, None, "trial", None)
     assert "trial" in set(counts.unit)
 
+    class CrossRNG:
+        def choice(self, values, size, replace=False):
+            del size, replace
+            if str(values[0]).startswith("p"):
+                return np.array(["p1"])
+            return np.array(["s2"])
+
     with pytest.raises(GP3MLError, match="Could not construct"):
         sp._two_way_assignment(
-            np.array(["p1", "p1"]),
-            np.array(["s1", "s1"]),
+            np.array(["p1", "p2"]),
+            np.array(["s1", "s2"]),
             0.2,
-            np.random.default_rng(1),
+            CrossRNG(),
             max_attempts=1,
         )
 
