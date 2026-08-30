@@ -13,9 +13,6 @@
 <a href="https://github.com/stefanosbalaskas/gp3mlpy">GitHub</a>
 </div>
 </div>
-<div>
-<img src="assets/brand/gp3mlpy-mark.svg" alt="gp3mlpy package mark">
-</div>
 </div>
 
 <div class="gp-stats">
@@ -23,6 +20,12 @@
 <div class="gp-stat"><strong>71</strong><span>stable exports</span></div>
 <div class="gp-stat"><strong>38</strong><span>stable public classes</span></div>
 <div class="gp-stat"><strong>20</strong><span>article companions</span></div>
+<div class="gp-stat"><strong>122</strong><span>passing tests</span></div>
+<div class="gp-stat"><strong>100%</strong><span>line + branch coverage</span></div>
+</div>
+
+<div class="gp-note" markdown>
+**Validated development baseline.** The package currently covers all 4,004 executable statements and all 1,690 measured branches, with zero partial branches. CI permanently enforces `--cov-branch --cov-fail-under=100` and runs the core suite on Ubuntu, Windows, and macOS across Python 3.11–3.13. Coverage is a Python-side quality property; `r_parity_tested` remains `false` until cross-language behavioral fixtures are completed.
 </div>
 
 ## What makes gp3mlpy different
@@ -194,9 +197,17 @@ Use the [workflow API map](api-map.md), the [complete alphabetical index](refere
 
 ## Installation
 
-=== "pip"
+=== "GitHub"
 
     ```bash
+    python -m pip install "git+https://github.com/stefanosbalaskas/gp3mlpy.git@main"
+    ```
+
+=== "Development checkout"
+
+    ```bash
+    git clone https://github.com/stefanosbalaskas/gp3mlpy.git
+    cd gp3mlpy
     python -m pip install -e .
     ```
 
@@ -207,6 +218,9 @@ Use the [workflow API map](api-map.md), the [complete alphabetical index](refere
     ```
 
 Optional extras include `xgboost`, `deep`, `conformal`, `rocrate`, and `artifact`.
+
+!!! info "Development version"
+    The current package is `0.1.0.dev0`. A formal PyPI release has not yet been declared.
 
 ## Frozen reference
 

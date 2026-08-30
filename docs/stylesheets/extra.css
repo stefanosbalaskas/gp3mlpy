@@ -12,7 +12,7 @@
 
 .gp-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.7fr) minmax(220px, .7fr);
+  grid-template-columns: 1fr;
   gap: 2rem;
   align-items: center;
   margin: 1rem 0 2.2rem;
@@ -37,16 +37,9 @@
 }
 
 .gp-hero p {
-  max-width: 760px;
+  max-width: 860px;
   font-size: 1.08rem;
   opacity: .94;
-}
-
-.gp-hero img {
-  width: min(100%, 250px);
-  display: block;
-  margin: auto;
-  filter: drop-shadow(0 16px 26px rgba(0, 0, 0, .18));
 }
 
 .gp-actions {
@@ -81,7 +74,7 @@
 }
 
 .gp-stats {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   margin: 1.25rem 0 2rem;
 }
 
@@ -204,8 +197,6 @@
 }
 
 @media (max-width: 900px) {
-  .gp-hero { grid-template-columns: 1fr; }
-  .gp-hero img { max-width: 180px; }
   .gp-stats { grid-template-columns: repeat(2, 1fr); }
   .gp-card-grid { grid-template-columns: 1fr 1fr; }
   .gp-pipeline { grid-template-columns: repeat(2, 1fr); }
