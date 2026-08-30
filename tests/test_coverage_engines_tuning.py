@@ -16,7 +16,7 @@ from gp3mlpy import model_tuning as mt
 from gp3mlpy import nested_resampling as nr
 from gp3mlpy import preprocessing as pp
 from gp3mlpy.exceptions import GP3MLError, OptionalDependencyError
-from gp3mlpy.objects import GP3MLEngine, GP3MLModel, GP3MLModelTuning, GP3MLPreprocessor
+from gp3mlpy.objects import GP3MLEngine, GP3MLModelTuning
 
 
 PREDICTORS = ["tracking_ratio", "blink_rate", "fixation_duration"]
@@ -537,9 +537,7 @@ def test_tuning_grid_helpers_validation_selection_and_writers(tmp_path: Path):
             tuning, "roc_auc", "maximize", minimum_success_prop=2, rationale="x"
         )
     with pytest.raises(GP3MLError, match="No eligible"):
-        mt.select_gazepoint_model(
-            tuning, "missing", "maximize", rationale="x"
-        )
+        mt.select_gazepoint_model(tuning, "missing", "maximize", rationale="x")
     with pytest.raises(GP3MLError, match="gp3ml_model_tuning"):
         mt.validate_gazepoint_model_tuning(object())
     with pytest.raises(GP3MLError, match="selection"):
