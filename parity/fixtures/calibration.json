@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "r_reference": {
+    "package": "gp3ml",
+    "version": "0.3.0",
+    "archive_sha256": "04c5fdb017c63ecbf6f5e85c29fff6492880201a2f2aa5c3c1d3fe998e60bae6"
+  },
+  "numeric_tolerance": {
+    "absolute": 1e-07,
+    "relative": 1e-06
+  },
+  "primary": {
+    "truth": ["pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review"],
+    "probability": [0.2, 0.7, 0.6, 0.55, 0.3, 0.8, 0.65, 0.45, 0.4, 0.75, 0.5, 0.6],
+    "positive": "review",
+    "probes": [0.0, 0.1, 0.25, 0.5, 0.75, 0.9, 1.0]
+  },
+  "isotonic": {
+    "truth": ["pass", "pass", "review", "pass", "review", "review", "pass", "review", "review", "review"],
+    "probability": [0.1, 0.2, 0.2, 0.35, 0.45, 0.45, 0.6, 0.7, 0.8, 0.9],
+    "positive": "review",
+    "probes": [0.0, 0.15, 0.2, 0.4, 0.45, 0.65, 0.85, 1.0]
+  },
+  "assessment": {
+    "truth": ["pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review"],
+    "probability": [0.05, 0.15, 0.18, 0.26, 0.31, 0.39, 0.4, 0.41, 0.49, 0.51, 0.59, 0.6, 0.61, 0.69, 0.72, 0.79, 0.8, 0.81, 0.9, 0.97],
+    "positive": "review"
+  },
+  "bootstrap": {
+    "bins": 5,
+    "bootstrap": 250,
+    "conf_level": 0.9,
+    "seed": 101
+  }
+}

@@ -184,6 +184,27 @@ jobs:
           parity/results/python-diagnostics.json
           parity/results/diagnostics-report.json
 
+      - name: Execute Python calibration fixtures
+        run: >-
+          python parity/run_python_calibration.py
+          parity/fixtures/calibration.json
+          parity/results/python-calibration.json
+
+      - name: Execute R calibration fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_calibration.R
+          parity/fixtures/calibration.json
+          parity/results/r-calibration.json
+
+      - name: Compare calibration behavior
+        run: >-
+          python parity/compare_calibration.py
+          parity/fixtures/calibration.json
+          parity/results/r-calibration.json
+          parity/results/python-calibration.json
+          parity/results/calibration-report.json
+
       - name: Build stable API parity matrix
         run: >-
           python parity/build_matrix.py
@@ -201,6 +222,8 @@ jobs:
           parity/results/resampling-report.json
           parity/diagnostics_cases.csv
           parity/results/diagnostics-report.json
+          parity/calibration_cases.csv
+          parity/results/calibration-report.json
 
       - name: Upload parity evidence
         if: always()
