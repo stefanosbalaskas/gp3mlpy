@@ -23,4 +23,19 @@ options(error = function() {
   quit(save = "no", status = 1L, runLast = FALSE)
 })
 
-source("parity/run_r_target_uncertainty_impl.R", local = globalenv(), echo = FALSE)
+impl_path <- "parity/run_r_target_uncertainty_impl.R"
+impl_text <- readLines(impl_path, warn = FALSE)
+invalid_repeat_line <- "    repeat = as.integer(row$repeat),"
+repeat_matches <- which(impl_text == invalid_repeat_line)
+if (length(repeat_matches) != 1L) {
+  stop(
+    sprintf(
+      "Expected exactly one guarded target-uncertainty `repeat` parse repair, found %d.",
+      length(repeat_matches)
+    ),
+    call. = FALSE
+  )
+}
+impl_text[[repeat_matches]] <- "    `repeat` = as.integer(row$repeat),"
+parsed_impl <- parse(text = paste(impl_text, collapse = "\n"), keep.source = TRUE)
+eval(parsed_impl, envir = globalenv())
