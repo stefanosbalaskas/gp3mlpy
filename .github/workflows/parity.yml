@@ -205,6 +205,27 @@ jobs:
           parity/results/python-calibration.json
           parity/results/calibration-report.json
 
+      - name: Execute Python preprocessing fixtures
+        run: >-
+          python parity/run_python_preprocessing.py
+          parity/fixtures/preprocessing.json
+          parity/results/python-preprocessing.json
+
+      - name: Execute R preprocessing fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_preprocessing.R
+          parity/fixtures/preprocessing.json
+          parity/results/r-preprocessing.json
+
+      - name: Compare preprocessing behavior
+        run: >-
+          python parity/compare_preprocessing.py
+          parity/fixtures/preprocessing.json
+          parity/results/r-preprocessing.json
+          parity/results/python-preprocessing.json
+          parity/results/preprocessing-report.json
+
       - name: Build stable API parity matrix
         run: >-
           python parity/build_matrix.py
@@ -224,6 +245,8 @@ jobs:
           parity/results/diagnostics-report.json
           parity/calibration_cases.csv
           parity/results/calibration-report.json
+          parity/preprocessing_cases.csv
+          parity/results/preprocessing-report.json
 
       - name: Upload parity evidence
         if: always()
