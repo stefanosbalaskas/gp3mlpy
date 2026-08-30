@@ -36,6 +36,6 @@ if (length(repeat_matches) != 1L) {
     call. = FALSE
   )
 }
-impl_text[[repeat_matches]] <- "    `repeat` = as.integer(row$repeat),"
+impl_text[[repeat_matches]] <- "    `repeat` = as.integer(row[[\"repeat\"]]),"
 parsed_impl <- parse(text = paste(impl_text, collapse = "\n"), keep.source = TRUE)
 eval(parsed_impl, envir = globalenv())
