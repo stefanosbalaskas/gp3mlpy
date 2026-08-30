@@ -44,8 +44,19 @@ def _prepare_raw_frame(
                 value = float(preprocessor.numeric_imputation_values[name])
             frame[name] = numeric.fillna(value).astype(float)
         else:
+            logical = pd.api.types.is_bool_dtype(x.dtype)
             vals = x.astype(object).to_numpy()
-            text = np.asarray(["<missing>" if pd.isna(v) or str(v) == "" else str(v) for v in vals], dtype=object)
+            text_values: list[str] = []
+            for value in vals:
+                if pd.isna(value) or str(value) == "":
+                    text_values.append("<missing>")
+                elif logical:
+                    # R converts logical predictors to factor(FALSE, TRUE) before
+                    # model-matrix construction, so preserve those exact labels.
+                    text_values.append("TRUE" if bool(value) else "FALSE")
+                else:
+                    text_values.append(str(value))
+            text = np.asarray(text_values, dtype=object)
             if fit:
                 base = set(text.tolist())
                 if novel_level == "other":

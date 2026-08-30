@@ -42,9 +42,21 @@ scalar <- function(value) {
   as.character(value)
 }
 
+as_array <- function(values) {
+  if (is.null(values) || length(values) == 0L) return(list())
+  lapply(as.character(values), identity)
+}
+
 named_numeric <- function(values, order) {
   if (is.null(values) || length(values) == 0L) return(list())
   names_found <- names(values)
+  if (is.null(names_found) || length(names_found) == 0L) {
+    n <- min(length(values), length(order))
+    if (n == 0L) return(list())
+    return(lapply(seq_len(n), function(index) {
+      list(name = order[[index]], value = scalar(values[[index]]))
+    }))
+  }
   lapply(order[order %in% names_found], function(name) {
     list(name = name, value = scalar(values[[name]]))
   })
@@ -54,7 +66,7 @@ named_levels <- function(values, order) {
   if (is.null(values) || length(values) == 0L) return(list())
   names_found <- names(values)
   lapply(order[order %in% names_found], function(name) {
-    list(name = name, levels = as.character(values[[name]]))
+    list(name = name, levels = as_array(values[[name]]))
   })
 }
 
@@ -63,7 +75,7 @@ normalize_preprocessor <- function(value) {
   columns <- as.character(value$columns)
   list(
     class = class(value)[[1L]],
-    predictors = predictors,
+    predictors = as_array(predictors),
     numeric_imputation = value$numeric_imputation,
     numeric_imputation_values = named_numeric(
       value$numeric_imputation_values,
@@ -71,7 +83,7 @@ normalize_preprocessor <- function(value) {
     ),
     factor_levels = named_levels(value$factor_levels, predictors),
     novel_level = value$novel_level,
-    columns = columns,
+    columns = as_array(columns),
     center = named_numeric(value$center, columns),
     scale = named_numeric(value$scale, columns),
     remove_zero_variance = isTRUE(value$remove_zero_variance)
@@ -85,7 +97,7 @@ normalize_matrix <- function(value, columns) {
     lapply(as.numeric(matrix[index, , drop = TRUE]), scalar)
   })
   list(
-    columns = as.character(columns),
+    columns = as_array(columns),
     nrow = as.integer(nrow(matrix)),
     ncol = as.integer(ncol(matrix)),
     values = rows
