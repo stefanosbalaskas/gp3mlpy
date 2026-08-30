@@ -10,6 +10,26 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [{name = "Stefanos Balaskas"}]
+keywords = [
+  "gazepoint",
+  "eye-tracking",
+  "machine-learning",
+  "predictive-modeling",
+  "data-leakage",
+  "model-governance",
+  "nested-cross-validation",
+  "reproducible-research",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 dependencies = [
   "numpy>=2.0",
   "pandas>=2.2",
@@ -31,7 +51,10 @@ all = ["xgboost>=2.1", "keras>=3.10", "tensorflow>=2.21", "mapie>=1.0", "rocrate
 
 [project.urls]
 Homepage = "https://stefanosbalaskas.github.io/gp3mlpy/"
+Documentation = "https://stefanosbalaskas.github.io/gp3mlpy/"
 Repository = "https://github.com/stefanosbalaskas/gp3mlpy"
+Issues = "https://github.com/stefanosbalaskas/gp3mlpy/issues"
+Changelog = "https://github.com/stefanosbalaskas/gp3mlpy/blob/main/CHANGELOG.md"
 R-Reference = "https://github.com/stefanosbalaskas/gp3ml"
 
 [tool.hatch.build.targets.wheel]
