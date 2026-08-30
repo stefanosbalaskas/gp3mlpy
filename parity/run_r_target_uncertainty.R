@@ -25,6 +25,7 @@ options(error = function() {
 
 impl_path <- "parity/run_r_target_uncertainty_impl.R"
 impl_text <- readLines(impl_path, warn = FALSE)
+
 invalid_repeat_line <- "    repeat = as.integer(row$repeat),"
 repeat_matches <- which(impl_text == invalid_repeat_line)
 if (length(repeat_matches) != 1L) {
@@ -55,6 +56,51 @@ impl_text[[strings_matches[[1L]]]] <- paste(
   "    check.names = FALSE",
   sep = "\n"
 )
+
+repeat_call_line <- "repeat_uncertainty <- gp3ml::summarize_gazepoint_resample_uncertainty("
+repeat_call_matches <- which(impl_text == repeat_call_line)
+if (length(repeat_call_matches) != 1L) {
+  stop(
+    sprintf(
+      "Expected exactly one guarded frozen-R repeat-summary call, found %d.",
+      length(repeat_call_matches)
+    ),
+    call. = FALSE
+  )
+}
+repeat_call <- repeat_call_matches[[1L]]
+expected_repeat_call <- c(
+  repeat_call_line,
+  "  evaluation, unit = \"repeat\", conf_level = 0.90",
+  ")"
+)
+if (!identical(impl_text[repeat_call:(repeat_call + 2L)], expected_repeat_call)) {
+  stop("Frozen-R repeat-summary call no longer matches the guarded evidence shape.", call. = FALSE)
+}
+impl_text[[repeat_call]] <- paste(
+  "repeat_uncertainty <- capture_call(",
+  "  function() gp3ml::summarize_gazepoint_resample_uncertainty(",
+  "    evaluation, unit = \"repeat\", conf_level = 0.90",
+  "  ),",
+  "  normalize_resample_uncertainty",
+  ")",
+  sep = "\n"
+)
+impl_text[[repeat_call + 1L]] <- ""
+impl_text[[repeat_call + 2L]] <- ""
+
+repeat_summary_line <- "  repeat_summary = list(status = \"success\", value = normalize_resample_uncertainty(repeat_uncertainty)),"
+repeat_summary_matches <- which(impl_text == repeat_summary_line)
+if (length(repeat_summary_matches) != 1L) {
+  stop(
+    sprintf(
+      "Expected exactly one guarded repeat-summary evidence line, found %d.",
+      length(repeat_summary_matches)
+    ),
+    call. = FALSE
+  )
+}
+impl_text[[repeat_summary_matches[[1L]]]] <- "  repeat_summary = repeat_uncertainty,"
 
 parsed_impl <- parse(text = paste(impl_text, collapse = "\n"), keep.source = TRUE)
 eval(parsed_impl, envir = globalenv())
