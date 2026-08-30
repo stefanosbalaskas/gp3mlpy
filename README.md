@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="docs/assets/brand/gp3mlpy-mark.svg" width="165" alt="gp3mlpy package mark">
   <h1>gp3mlpy</h1>
   <p><strong>Governance-first, leakage-resistant predictive modelling for Gazepoint research workflows in Python.</strong></p>
 
