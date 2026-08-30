@@ -7,6 +7,9 @@ from collections import defaultdict
 from pathlib import Path
 
 
+ACCEPTED_TERMINAL = {"PASS", "EXPECTED-DIFFERENCE", "NOT-APPLICABLE"}
+
+
 def main() -> int:
     if len(sys.argv) < 5 or (len(sys.argv) - 3) % 2 != 0:
         raise SystemExit(
@@ -57,8 +60,17 @@ def main() -> int:
             comparison = ""
         else:
             statuses = [result_by_case[(name, row["case_id"])] for row in registered]
+            unknown = sorted(set(statuses) - ACCEPTED_TERMINAL - {"FAIL", "PENDING"})
+            if unknown:
+                raise RuntimeError(f"Unknown parity status for {name}: {unknown}")
             if any(value == "FAIL" for value in statuses):
                 status = "FAIL"
+            elif any(value == "PENDING" for value in statuses):
+                status = "PENDING"
+            elif any(value == "EXPECTED-DIFFERENCE" for value in statuses):
+                status = "EXPECTED-DIFFERENCE"
+            elif any(value == "NOT-APPLICABLE" for value in statuses):
+                status = "NOT-APPLICABLE"
             elif statuses and all(value == "PASS" for value in statuses):
                 status = "PASS"
             else:

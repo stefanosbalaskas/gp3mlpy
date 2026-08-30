@@ -12,7 +12,13 @@ STATUS_ONLY = {
     "fit_invalid_method_error",
     "fit_length_mismatch_error",
     "apply_invalid_calibrator_error",
-    "assess_length_mismatch_error",
+}
+
+EXPECTED_DIFFERENCES = {
+    "assess_length_mismatch_error": (
+        "Frozen R 0.3.0 recycles unequal truth/probability vectors with warnings, "
+        "while gp3mlpy rejects unequal lengths to prevent silent statistical recycling."
+    )
 }
 
 
@@ -65,27 +71,36 @@ def _compare(left: Any, right: Any, *, atol: float, rtol: float, path: str) -> l
     return errors
 
 
-def _compare_case(
+def _status_only_errors(case_id: str, r_value: Any, py_value: Any, path: str) -> list[str]:
+    errors: list[str] = []
+    r_status = r_value.get("status") if isinstance(r_value, dict) else None
+    py_status = py_value.get("status") if isinstance(py_value, dict) else None
+    if r_status != "error":
+        errors.append(f"{path}: R did not reject the invalid input (status={r_status!r})")
+    if py_status != "error":
+        errors.append(f"{path}: Python did not reject the invalid input (status={py_status!r})")
+    return errors
+
+
+def _expected_difference(
     case_id: str,
     r_value: Any,
     py_value: Any,
-    *,
-    atol: float,
-    rtol: float,
     path: str,
-) -> list[str]:
-    if case_id in STATUS_ONLY:
-        errors: list[str] = []
-        r_status = r_value.get("status") if isinstance(r_value, dict) else None
-        py_status = py_value.get("status") if isinstance(py_value, dict) else None
-        if r_status != "error":
-            errors.append(f"{path}: R did not reject the invalid input (status={r_status!r})")
-        if py_status != "error":
-            errors.append(
-                f"{path}: Python did not reject the invalid input (status={py_status!r})"
-            )
-        return errors
-    return _compare(r_value, py_value, atol=atol, rtol=rtol, path=path)
+) -> tuple[str, list[str], str]:
+    reason = EXPECTED_DIFFERENCES[case_id]
+    r_status = r_value.get("status") if isinstance(r_value, dict) else None
+    py_status = py_value.get("status") if isinstance(py_value, dict) else None
+    errors: list[str] = []
+    if r_status != "success":
+        errors.append(
+            f"{path}: expected frozen R to preserve recycling behavior, got status={r_status!r}"
+        )
+    if py_status != "error":
+        errors.append(
+            f"{path}: expected gp3mlpy safety guard to reject unequal lengths, got status={py_status!r}"
+        )
+    return ("FAIL" if errors else "EXPECTED-DIFFERENCE", errors, reason)
 
 
 def main() -> int:
@@ -127,26 +142,37 @@ def main() -> int:
         r_cases = r_result.get(group, {})
         py_cases = py_result.get(group, {})
         for case_id in sorted(set(r_cases) | set(py_cases)):
-            errors = _compare_case(
-                case_id,
-                r_cases.get(case_id),
-                py_cases.get(case_id),
-                atol=atol,
-                rtol=rtol,
-                path=f"{function_name}.{case_id}",
-            )
+            path = f"{function_name}.{case_id}"
+            reason = ""
+            if case_id in EXPECTED_DIFFERENCES:
+                status, errors, reason = _expected_difference(
+                    case_id, r_cases.get(case_id), py_cases.get(case_id), path
+                )
+            elif case_id in STATUS_ONLY:
+                errors = _status_only_errors(
+                    case_id, r_cases.get(case_id), py_cases.get(case_id), path
+                )
+                status = "PASS" if not errors else "FAIL"
+            else:
+                errors = _compare(
+                    r_cases.get(case_id),
+                    py_cases.get(case_id),
+                    atol=atol,
+                    rtol=rtol,
+                    path=path,
+                )
+                status = "PASS" if not errors else "FAIL"
             cases.append(
                 {
                     "function": function_name,
                     "case_id": case_id,
-                    "status": "PASS" if not errors else "FAIL",
+                    "status": status,
                     "errors": errors,
+                    "reason": reason,
                 }
             )
 
-    failed = bool(provenance_errors) or any(
-        case["status"] == "FAIL" for case in cases
-    )
+    failed = bool(provenance_errors) or any(case["status"] == "FAIL" for case in cases)
     report = {
         "schema_version": 1,
         "overall_status": "FAIL" if failed else "PASS",
@@ -163,6 +189,8 @@ def main() -> int:
     print(f"calibration parity: {report['overall_status']}")
     for case in cases:
         print(f"  {case['status']}: {case['function']}::{case['case_id']}")
+        if case["reason"]:
+            print(f"    {case['reason']}")
         for error in case["errors"]:
             print(f"    {error}")
     for error in provenance_errors:

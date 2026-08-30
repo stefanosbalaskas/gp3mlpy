@@ -41,6 +41,20 @@ Fixtures are defined once in `fixtures/core_metrics.json` and consumed by both
 R and Python runners. The comparison uses `1e-12` absolute and relative
 numeric tolerances, with missing numeric results normalized to JSON `null`.
 
+## Documented safety-strengthening differences
+
+Parity does not require gp3mlpy to reproduce behavior that would silently weaken
+an input-safety guarantee. Such cases remain executable and are classified as
+`EXPECTED-DIFFERENCE`; they are never silently removed from the evidence set.
+
+The first recorded case is calibration assessment with unequal `truth` and
+`probability` lengths. Frozen gp3ml 0.3.0 allows R vector recycling and emits
+warnings while continuing the calculation. gp3mlpy rejects unequal lengths
+before calculation. The calibration parity runner verifies both sides of this
+specific difference: the R call must retain the frozen recycling behavior and
+the Python call must retain the explicit rejection guard. A change on either
+side makes the case fail rather than pass by exception.
+
 ## Files
 
 - `fixtures/core_metrics.json`: shared deterministic inputs and tolerance policy;

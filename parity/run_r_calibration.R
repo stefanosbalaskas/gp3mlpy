@@ -309,6 +309,7 @@ jsonlite::write_json(
   auto_unbox = TRUE,
   pretty = TRUE,
   null = "null",
-  na = "null"
+  na = "null",
+  digits = 16
 )
 cat("\n", file = output_path, append = TRUE)
