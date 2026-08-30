@@ -6,13 +6,12 @@ import numpy as np
 import pandas as pd
 import pytest
 
-import gp3mlpy as gp
 from gp3mlpy import calibration as cal
 from gp3mlpy import metrics as met
 from gp3mlpy import target_uncertainty as tu
 from gp3mlpy import task_governance as tg
 from gp3mlpy.exceptions import GP3MLError
-from gp3mlpy.objects import GP3MLObject, GP3MLResampleUncertainty, GP3MLTargetUncertainty
+from gp3mlpy.objects import GP3MLResampleEvaluation, GP3MLTargetUncertainty
 
 
 def _classification_data(n: int = 20) -> pd.DataFrame:
@@ -367,12 +366,16 @@ def test_platt_isotonic_calibration_and_assessment_branches(monkeypatch):
     no_boot = cal.assess_gazepoint_calibration(
         truth, probability, positive="target", bins=2, bootstrap=0
     )
-    assert no_boot.draws.empty and no_boot.intervals.empty
+    assert no_boot.bootstrap == 0 and no_boot.intervals.empty
     with pytest.raises(GP3MLError, match="probability"):
         cal.assess_gazepoint_calibration(truth, [0.1])
 
     original = cal._fit_platt
-    monkeypatch.setattr(cal, "_fit_platt", lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError()))
+    monkeypatch.setattr(
+        cal,
+        "_fit_platt",
+        lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError()),
+    )
     summary, reliability = cal._calibration_core(
         np.array([0.0, 1.0]), np.array([0.2, 0.8]), 2
     )
@@ -505,12 +508,10 @@ def test_resample_uncertainty_fold_repeat_empty_nonfinite_and_writer(tmp_path: P
             "value": [0.7, 0.8, np.nan, 0.9],
         }
     )
-    evaluation = GP3MLObject(
-        r_class="ignored",
+    evaluation = GP3MLResampleEvaluation(
         metrics=metrics,
         generalization_target="new_participants",
     )
-    evaluation.r_class = "gp3ml_resample_evaluation"
     fold = tu.summarize_gazepoint_resample_uncertainty(evaluation, unit="fold")
     repeat = tu.summarize_gazepoint_resample_uncertainty(evaluation, unit="repeat")
     assert fold.summary.loc[0, "n_units"] == 3
