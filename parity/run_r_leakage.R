@@ -30,8 +30,8 @@ normalize_audit <- function(value) {
       participant_id = normalize_scalar(value$roles$participant_id),
       trial_id = normalize_scalar(value$roles$trial_id),
       stimulus_id = normalize_scalar(value$roles$stimulus_id),
-      target_derived = as.character(value$roles$target_derived),
-      post_outcome = as.character(value$roles$post_outcome)
+      target_derived = as.list(as.character(value$roles$target_derived)),
+      post_outcome = as.list(as.character(value$roles$post_outcome))
     ),
     partition_summary = normalize_frame(value$partition_summary),
     checks = normalize_frame(value$checks),
