@@ -226,6 +226,27 @@ jobs:
           parity/results/python-preprocessing.json
           parity/results/preprocessing-report.json
 
+      - name: Execute Python synthetic workflows fixtures
+        run: >-
+          python parity/run_python_synthetic.py
+          parity/fixtures/synthetic.json
+          parity/results/python-synthetic.json
+
+      - name: Execute R synthetic workflows fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_synthetic.R
+          parity/fixtures/synthetic.json
+          parity/results/r-synthetic.json
+
+      - name: Compare synthetic workflows behavior
+        run: >-
+          python parity/compare_synthetic.py
+          parity/fixtures/synthetic.json
+          parity/results/r-synthetic.json
+          parity/results/python-synthetic.json
+          parity/results/synthetic-report.json
+
       - name: Build stable API parity matrix
         run: >-
           python parity/build_matrix.py
@@ -247,6 +268,8 @@ jobs:
           parity/results/calibration-report.json
           parity/preprocessing_cases.csv
           parity/results/preprocessing-report.json
+          parity/synthetic_cases.csv
+          parity/results/synthetic-report.json
 
       - name: Upload parity evidence
         if: always()
