@@ -97,8 +97,10 @@ def evaluate_gazepoint_group_folds(
                 pywarnings.simplefilter("always")
                 analysis_task=_redeclare_task(fold_object.analysis,task)
                 role_validation=validate_gazepoint_ml_roles(fold_object.analysis,analysis_task,predictors,feature_manifest=folds.feature_manifest)
-                if role_validation.status=="fail": raise GP3MLError(f"Fold `{fold_object.fold_id}` failed role validation.")
-                if getattr(fold_object.leakage_audit,"status",None)=="fail": raise GP3MLError(f"Fold `{fold_object.fold_id}` failed its stored leakage audit.")
+                if role_validation.status=="fail":
+                    raise GP3MLError(f"Fold `{fold_object.fold_id}` failed role validation.")
+                if getattr(fold_object.leakage_audit,"status",None)=="fail":
+                    raise GP3MLError(f"Fold `{fold_object.fold_id}` failed its stored leakage audit.")
                 model=fit_gazepoint_model(fold_object.analysis,analysis_task,predictors,engine,preprocessor_args=preprocessor_args,engine_args=engine_args,seed=fold_seed,threshold=threshold)
                 prediction,probability=_predictions_from_model(model,fold_object.assessment,task)
                 prediction_table=_prediction_table(fold_object.assessment,task,fold_object,prediction,probability,source_row_id)
