@@ -36,6 +36,25 @@ if (length(repeat_matches) != 1L) {
     call. = FALSE
   )
 }
-impl_text[[repeat_matches]] <- "    `repeat` = as.integer(row[[\"repeat\"]]),"
+repeat_line <- repeat_matches[[1L]]
+impl_text[[repeat_line]] <- "    `repeat` = as.integer(row[[\"repeat\"]]),"
+
+frame_window <- seq.int(repeat_line, min(length(impl_text), repeat_line + 10L))
+strings_matches <- frame_window[impl_text[frame_window] == "    stringsAsFactors = FALSE"]
+if (length(strings_matches) != 1L) {
+  stop(
+    sprintf(
+      "Expected exactly one guarded target-uncertainty resample frame repair, found %d.",
+      length(strings_matches)
+    ),
+    call. = FALSE
+  )
+}
+impl_text[[strings_matches[[1L]]]] <- paste(
+  "    stringsAsFactors = FALSE,",
+  "    check.names = FALSE",
+  sep = "\n"
+)
+
 parsed_impl <- parse(text = paste(impl_text, collapse = "\n"), keep.source = TRUE)
 eval(parsed_impl, envir = globalenv())
