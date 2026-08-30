@@ -247,6 +247,27 @@ jobs:
           parity/results/python-synthetic.json
           parity/results/synthetic-report.json
 
+      - name: Execute Python target-uncertainty fixtures
+        run: >-
+          python parity/run_python_target_uncertainty.py
+          parity/fixtures/target_uncertainty.json
+          parity/results/python-target-uncertainty.json
+
+      - name: Execute R target-uncertainty fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_target_uncertainty.R
+          parity/fixtures/target_uncertainty.json
+          parity/results/r-target-uncertainty.json
+
+      - name: Compare target-uncertainty behavior
+        run: >-
+          python parity/compare_target_uncertainty.py
+          parity/fixtures/target_uncertainty.json
+          parity/results/r-target-uncertainty.json
+          parity/results/python-target-uncertainty.json
+          parity/results/target-uncertainty-report.json
+
       - name: Build stable API parity matrix
         run: >-
           python parity/build_matrix.py
@@ -270,6 +291,8 @@ jobs:
           parity/results/preprocessing-report.json
           parity/synthetic_cases.csv
           parity/results/synthetic-report.json
+          parity/target_uncertainty_cases.csv
+          parity/results/target-uncertainty-report.json
 
       - name: Upload parity evidence
         if: always()
