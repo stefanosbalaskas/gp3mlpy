@@ -30,7 +30,11 @@ frame <- function(data) {
 
 capture_case <- function(call, normalize) {
   tryCatch(
-    list(status = "success", value = normalize(call())),
+    {
+      value <- call()
+      force(value)
+      list(status = "success", value = normalize(value))
+    },
     error = function(error) list(status = "error", message = conditionMessage(error))
   )
 }
