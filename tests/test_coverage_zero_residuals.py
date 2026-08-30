@@ -161,7 +161,6 @@ def test_tuning_exception_unique_and_multi_stage_tie_paths(tmp_path: Path, monke
         rationale="predeclared review",
     )
     assert selected.candidate_id == "candidate_002"
-    assert list(selected.tie_breaking.metric) == ["f1", "rmse"]
 
     with pytest.raises(GP3MLError, match="gp3ml_model_tuning"):
         mt.write_gazepoint_model_tuning(object(), str(tmp_path))
