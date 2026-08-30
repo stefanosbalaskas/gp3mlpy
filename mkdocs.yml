@@ -11,8 +11,6 @@ strict: true
 
 theme:
   name: material
-  logo: assets/brand/gp3mlpy-mark.svg
-  favicon: assets/brand/gp3mlpy-mark.svg
   icon:
     repo: fontawesome/brands/github
   features:
