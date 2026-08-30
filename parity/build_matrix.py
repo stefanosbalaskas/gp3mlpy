@@ -8,12 +8,16 @@ from pathlib import Path
 
 
 def main() -> int:
-    if len(sys.argv) != 5:
+    if len(sys.argv) < 5 or (len(sys.argv) - 3) % 2 != 0:
         raise SystemExit(
-            "Usage: python parity/build_matrix.py <r-api.csv> <case-registry.csv> <core-report.json> <output.csv>"
+            "Usage: python parity/build_matrix.py <r-api.csv> <output.csv> "
+            "<case-registry.csv> <report.json> [<case-registry.csv> <report.json> ...]"
         )
 
-    api_path, cases_path, report_path, output_path = map(Path, sys.argv[1:])
+    api_path = Path(sys.argv[1])
+    output_path = Path(sys.argv[2])
+    evidence_paths = [Path(value) for value in sys.argv[3:]]
+    evidence_pairs = list(zip(evidence_paths[0::2], evidence_paths[1::2], strict=True))
 
     with api_path.open(newline="", encoding="utf-8") as handle:
         api_rows = list(csv.DictReader(handle))
@@ -23,17 +27,25 @@ def main() -> int:
     if {row["r_reference_version"] for row in stable} != {"0.3.0"}:
         raise RuntimeError("Stable API inventory is not uniformly pinned to R 0.3.0.")
 
-    with cases_path.open(newline="", encoding="utf-8") as handle:
-        case_rows = list(csv.DictReader(handle))
-    report = json.loads(report_path.read_text(encoding="utf-8"))
-
-    result_by_case = {
-        (row["function"], row["case_id"]): row["status"]
-        for row in report["cases"]
-    }
+    result_by_case: dict[tuple[str, str], str] = {}
     cases_by_function: dict[str, list[dict[str, str]]] = defaultdict(list)
-    for row in case_rows:
-        cases_by_function[row["function"]].append(row)
+    seen_cases: set[tuple[str, str]] = set()
+
+    for cases_path, report_path in evidence_pairs:
+        with cases_path.open(newline="", encoding="utf-8") as handle:
+            case_rows = list(csv.DictReader(handle))
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        report_cases = {
+            (row["function"], row["case_id"]): row["status"]
+            for row in report["cases"]
+        }
+        for row in case_rows:
+            key = (row["function"], row["case_id"])
+            if key in seen_cases:
+                raise RuntimeError(f"Duplicate parity case registration: {key[0]}::{key[1]}")
+            seen_cases.add(key)
+            cases_by_function[row["function"]].append(row)
+            result_by_case[key] = report_cases.get(key, "PENDING")
 
     output_rows: list[dict[str, str]] = []
     for api in stable:
@@ -44,7 +56,7 @@ def main() -> int:
             evidence = ""
             comparison = ""
         else:
-            statuses = [result_by_case.get((name, row["case_id"]), "PENDING") for row in registered]
+            statuses = [result_by_case[(name, row["case_id"])] for row in registered]
             if any(value == "FAIL" for value in statuses):
                 status = "FAIL"
             elif statuses and all(value == "PASS" for value in statuses):

@@ -8,6 +8,7 @@ on:
       - 'parity/**'
       - 'reference/r_api_inventory.csv'
       - 'src/gp3mlpy/**'
+      - 'tests/test_r_parity_*.py'
       - 'pyproject.toml'
       - '.github/workflows/parity.yml'
   pull_request:
@@ -15,6 +16,7 @@ on:
       - 'parity/**'
       - 'reference/r_api_inventory.csv'
       - 'src/gp3mlpy/**'
+      - 'tests/test_r_parity_*.py'
       - 'pyproject.toml'
       - '.github/workflows/parity.yml'
   workflow_dispatch:
@@ -69,7 +71,7 @@ jobs:
           parity/fixtures/core_metrics.json
           parity/results/r-core.json
 
-      - name: Compare deterministic R/Python behavior
+      - name: Compare deterministic core behavior
         run: >-
           python parity/compare_core.py
           parity/fixtures/core_metrics.json
@@ -77,18 +79,41 @@ jobs:
           parity/results/python-core.json
           parity/results/core-report.json
 
+      - name: Execute Python governance fixtures
+        run: >-
+          python parity/run_python_governance.py
+          parity/fixtures/governance.json
+          parity/results/python-governance.json
+
+      - name: Execute R governance fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_governance.R
+          parity/fixtures/governance.json
+          parity/results/r-governance.json
+
+      - name: Compare governance behavior
+        run: >-
+          python parity/compare_governance.py
+          parity/fixtures/governance.json
+          parity/results/r-governance.json
+          parity/results/python-governance.json
+          parity/results/governance-report.json
+
       - name: Build stable API parity matrix
         run: >-
           python parity/build_matrix.py
           reference/r_api_inventory.csv
+          parity/results/stable-api-matrix.csv
           parity/core_cases.csv
           parity/results/core-report.json
-          parity/results/stable-api-matrix.csv
+          parity/governance_cases.csv
+          parity/results/governance-report.json
 
       - name: Upload parity evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: gp3ml-r-python-core-parity
+          name: gp3ml-r-python-parity
           path: parity/results/
           if-no-files-found: warn
