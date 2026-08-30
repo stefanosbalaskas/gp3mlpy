@@ -1,0 +1,82 @@
+name: R/Python metrics and engine parity tranche
+
+on:
+  push:
+    branches:
+      - parity/r-0.3.0-behavioral-freeze
+    paths:
+      - 'parity/metrics_engines_cases.csv'
+      - 'parity/fixtures/metrics_engines.json'
+      - 'parity/run_python_metrics_engines.py'
+      - 'parity/run_r_metrics_engines.R'
+      - 'parity/compare_metrics_engines.py'
+      - '.github/workflows/parity-metrics-engines.yml'
+      - 'src/gp3mlpy/metrics.py'
+      - 'src/gp3mlpy/model_engines.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  metrics-engines:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          use-public-rspm: true
+
+      - name: Install gp3mlpy
+        run: python -m pip install -e .
+
+      - name: Install R parity helper
+        shell: bash
+        run: Rscript -e 'install.packages("jsonlite", repos="https://cloud.r-project.org")'
+
+      - name: Download frozen gp3ml 0.3.0 archive
+        shell: bash
+        run: |
+          curl --fail --location --retry 3 \
+            --output /tmp/gp3ml_0.3.0.tar.gz \
+            https://github.com/stefanosbalaskas/gp3ml/releases/download/v0.3.0/gp3ml_0.3.0.tar.gz
+          echo '04c5fdb017c63ecbf6f5e85c29fff6492880201a2f2aa5c3c1d3fe998e60bae6  /tmp/gp3ml_0.3.0.tar.gz' | sha256sum --check
+
+      - name: Install frozen gp3ml reference
+        shell: bash
+        run: R CMD INSTALL /tmp/gp3ml_0.3.0.tar.gz
+
+      - name: Execute Python metrics/engines fixtures
+        run: >-
+          python parity/run_python_metrics_engines.py
+          parity/fixtures/metrics_engines.json
+          parity/results/python-metrics-engines.json
+
+      - name: Execute R metrics/engines fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_metrics_engines.R
+          parity/fixtures/metrics_engines.json
+          parity/results/r-metrics-engines.json
+
+      - name: Compare metrics/engines behavior
+        run: >-
+          python parity/compare_metrics_engines.py
+          parity/fixtures/metrics_engines.json
+          parity/results/r-metrics-engines.json
+          parity/results/python-metrics-engines.json
+          parity/results/metrics-engines-report.json
+
+      - name: Upload metrics/engines evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gp3ml-r-python-metrics-engines
+          path: parity/results/
+          if-no-files-found: warn
