@@ -18,7 +18,6 @@ from gp3mlpy import robustness as rb
 from gp3mlpy.exceptions import GP3MLError
 from gp3mlpy.objects import (
     GP3MLCalibrationAssessment,
-    GP3MLModelArtifact,
     GP3MLModelSelection,
     GP3MLResampleUncertainty,
     GP3MLStabilityEvaluation,
@@ -111,7 +110,9 @@ def test_reproducibility_normalization_audit_and_environment_restore(tmp_path: P
         repro.write_gazepoint_reproducibility_audit(audit, tmp_path / "audit")
 
     monkeypatch.delenv("GP3MLPY_REPRODUCIBLE_EXAMPLES", raising=False)
-    assert repro.with_gazepoint_reproducible_output(lambda: os.environ["GP3MLPY_REPRODUCIBLE_EXAMPLES"]) == "1"
+    assert repro.with_gazepoint_reproducible_output(
+        lambda: os.environ["GP3MLPY_REPRODUCIBLE_EXAMPLES"]
+    ) == "1"
     assert "GP3MLPY_REPRODUCIBLE_EXAMPLES" not in os.environ
     monkeypatch.setenv("GP3MLPY_REPRODUCIBLE_EXAMPLES", "old")
     assert repro.with_gazepoint_reproducible_output(7) == 7
@@ -207,11 +208,15 @@ def test_robustness_stability_helpers_and_statuses():
     review_eval = GP3MLThresholdEvaluation(
         thresholds=pd.DataFrame({"threshold": [0.10, 0.15, 0.30], "score": [1.0, 0.99, 0.8]})
     )
-    assert rb.evaluate_gazepoint_threshold_stability(review_eval, "score", tolerance=0.02).status == "review"
+    assert rb.evaluate_gazepoint_threshold_stability(
+        review_eval, "score", tolerance=0.02
+    ).status == "review"
     unstable_eval = GP3MLThresholdEvaluation(
         thresholds=pd.DataFrame({"threshold": [0.10, 0.20], "score": [1.0, 0.5]})
     )
-    assert rb.evaluate_gazepoint_threshold_stability(unstable_eval, "score", tolerance=0.01).status == "unstable"
+    assert rb.evaluate_gazepoint_threshold_stability(
+        unstable_eval, "score", tolerance=0.01
+    ).status == "unstable"
     minimize_eval = GP3MLThresholdEvaluation(
         thresholds=pd.DataFrame({"threshold": [0.10, 0.20], "loss": [0.10, 0.11]})
     )
@@ -276,7 +281,11 @@ def test_model_artifact_validation_portability_and_private_helpers(tmp_path: Pat
     with pytest.raises(GP3MLError, match="missing model predictors"):
         ma._schema(model, data.drop(columns=[PREDICTORS[0]]))
 
-    monkeypatch.setattr(ma.subprocess, "run", lambda *a, **k: (_ for _ in ()).throw(OSError("no git")))
+    monkeypatch.setattr(
+        ma.subprocess,
+        "run",
+        lambda *a, **k: (_ for _ in ()).throw(OSError("no git")),
+    )
     assert ma._git_sha(tmp_path.as_posix()) is None
 
     assert ma._safe_model_fingerprint(None) == {"model": None}
@@ -397,7 +406,11 @@ def test_governance_reports_model_cards_external_validation_and_reproducibility(
     no_git = gr._git_info(tmp_path / "not-a-repo")
     assert no_git == {"commit": None, "branch": None, "clean": None}
     repro_report = gr.create_gazepoint_reproducibility_report(
-        objects={"task": task}, data=data.iloc[:3], seeds={"model": 71}, notes="synthetic", project_path=tmp_path
+        objects={"task": task},
+        data=data.iloc[:3],
+        seeds={"model": 71},
+        notes="synthetic",
+        project_path=tmp_path,
     )
     out = Path(gr.write_gazepoint_reproducibility_report(repro_report, tmp_path / "repro.md"))
     text = out.read_text(encoding="utf-8")
@@ -425,11 +438,17 @@ def test_release_reporting_evidence_and_validation_paths(tmp_path: Path):
     with pytest.raises(GP3MLError, match="explicit limitation"):
         rr.create_gazepoint_release_model_card(model, "research", limitations=[])
     with pytest.raises(GP3MLError, match="selection"):
-        rr.create_gazepoint_release_model_card(model, "research", selection=object(), limitations=["x"])
+        rr.create_gazepoint_release_model_card(
+            model, "research", selection=object(), limitations=["x"]
+        )
     with pytest.raises(GP3MLError, match="uncertainty"):
-        rr.create_gazepoint_release_model_card(model, "research", uncertainty=object(), limitations=["x"])
+        rr.create_gazepoint_release_model_card(
+            model, "research", uncertainty=object(), limitations=["x"]
+        )
     with pytest.raises(GP3MLError, match="transportability"):
-        rr.create_gazepoint_release_model_card(model, "research", transportability=object(), limitations=["x"])
+        rr.create_gazepoint_release_model_card(
+            model, "research", transportability=object(), limitations=["x"]
+        )
 
     card = rr.create_gazepoint_release_model_card(
         model,
@@ -485,9 +504,13 @@ def test_release_reporting_evidence_and_validation_paths(tmp_path: Path):
     assert "fold distribution" in detailed_text
     assert not rr._release_card_selection(selection).empty
     assert not rr._release_card_uncertainty(uncertainty).empty
-    target_uncertainty = GP3MLTargetUncertainty(intervals=pd.DataFrame({"metric": ["m"], "lower": [0.1]}))
+    target_uncertainty = GP3MLTargetUncertainty(
+        intervals=pd.DataFrame({"metric": ["m"], "lower": [0.1]})
+    )
     assert rr._release_card_uncertainty(target_uncertainty).shape[0] == 1
-    assert rr._release_card_metrics(object()).empty
+    unsupported_card = card.__deepcopy__({})
+    unsupported_card.evaluation = object()
+    assert rr._release_card_metrics(unsupported_card).empty
 
     file_path = tmp_path / "artifact.txt"
     file_path.write_text("release\n", encoding="utf-8")
