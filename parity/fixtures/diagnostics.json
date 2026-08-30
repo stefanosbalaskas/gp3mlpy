@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "r_reference": {"package": "gp3ml", "version": "0.3.0"},
+  "numeric_tolerance": {"absolute": 1e-12, "relative": 1e-12},
+  "success_cases": [
+    {"id": "diagnostics_participants", "target": "new_participants", "v": 3, "repeats": 2, "outcome_type": "categorical"},
+    {"id": "diagnostics_stimuli", "target": "new_stimuli", "v": 2, "repeats": 2, "outcome_type": "categorical"},
+    {"id": "diagnostics_trials_numeric", "target": "new_trials_known_participants", "v": 3, "repeats": 2, "outcome_type": "numeric"},
+    {"id": "diagnostics_crossed", "target": "new_participants_and_new_stimuli", "v": [3, 2], "repeats": 1, "outcome_type": "categorical"},
+    {"id": "diagnostics_numeric", "target": "new_participants", "v": 3, "repeats": 1, "outcome_type": "numeric"},
+    {"id": "diagnostics_sparse_outcome", "target": "new_participants", "v": 3, "repeats": 1, "outcome_type": "categorical", "sparse_first_assessment": true}
+  ],
+  "error_cases": [
+    {"id": "diagnostics_invalid_object", "kind": "invalid_object"},
+    {"id": "diagnostics_bad_review_threshold", "kind": "bad_review_threshold"},
+    {"id": "diagnostics_threshold_order", "kind": "threshold_order"},
+    {"id": "diagnostics_missing_component", "kind": "missing_component"},
+    {"id": "diagnostics_missing_summary_column", "kind": "missing_summary_column"},
+    {"id": "diagnostics_missing_outcome_column", "kind": "missing_outcome_column"}
+  ],
+  "validation_cases": [
+    {"id": "diagnostics_validation_clean", "kind": "clean"},
+    {"id": "diagnostics_validation_damaged_coverage", "kind": "damaged_coverage"},
+    {"id": "diagnostics_validation_review_imbalance", "kind": "review_imbalance"},
+    {"id": "diagnostics_validation_fail_imbalance", "kind": "fail_imbalance"},
+    {"id": "diagnostics_validation_missing_level", "kind": "missing_level"},
+    {"id": "diagnostics_validation_invalid_object", "kind": "invalid_object"},
+    {"id": "diagnostics_validation_missing_component", "kind": "missing_component"}
+  ],
+  "writer_cases": [
+    {"id": "diagnostics_writer_selected", "kind": "selected"},
+    {"id": "diagnostics_writer_overwrite", "kind": "overwrite"},
+    {"id": "diagnostics_writer_unknown_table", "kind": "unknown_table"},
+    {"id": "diagnostics_writer_bad_overwrite", "kind": "bad_overwrite"},
+    {"id": "diagnostics_writer_invalid_object", "kind": "invalid_object"}
+  ]
+}

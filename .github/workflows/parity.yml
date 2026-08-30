@@ -163,6 +163,27 @@ jobs:
           parity/results/python-resampling.json
           parity/results/resampling-report.json
 
+      - name: Execute Python fold-diagnostics fixtures
+        run: >-
+          python parity/run_python_diagnostics.py
+          parity/fixtures/diagnostics.json
+          parity/results/python-diagnostics.json
+
+      - name: Execute R fold-diagnostics fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_diagnostics.R
+          parity/fixtures/diagnostics.json
+          parity/results/r-diagnostics.json
+
+      - name: Compare fold-diagnostics behavior
+        run: >-
+          python parity/compare_diagnostics.py
+          parity/fixtures/diagnostics.json
+          parity/results/r-diagnostics.json
+          parity/results/python-diagnostics.json
+          parity/results/diagnostics-report.json
+
       - name: Build stable API parity matrix
         run: >-
           python parity/build_matrix.py
@@ -178,6 +199,8 @@ jobs:
           parity/results/splitting-report.json
           parity/resampling_cases.csv
           parity/results/resampling-report.json
+          parity/diagnostics_cases.csv
+          parity/results/diagnostics-report.json
 
       - name: Upload parity evidence
         if: always()
