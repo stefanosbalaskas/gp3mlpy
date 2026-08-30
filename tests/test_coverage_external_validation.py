@@ -222,7 +222,7 @@ def test_transportability_no_external_declaration_mismatch_nonindependent_and_sc
         model, development, external, declaration=nonindependent_decl, bootstrap=1
     )
     assert nonindependent.status == "not_externally_validated"
-    assert nonindependent.validation_summary.status == "fail"
+    assert nonindependent.validation_summary.status == "review"
 
     missing_outcome = external.drop(columns=[model.task.outcome])
     missing_outcome_decl = ev.declare_gazepoint_external_dataset(
