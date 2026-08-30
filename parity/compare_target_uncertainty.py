@@ -15,6 +15,15 @@ STATUS_ONLY = {
     ("write_gazepoint_target_uncertainty", "overwrite_refusal"),
 }
 
+EXPECTED_DIFFERENCES = {
+    ("summarize_gazepoint_resample_uncertainty", "repeat_summary"): (
+        "Frozen R 0.3.0 fails when repeat-level uncertainty evaluates its reserved "
+        "`repeat` column in the aggregate formula, while gp3mlpy returns the intended "
+        "repeat-level uncertainty summary. The Python behavior is retained rather than "
+        "porting the frozen R reference defect."
+    )
+}
+
 SECTION_BY_FUNCTION = {
     "bootstrap_gazepoint_metrics_by_unit": "bootstrap_cases",
     "summarize_gazepoint_resample_uncertainty": "summarize_cases",
@@ -67,6 +76,47 @@ def _status_only(r_case: Any, py_case: Any, path: str) -> list[str]:
     if py_status != "error":
         errors.append(f"{path}: Python did not reject invalid input (status={py_status!r})")
     return errors
+
+
+def _expected_difference(
+    function_name: str,
+    case_id: str,
+    r_case: Any,
+    py_case: Any,
+    path: str,
+) -> tuple[str, list[str], str]:
+    reason = EXPECTED_DIFFERENCES[(function_name, case_id)]
+    errors: list[str] = []
+    r_status = r_case.get("status") if isinstance(r_case, dict) else None
+    py_status = py_case.get("status") if isinstance(py_case, dict) else None
+    if r_status != "error":
+        errors.append(
+            f"{path}: expected frozen R repeat-summary defect, got status={r_status!r}"
+        )
+    else:
+        message = str(r_case.get("message", ""))
+        if "invalid argument to unary operator" not in message:
+            errors.append(
+                f"{path}: frozen R failed for an unexpected reason: {message!r}"
+            )
+    if py_status != "success":
+        errors.append(
+            f"{path}: expected gp3mlpy repeat summary to succeed, got status={py_status!r}"
+        )
+    else:
+        value = py_case.get("value")
+        if not isinstance(value, dict):
+            errors.append(f"{path}: Python success value is not an object")
+        else:
+            if value.get("class") != "gp3ml_resample_uncertainty":
+                errors.append(
+                    f"{path}: Python returned unexpected class {value.get('class')!r}"
+                )
+            if value.get("unit") != "repeat":
+                errors.append(
+                    f"{path}: Python returned unexpected unit {value.get('unit')!r}"
+                )
+    return ("FAIL" if errors else "EXPECTED-DIFFERENCE", errors, reason)
 
 
 def _checks_true(value: Any, runtime: str, path: str) -> list[str]:
@@ -201,10 +251,17 @@ def main() -> int:
             r_case = r_cases.get(case_id)
             py_case = py_cases.get(case_id)
             path = f"{function_name}.{case_id}"
-            if (function_name, case_id) in STATUS_ONLY:
+            reason = ""
+            if (function_name, case_id) in EXPECTED_DIFFERENCES:
+                status, errors, reason = _expected_difference(
+                    function_name, case_id, r_case, py_case, path
+                )
+            elif (function_name, case_id) in STATUS_ONLY:
                 errors = _status_only(r_case, py_case, path)
+                status = "PASS" if not errors else "FAIL"
             elif function_name == "bootstrap_gazepoint_metrics_by_unit" and case_id == "regression_observation":
                 errors = _compare_regression_bootstrap(r_case, py_case, fixture, path)
+                status = "PASS" if not errors else "FAIL"
             else:
                 errors = _compare(r_case, py_case, path)
                 if (
@@ -216,12 +273,14 @@ def main() -> int:
                 ):
                     errors.extend(_checks_true(r_case.get("value"), "R", path))
                     errors.extend(_checks_true(py_case.get("value"), "Python", path))
+                status = "PASS" if not errors else "FAIL"
             cases.append(
                 {
                     "function": function_name,
                     "case_id": case_id,
-                    "status": "PASS" if not errors else "FAIL",
+                    "status": status,
                     "errors": errors,
+                    "reason": reason,
                 }
             )
 
@@ -242,6 +301,8 @@ def main() -> int:
     print(f"target uncertainty parity: {report['overall_status']}")
     for case in cases:
         print(f"  {case['status']}: {case['function']}::{case['case_id']}")
+        if case["reason"]:
+            print(f"    {case['reason']}")
         for error in case["errors"]:
             print(f"    {error}")
     for error in provenance_errors:
