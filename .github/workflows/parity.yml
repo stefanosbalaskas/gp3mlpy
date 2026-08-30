@@ -142,6 +142,27 @@ jobs:
           parity/results/python-splitting.json
           parity/results/splitting-report.json
 
+      - name: Execute Python group-resampling fixtures
+        run: >-
+          python parity/run_python_resampling.py
+          parity/fixtures/resampling.json
+          parity/results/python-resampling.json
+
+      - name: Execute R group-resampling fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_resampling.R
+          parity/fixtures/resampling.json
+          parity/results/r-resampling.json
+
+      - name: Compare group-resampling behavior
+        run: >-
+          python parity/compare_resampling.py
+          parity/fixtures/resampling.json
+          parity/results/r-resampling.json
+          parity/results/python-resampling.json
+          parity/results/resampling-report.json
+
       - name: Build stable API parity matrix
         run: >-
           python parity/build_matrix.py
@@ -155,6 +176,8 @@ jobs:
           parity/results/leakage-report.json
           parity/splitting_cases.csv
           parity/results/splitting-report.json
+          parity/resampling_cases.csv
+          parity/results/resampling-report.json
 
       - name: Upload parity evidence
         if: always()
