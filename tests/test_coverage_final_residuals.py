@@ -71,8 +71,7 @@ def test_repr_api_and_object_fallbacks():
     assert reps._component(object(), "missing", 7) == 7
 
     capabilities = GP3MLEngineCapabilities(engine=["glm"], status=["pass"])
-    rendered = reps.render_r_print(capabilities)
-    assert "gp3ml_engine_capabilities" in rendered
+    assert "gp3ml_engine_capabilities" in reps.render_r_print(capabilities)
 
     schema = ac.gp3ml_object_schema({"outer": {"inner": 1}}, recursive=True)
     assert "outer$inner" in schema.component.tolist()
@@ -124,8 +123,7 @@ def test_governance_report_calibration_and_git_command_paths(tmp_path: Path, mon
         limitations=["limit"],
     )
     text = "\n".join(gr._model_card_markdown(card))
-    assert "ece" in text
-    assert "attached" in text
+    assert "ece" in text and "attached" in text
 
     repo = tmp_path / "repo"
     (repo / ".git").mkdir(parents=True)
@@ -136,15 +134,13 @@ def test_governance_report_calibration_and_git_command_paths(tmp_path: Path, mon
 
     values = iter(["abc123\n", "main\n", ""])
     monkeypatch.setattr(gr.subprocess, "run", lambda *args, **kwargs: Result(next(values)))
-    info = gr._git_info(repo)
-    assert info == {"commit": "abc123", "branch": "main", "clean": True}
+    assert gr._git_info(repo) == {"commit": "abc123", "branch": "main", "clean": True}
 
     def fail_run(*args, **kwargs):
         raise RuntimeError("git unavailable")
 
     monkeypatch.setattr(gr.subprocess, "run", fail_run)
-    failed = gr._git_info(repo)
-    assert failed == {"commit": None, "branch": None, "clean": None}
+    assert gr._git_info(repo) == {"commit": None, "branch": None, "clean": None}
 
 
 def test_model_artifact_metadata_hash_and_prediction_fallbacks(monkeypatch):
@@ -180,12 +176,11 @@ def test_model_artifact_metadata_hash_and_prediction_fallbacks(monkeypatch):
     unknown = ma.create_gazepoint_model_artifact(dummy("custom"), bundle_model=False)
     assert unknown.metadata["engine_version"] is None
 
-    non_string = ma.create_gazepoint_model_artifact(dummy(object()), bundle_model=False)
+    non_string = ma.create_gazepoint_model_artifact(dummy(123), bundle_model=False)
     assert non_string.metadata["engine_version"] is None
 
     malformed = GP3MLModelArtifact(model=None, task=None, predictor_schema=None, metadata=None)
-    validation = ma.validate_gazepoint_model_artifact(malformed)
-    assert validation.status == "fail"
+    assert ma.validate_gazepoint_model_artifact(malformed).status == "fail"
 
     tampered = deepcopy(known)
     tampered.artifact_hash = "not-the-real-hash"
@@ -206,11 +201,7 @@ def test_tuning_all_failed_ties_and_writer_guards(tmp_path: Path, monkeypatch):
     task = SimpleNamespace(task_type="classification", generalization_target="new_participants")
     fake_evaluation = SimpleNamespace(
         fold_status=pd.DataFrame(
-            {
-                "status": ["fail", "fail"],
-                "error": ["first", "second"],
-                "warnings": ["warn", None],
-            }
+            {"status": ["fail", "fail"], "error": ["first", "second"], "warnings": ["warn", None]}
         ),
         metrics=pd.DataFrame(),
         validation=SimpleNamespace(status="review"),
@@ -239,9 +230,7 @@ def test_tuning_all_failed_ties_and_writer_guards(tmp_path: Path, monkeypatch):
     with pytest.raises(GP3MLError, match="gp3ml_model_tuning"):
         mt.select_gazepoint_model(object(), "roc_auc", "maximize", rationale="review")
 
-    tie_grid = mt.create_gazepoint_tuning_grid(
-        ["glm", "ranger"], complexity=[np.nan, np.nan]
-    )
+    tie_grid = mt.create_gazepoint_tuning_grid(["glm", "ranger"], complexity=[np.nan, np.nan])
     comparison = pd.DataFrame(
         [
             {"candidate_id": "candidate_001", "metric": "roc_auc", "candidate_status": "pass", "success_prop": 1.0, "mean": 0.8},
@@ -285,10 +274,7 @@ def test_external_transportability_empty_metrics_and_calibration_drift(monkeypat
 
     assert "complex" in ev._column_class(pd.Series([1 + 2j]))
     no_external = ev.evaluate_gazepoint_external_transportability(
-        model,
-        data,
-        external_data=None,
-        threshold=0.4,
+        model, data, external_data=None, threshold=0.4
     )
     assert no_external.status == "not_externally_validated"
 
@@ -305,16 +291,11 @@ def test_external_transportability_empty_metrics_and_calibration_drift(monkeypat
     )
 
     empty_validation = GP3MLExternalValidation(
-        metrics=pd.DataFrame(),
-        shift=pd.DataFrame(),
-        calibration=None,
+        metrics=pd.DataFrame(), shift=pd.DataFrame(), calibration=None
     )
     monkeypatch.setattr(ev, "evaluate_external_validation", lambda *args, **kwargs: empty_validation)
     empty_report = ev.evaluate_gazepoint_external_transportability(
-        model,
-        data,
-        external,
-        declaration,
+        model, data, external, declaration
     )
     assert empty_report.performance_comparison.empty
 
@@ -392,7 +373,8 @@ def test_grouped_nested_excluded_rows_and_diagnostic_string_outcome(monkeypatch)
         for part in ("analysis", "assessment", "excluded"):
             fold[part][simple_task.outcome] = fold[part][simple_task.outcome].astype(str)
     diagnostics = rd.diagnose_gazepoint_group_folds(string_folds)
-    assert not diagnostics.outcome_distribution.empty
+    assert diagnostics.metadata["outcome_type"] == "categorical"
+    assert not diagnostics.fold_metrics.empty
 
     nested = nr.create_gazepoint_nested_folds(
         folds,
