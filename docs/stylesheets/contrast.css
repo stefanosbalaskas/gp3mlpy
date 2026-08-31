@@ -1,0 +1,15 @@
+.gp-reference-hero .gp-kicker,
+.gp-diagnostics-hero .gp-kicker,
+.gp-api-intro .gp-kicker {
+  color: var(--gp-blue-700);
+}
+
+[data-md-color-scheme="slate"] .gp-reference-hero .gp-kicker,
+[data-md-color-scheme="slate"] .gp-diagnostics-hero .gp-kicker,
+[data-md-color-scheme="slate"] .gp-api-intro .gp-kicker,
+[data-md-color-scheme="slate"] .gp-reference-stats strong,
+[data-md-color-scheme="slate"] .gp-diagnostics-stats strong,
+[data-md-color-scheme="slate"] .gp-api-jump span,
+[data-md-color-scheme="slate"] .gp-gallery-card span {
+  color: var(--gp-sky-200);
+}
