@@ -1,121 +1,53 @@
 <div align="center">
-  <h1>gp3mlpy</h1>
-  <p><strong>Governance-first, leakage-resistant predictive modelling for Gazepoint research workflows in Python.</strong></p>
 
-  [![CI](https://github.com/stefanosbalaskas/gp3mlpy/actions/workflows/ci.yml/badge.svg)](https://github.com/stefanosbalaskas/gp3mlpy/actions/workflows/ci.yml)
-  [![Documentation](https://github.com/stefanosbalaskas/gp3mlpy/actions/workflows/pages.yml/badge.svg)](https://stefanosbalaskas.github.io/gp3mlpy/)
-  [![Coverage](https://img.shields.io/badge/line%20%2B%20branch%20coverage-100%25-2ea44f.svg)](https://github.com/stefanosbalaskas/gp3mlpy/actions/workflows/ci.yml)
-  [![Python](https://img.shields.io/badge/Python-%E2%89%A53.11-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-  [![R reference](https://img.shields.io/badge/R%20reference-gp3ml%200.3.0-276DC3?logo=r&logoColor=white)](https://CRAN.R-project.org/package=gp3ml)
-  [![Release](https://img.shields.io/badge/release-0.1.0-blue.svg)](https://github.com/stefanosbalaskas/gp3mlpy/releases/tag/v0.1.0)
-  [![PyPI](https://img.shields.io/pypi/v/gp3mlpy.svg)](https://pypi.org/project/gp3mlpy/)
-  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22206729.svg)](https://doi.org/10.5281/zenodo.22206729)
-  [![License](https://img.shields.io/badge/license-MIT-2f855a.svg)](LICENSE)
+# gp3mlpy
+
+**Governance-first, leakage-resistant predictive modelling for Gazepoint research workflows in Python.**
+
+[![CI](https://github.com/stefanosbalaskas/gp3mlpy/actions/workflows/ci.yml/badge.svg)](https://github.com/stefanosbalaskas/gp3mlpy/actions/workflows/ci.yml)
+[![Documentation](https://github.com/stefanosbalaskas/gp3mlpy/actions/workflows/pages.yml/badge.svg)](https://stefanosbalaskas.github.io/gp3mlpy/)
+[![Coverage](https://img.shields.io/badge/line%20%2B%20branch%20coverage-100%25-2ea44f.svg)](https://github.com/stefanosbalaskas/gp3mlpy/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/gp3mlpy.svg)](https://pypi.org/project/gp3mlpy/)
+[![Python](https://img.shields.io/badge/Python-%E2%89%A53.11-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22206729.svg)](https://doi.org/10.5281/zenodo.22206729)
+[![License](https://img.shields.io/badge/license-MIT-2f855a.svg)](LICENSE)
+
+[**Documentation**](https://stefanosbalaskas.github.io/gp3mlpy/) · [**PyPI**](https://pypi.org/project/gp3mlpy/) · [**API reference**](https://stefanosbalaskas.github.io/gp3mlpy/reference/) · [**Articles**](https://stefanosbalaskas.github.io/gp3mlpy/articles/) · [**Zenodo**](https://doi.org/10.5281/zenodo.22206729)
+
 </div>
 
 ---
 
-`gp3mlpy` is the Python port of **gp3ml 0.3.0**, the governance-first R package for leakage-resistant and group-aware predictive modelling with Gazepoint-derived research data.
+`gp3mlpy` is the Python port of **gp3ml 0.3.0**. It brings the R package's governance-first modelling contracts to Python while keeping the scientific target, leakage controls, group structure, uncertainty, transportability, and reporting evidence explicit.
 
-It is designed for **explicitly observed, non-sensitive outcomes and declared scientific purposes**. It is not an AutoML system: it does not silently choose a winning model, weaken participant/stimulus grouping, fit preprocessing on assessment data, invent a threshold, or relax provenance and external-validation requirements to make an analysis succeed.
+It is built for **declared research questions and explicitly observed, non-sensitive outcomes**. It is deliberately not an AutoML system: it will not silently change the generalization target, fit preprocessing on assessment data, invent a threshold, or relax governance constraints simply to produce a better-looking model.
 
-| Start here | Link |
+## Why use gp3mlpy?
+
+| Principle | What the package enforces |
 |---|---|
-| Documentation | **https://stefanosbalaskas.github.io/gp3mlpy/** |
-| PyPI | https://pypi.org/project/gp3mlpy/ |
-| Zenodo DOI | https://doi.org/10.5281/zenodo.22206729 |
-| Key concepts | https://stefanosbalaskas.github.io/gp3mlpy/key-concepts/ |
-| Plot gallery | https://stefanosbalaskas.github.io/gp3mlpy/plots/ |
-| Articles | https://stefanosbalaskas.github.io/gp3mlpy/articles/ |
-| API map | https://stefanosbalaskas.github.io/gp3mlpy/api-map/ |
-| Complete API index | https://stefanosbalaskas.github.io/gp3mlpy/reference/ |
-| R reference package | https://CRAN.R-project.org/package=gp3ml |
+| **Scientific target first** | Participant, stimulus, and participant–stimulus generalization are declared before resampling. |
+| **Leakage resistance** | Preprocessing, tuning, calibration, threshold selection, and uncertainty operations stay inside the correct partition. |
+| **Group-aware validation** | Splits that contradict the declared independence target are rejected rather than silently accepted. |
+| **Auditability** | Feature manifests, diagnostics, model cards, external-validation reports, checksums, handoffs, and release evidence are first-class objects. |
+| **Visible model selection** | Candidate models and decision rules remain inspectable; no hidden winner selection is performed. |
+| **Precise parity claims** | API, semantic, numerical, and algorithmic parity are described separately instead of being conflated. |
 
-## Frozen compatibility target
-
-The port tracks gp3ml 0.3.0 as its frozen reference layer:
-
-- **127 exported functions** — 71 stable and 56 experimental;
-- **38 stable public object classes**;
-- **16 registered plot contracts**;
-- **20 article/vignette companions**;
-- explicit API, object-schema, failure, reproducibility, and governance contracts.
-
-`gp3mlpy.r_reference_version` is `"0.3.0"`. Machine-readable inventories are stored under `reference/`, alongside deterministic reference-layer tooling.
-
-## Current quality floor
-
-The release baseline is continuously checked rather than described informally:
-
-- **125 passing Python tests**;
-- **100% statement coverage** — 4,020 / 4,020 executable statements;
-- **100% branch coverage** — 1,700 / 1,700 branches with zero partial branches;
-- permanent CI enforcement with `--cov-branch --cov-fail-under=100`;
-- Ubuntu, Windows, and macOS across Python 3.11, 3.12, and 3.13;
-- Ruff semantic lint and public-stub mypy validation;
-- strict MkDocs build and generated documentation assets;
-- sdist/wheel build, Twine checks, and fresh installed-wheel frozen-API smoke testing; and
-- completed stable-API R/Python behavioral freeze against the SHA-256-verified gp3ml 0.3.0 release archive.
-
-The frozen 71-export stable matrix is **67 PASS / 4 EXPECTED-DIFFERENCE / 0 PENDING / 0 FAIL**. The four expected differences are documented safety/reference-defect boundaries: unequal calibration-vector recycling, shortened classification-probability recycling, the frozen-R repeat-level uncertainty defect, and the frozen-R release-model-card Markdown writer defect. Python retains the safer or functioning behavior rather than reproducing those reference defects.
-
-Coverage is a Python-side quality property and stable-API behavioral parity is not a blanket claim of bitwise or algorithmic identity. API, semantic, numerical, and algorithmic parity remain separate claims, especially where Python-native backends differ from the R engines.
-
-## Why gp3mlpy
-
-### Generalization is part of the scientific claim
-
-Participant, stimulus, and participant–stimulus generalization targets imply different independence requirements. Overlap that contradicts the declared target is a validation failure rather than a convenient fallback.
-
-### Leakage-sensitive operations remain local
-
-Fitted preprocessing, tuning, calibration, threshold selection, and related operations stay inside the appropriate analysis/fold structure. External and assessment data are not allowed to influence fitting.
-
-### Important choices become auditable objects
-
-The package provides feature-provenance manifests, leakage audits, grouped holdouts, repeated and nested resampling, fold diagnostics, governed model engines, uncertainty summaries, external-validation/transportability reports, decision rules, conformal prediction, shift audits, analysis plans, model artifacts, reproducibility checks, handoffs, RO-Crate export, model cards, and release evidence.
-
-### Parity is described precisely
-
-Parity is separated into **API**, **semantic**, **numerical**, and **algorithmic** parity. Python-native adapters are not falsely described as bitwise-identical when the underlying implementation differs. In particular, current `ranger` and `nnet` labels preserve gp3ml governance/interface semantics while using scikit-learn backends rather than claiming algorithmic identity with the R engines.
-
-## Scientific safeguards
-
-The package preserves gp3ml's prohibited-use boundary. It must not be used for person identification, biometric authentication, health or diagnosis inference, protected-attribute inference, or direct/indirect inference of emotion, stress, personality, deception, cognition, comprehension, intent, or other mental states.
-
-Participant overlap is a failure when the declared target requires new-participant generalization. Stimulus overlap is a failure when the target requires unseen stimuli. Threshold origin, uncertainty unit, calibration source, and analysis partition remain explicit and inspectable.
-
-## Installation
-
-### PyPI
+## Install
 
 ```bash
 python -m pip install gp3mlpy
 ```
 
-### Install directly from GitHub
+Optional extras are available for `xgboost`, deep-learning backends, conformal prediction, RO-Crate export, and safe model-artifact workflows.
 
 ```bash
-python -m pip install "git+https://github.com/stefanosbalaskas/gp3mlpy.git@main"
+python -m pip install "gp3mlpy[xgboost]"
+python -m pip install "gp3mlpy[conformal]"
+python -m pip install "gp3mlpy[artifact]"
 ```
 
-### Development checkout
-
-```bash
-git clone https://github.com/stefanosbalaskas/gp3mlpy.git
-cd gp3mlpy
-python -m pip install -e .
-```
-
-or, with `uv`:
-
-```bash
-uv sync --extra dev --extra docs
-```
-
-Optional extras include `xgboost`, `deep`, `conformal`, `rocrate`, and `artifact`.
-
-## Minimal governed workflow
+## A governed workflow in a few steps
 
 ```python
 import gp3mlpy as gp
@@ -168,35 +100,82 @@ evaluation = gp.evaluate_gazepoint_group_folds(
 assert gp.validate_gazepoint_resample_evaluation(evaluation).status == "pass"
 ```
 
-## Visual diagnostics
+The full workflow extends from task declaration and feature provenance through grouped/nested resampling, calibration, decision governance, robustness, external validation, reproducibility, and release evidence.
 
-The documentation site contains a generated [plot gallery](https://stefanosbalaskas.github.io/gp3mlpy/plots/) built from the current Python package. Plot contracts cover decision thresholds, abstention, conformal coverage, dataset shift, environment comparison, handoff/model-artifact/research-bundle validation, API stability, robustness, analysis-plan deviations, checksums, governance evidence, reproducibility, and engine portability.
+## Release quality
 
-## Documentation and runnable articles
+| Release property | Validated baseline |
+|---|---:|
+| **gp3mlpy release** | `0.1.0` |
+| **Frozen R reference** | `gp3ml 0.3.0` |
+| **Compatibility exports** | 127 |
+| **Stable exports** | 71 |
+| **Stable public classes** | 38 |
+| **Python tests** | 125 passing |
+| **Statement coverage** | **4,020 / 4,020 — 100%** |
+| **Branch coverage** | **1,700 / 1,700 — 100%** |
+| **Partial branches** | **0** |
+| **Stable behavioral parity** | **67 PASS / 4 EXPECTED-DIFFERENCE / 0 PENDING / 0 FAIL** |
 
-All 127 compatibility exports have dedicated reference pages. The 20 gp3ml 0.3.0 vignette topics have Python article companions, with runnable scripts under `examples/` and CI coverage for the example suite.
+Coverage is permanently enforced in CI with `--cov-branch --cov-fail-under=100`. The core test matrix runs on Ubuntu, Windows, and macOS across Python 3.11, 3.12, and 3.13, alongside Ruff, mypy, strict documentation builds, package build/Twine checks, and installed-wheel API validation.
 
-Useful entry points:
+## Frozen R/Python behavioral parity
 
-- [Key concepts](https://stefanosbalaskas.github.io/gp3mlpy/key-concepts/)
-- [Workflow API map](https://stefanosbalaskas.github.io/gp3mlpy/api-map/)
-- [Integrated research workflow](https://stefanosbalaskas.github.io/gp3mlpy/articles/integrated-research-workflow/)
-- [Participant generalization](https://stefanosbalaskas.github.io/gp3mlpy/articles/participant-generalization/)
-- [Nested grouped resampling](https://stefanosbalaskas.github.io/gp3mlpy/articles/nested-grouped-resampling/)
-- [Dataset shift and robustness](https://stefanosbalaskas.github.io/gp3mlpy/articles/dataset-shift-and-robustness/)
-- [Decision governance](https://stefanosbalaskas.github.io/gp3mlpy/articles/decision-governance/)
-- [Reproducibility hardening](https://stefanosbalaskas.github.io/gp3mlpy/articles/reproducibility-hardening/)
+The 71-export stable API has a completed executable behavioral freeze against the SHA-256-verified `gp3ml 0.3.0` release archive.
 
-## Model-artifact security
+The four documented expected differences are intentional safety/reference-defect boundaries:
 
-`gp3mlpy` does not silently deserialize arbitrary pickle/joblib files. In-memory model-artifact validation is supported, and persisted artifacts should use an explicitly safe/native engine format or an audited optional persistence backend such as `skops` where supported.
+1. Python rejects unequal calibration-vector lengths where frozen R recycles them.
+2. Python rejects shortened probability vectors where frozen R recycles them.
+3. Python returns the intended repeat-level uncertainty summary instead of reproducing the frozen-R `repeat` formula defect.
+4. Python keeps a functioning release-model-card Markdown writer instead of reproducing the frozen-R partial-matching defect.
+
+These are **not unresolved parity failures**. See [PARITY_STATUS.md](PARITY_STATUS.md) and the executable evidence under [`parity/`](parity/).
+
+## Choose your starting point
+
+| Goal | Start here |
+|---|---|
+| Understand the design philosophy | [Key concepts](https://stefanosbalaskas.github.io/gp3mlpy/key-concepts/) |
+| Run an end-to-end analysis | [Integrated research workflow](https://stefanosbalaskas.github.io/gp3mlpy/articles/integrated-research-workflow/) |
+| Validate new participants | [Participant generalization](https://stefanosbalaskas.github.io/gp3mlpy/articles/participant-generalization/) |
+| Use nested grouped resampling | [Nested grouped resampling](https://stefanosbalaskas.github.io/gp3mlpy/articles/nested-grouped-resampling/) |
+| Audit shift / external validity | [Dataset shift and robustness](https://stefanosbalaskas.github.io/gp3mlpy/articles/dataset-shift-and-robustness/) |
+| Govern thresholds and decisions | [Decision governance](https://stefanosbalaskas.github.io/gp3mlpy/articles/decision-governance/) |
+| Build reproducible release evidence | [Reproducibility hardening](https://stefanosbalaskas.github.io/gp3mlpy/articles/reproducibility-hardening/) |
+| Find a function quickly | [Workflow API map](https://stefanosbalaskas.github.io/gp3mlpy/api-map/) · [Full API index](https://stefanosbalaskas.github.io/gp3mlpy/reference/) |
+
+## Scientific safeguards
+
+`gp3mlpy` preserves the prohibited-use boundary of the upstream package. It must not be used for person identification, biometric authentication, protected-attribute inference, health or diagnosis inference, or direct/indirect inference of emotion, stress, personality, deception, cognition, comprehension, intent, or other mental states.
+
+See [PROHIBITED-USE.md](PROHIBITED-USE.md) and [GOVERNANCE.md](GOVERNANCE.md) before adapting the package to a new research context.
+
+## Citation
+
+If you use `gp3mlpy`, cite the software release and the upstream `gp3ml` package.
+
+> Balaskas, S. (2026). **gp3mlpy** (Version 0.1.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22206729
+
+Machine-readable citation metadata are provided in [`CITATION.cff`](CITATION.cff).
+
+## Development and reproducibility
+
+```bash
+git clone https://github.com/stefanosbalaskas/gp3mlpy.git
+cd gp3mlpy
+python -m pip install -e ".[dev,docs]"
+python -m pytest --cov=gp3mlpy --cov-branch --cov-fail-under=100
+```
+
+The repository also contains the frozen R/Python parity harness, reference inventories, runnable examples, documentation-generation scripts, governance files, and release evidence.
 
 ## Upstream reference
 
 - **R package:** `gp3ml` 0.3.0
 - **CRAN:** https://CRAN.R-project.org/package=gp3ml
-- **R source:** https://github.com/stefanosbalaskas/gp3ml
-- **R documentation:** https://stefanosbalaskas.github.io/gp3ml/
+- **Source:** https://github.com/stefanosbalaskas/gp3ml
+- **Documentation:** https://stefanosbalaskas.github.io/gp3ml/
 
 ## License
 
