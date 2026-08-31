@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "r_reference": {
+    "version": "0.3.0",
+    "archive_sha256": "04c5fdb017c63ecbf6f5e85c29fff6492880201a2f2aa5c3c1d3fe998e60bae6"
+  },
+  "numeric_tolerance": {
+    "absolute": 1e-06,
+    "relative": 1e-06
+  },
+  "seed": 101,
+  "bootstrap": 10
+}
