@@ -264,6 +264,7 @@ jobs:
         run: >-
           python parity/compare_target_uncertainty.py
           parity/fixtures/target_uncertainty.json
+          parity/target_uncertainty_cases.csv
           parity/results/r-target-uncertainty.json
           parity/results/python-target-uncertainty.json
           parity/results/target-uncertainty-report.json
@@ -285,6 +286,7 @@ jobs:
         run: >-
           python parity/compare_metrics_engines.py
           parity/fixtures/metrics_engines.json
+          parity/metrics_engines_cases.csv
           parity/results/r-metrics-engines.json
           parity/results/python-metrics-engines.json
           parity/results/metrics-engines-report.json
@@ -306,6 +308,7 @@ jobs:
         run: >-
           python parity/compare_resample_outputs.py
           parity/fixtures/resample_outputs.json
+          parity/resample_outputs_cases.csv
           parity/results/r-resample-outputs.json
           parity/results/python-resample-outputs.json
           parity/results/resample-outputs-report.json
@@ -376,6 +379,28 @@ jobs:
           parity/results/python-nested-resampling.json
           parity/results/nested-resampling-report.json
 
+      - name: Execute Python external-validation fixtures
+        run: >-
+          python parity/run_python_external_validation.py
+          parity/fixtures/external_validation.json
+          parity/results/python-external-validation.json
+
+      - name: Execute R external-validation fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_external_validation.R
+          parity/fixtures/external_validation.json
+          parity/results/r-external-validation.json
+
+      - name: Compare external-validation behavior
+        run: >-
+          python parity/compare_external_validation.py
+          parity/fixtures/external_validation.json
+          parity/external_validation_cases.csv
+          parity/results/r-external-validation.json
+          parity/results/python-external-validation.json
+          parity/results/external-validation-report.json
+
       - name: Build stable API parity matrix
         run: >-
           python parity/build_matrix.py
@@ -411,6 +436,8 @@ jobs:
           parity/results/model-execution-report.json
           parity/nested_resampling_cases.csv
           parity/results/nested-resampling-report.json
+          parity/external_validation_cases.csv
+          parity/results/external-validation-report.json
 
       - name: Upload parity evidence
         if: always()
