@@ -37,7 +37,7 @@ normalize_frame <- function(frame) {
       for (j in seq_along(frame)) {
         column <- frame[[j]]
         value <- if (is.list(column)) column[[i]] else column[i]
-        row[[j]] <- normalize_value(value)
+        row[j] <- list(normalize_value(value))
       }
       rows[[i]] <- row
     }
