@@ -35,9 +35,19 @@ def _canonical_status_counts(value: Any) -> Any:
     return {"nonfail": nonfail, "fail": fail}
 
 
+def _canonical_selected_candidates(value: Any) -> Any:
+    if isinstance(value, dict):
+        return sorted(str(candidate) for candidate in value.values())
+    if isinstance(value, list):
+        return sorted(str(candidate) for candidate in value)
+    return value
+
+
 def _normalize_for_path(value: Any, path: str) -> Any:
     if path.endswith(".status_counts"):
         return _canonical_status_counts(value)
+    if path.endswith(".selected_candidates"):
+        return _canonical_selected_candidates(value)
     return value
 
 
