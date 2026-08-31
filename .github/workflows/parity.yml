@@ -289,6 +289,27 @@ jobs:
           parity/results/python-metrics-engines.json
           parity/results/metrics-engines-report.json
 
+      - name: Execute Python resample-output fixtures
+        run: >-
+          python parity/run_python_resample_outputs.py
+          parity/fixtures/resample_outputs.json
+          parity/results/python-resample-outputs.json
+
+      - name: Execute R resample-output fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_resample_outputs.R
+          parity/fixtures/resample_outputs.json
+          parity/results/r-resample-outputs.json
+
+      - name: Compare resample-output behavior
+        run: >-
+          python parity/compare_resample_outputs.py
+          parity/fixtures/resample_outputs.json
+          parity/results/r-resample-outputs.json
+          parity/results/python-resample-outputs.json
+          parity/results/resample-outputs-report.json
+
       - name: Build stable API parity matrix
         run: >-
           python parity/build_matrix.py
@@ -316,6 +337,8 @@ jobs:
           parity/results/target-uncertainty-report.json
           parity/metrics_engines_cases.csv
           parity/results/metrics-engines-report.json
+          parity/resample_outputs_cases.csv
+          parity/results/resample-outputs-report.json
 
       - name: Upload parity evidence
         if: always()
