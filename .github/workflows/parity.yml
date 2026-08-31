@@ -354,6 +354,28 @@ jobs:
           parity/results/python-model-execution.json
           parity/results/model-execution-report.json
 
+      - name: Execute Python nested-resampling fixtures
+        run: >-
+          python parity/run_python_nested_resampling.py
+          parity/fixtures/nested_resampling.json
+          parity/results/python-nested-resampling.json
+
+      - name: Execute R nested-resampling fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_nested_resampling.R
+          parity/fixtures/nested_resampling.json
+          parity/results/r-nested-resampling.json
+
+      - name: Compare nested-resampling behavior
+        run: >-
+          python parity/compare_nested_resampling.py
+          parity/fixtures/nested_resampling.json
+          parity/nested_resampling_cases.csv
+          parity/results/r-nested-resampling.json
+          parity/results/python-nested-resampling.json
+          parity/results/nested-resampling-report.json
+
       - name: Build stable API parity matrix
         run: >-
           python parity/build_matrix.py
@@ -387,6 +409,8 @@ jobs:
           parity/results/tuning-objects-report.json
           parity/model_execution_cases.csv
           parity/results/model-execution-report.json
+          parity/nested_resampling_cases.csv
+          parity/results/nested-resampling-report.json
 
       - name: Upload parity evidence
         if: always()
