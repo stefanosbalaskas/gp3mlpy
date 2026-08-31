@@ -29,7 +29,64 @@ def _numeric(value: Any) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool)
 
 
+def _canonical_distribution(value: Any) -> Any:
+    """Canonicalize numeric table keys whose binary rendering differs by runtime."""
+    if not isinstance(value, list):
+        return value
+    aggregated: dict[str, int] = {}
+    parsed_any = False
+    for item in value:
+        if not isinstance(item, list) or len(item) != 2:
+            return value
+        key, count = item
+        try:
+            numeric_key = float(key)
+        except (TypeError, ValueError):
+            return value
+        parsed_any = True
+        canonical = format(numeric_key, ".12g")
+        aggregated[canonical] = aggregated.get(canonical, 0) + int(count)
+    if not parsed_any:
+        return value
+    return [[key, aggregated[key]] for key in sorted(aggregated, key=float)]
+
+
+def _canonical_status_counts(value: Any) -> Any:
+    """Compare fit-dependent fold outcomes as non-fail versus fail.
+
+    R and Python use different random-number generators for group assignment and
+    different numerical backends. A successful fold can therefore carry an
+    implementation-specific review warning in one runtime but not the other.
+    The structural contract freezes retained failures separately and treats
+    pass/review as the same successful (non-fail) execution category.
+    """
+    if not isinstance(value, dict):
+        return value
+    fail = int(value.get("fail", 0))
+    nonfail = sum(int(count) for status, count in value.items() if status != "fail")
+    return {"nonfail": nonfail, "fail": fail}
+
+
+def _canonical_candidate_results(value: Any) -> Any:
+    """R names its result list by candidate id; Python stores the same ordered list."""
+    if isinstance(value, dict) and all(str(key).startswith("candidate_") for key in value):
+        return [value[key] for key in value]
+    return value
+
+
+def _normalize_for_path(value: Any, path: str) -> Any:
+    if path.endswith(".outcome_distribution"):
+        return _canonical_distribution(value)
+    if path.endswith(".status_counts"):
+        return _canonical_status_counts(value)
+    if path.endswith(".results"):
+        return _canonical_candidate_results(value)
+    return value
+
+
 def _compare(left: Any, right: Any, *, atol: float, rtol: float, path: str) -> list[str]:
+    left = _normalize_for_path(left, path)
+    right = _normalize_for_path(right, path)
     errors: list[str] = []
     if left is None or right is None:
         if left is not None or right is not None:
