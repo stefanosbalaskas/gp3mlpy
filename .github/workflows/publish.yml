@@ -2,8 +2,11 @@ name: Publish gp3mlpy release
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [main]
+    paths:
+      - 'pyproject.toml'
+      - '.github/workflows/publish.yml'
+  workflow_dispatch:
 
 permissions: {}
 
@@ -12,27 +15,52 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    outputs:
+      version: ${{ steps.release-meta.outputs.version }}
+      tag: ${{ steps.release-meta.outputs.tag }}
+      release_needed: ${{ steps.release-meta.outputs.release_needed }}
     steps:
       - uses: actions/checkout@v7
-        with:
-          ref: ${{ github.ref_name }}
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
-      - name: Verify release tag matches package version
+      - name: Resolve release metadata
+        id: release-meta
+        env:
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          python - <<'PY'
-          import os
+          version=$(python - <<'PY'
           import tomllib
           from pathlib import Path
-
-          version = tomllib.loads(Path('pyproject.toml').read_text(encoding='utf-8'))['project']['version']
-          tag = os.environ['GITHUB_REF_NAME']
-          normalized = tag[1:] if tag.startswith('v') else tag
-          if normalized != version:
-              raise SystemExit(f'Release tag {tag!r} does not match package version {version!r}.')
-          print(f'release version check: PASS ({version})')
+          print(tomllib.loads(Path('pyproject.toml').read_text(encoding='utf-8'))['project']['version'])
+          PY
+          )
+          tag="v${version}"
+          if [[ "$version" == *dev* || "$version" == *a* || "$version" == *b* || "$version" == *rc* ]]; then
+            echo "Refusing to publish non-final version: $version" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "release_needed=false" >> "$GITHUB_OUTPUT"
+            echo "GitHub release $tag already exists; publication jobs will be skipped."
+          else
+            echo "release_needed=true" >> "$GITHUB_OUTPUT"
+            echo "Release candidate: $tag"
+          fi
+      - name: Verify runtime version matches package metadata
+        run: |
+          python -m pip install -e .
+          python - <<'PY'
+          import tomllib
+          from pathlib import Path
+          import gp3mlpy
+          expected = tomllib.loads(Path('pyproject.toml').read_text(encoding='utf-8'))['project']['version']
+          if gp3mlpy.__version__ != expected:
+              raise SystemExit(f'Runtime version {gp3mlpy.__version__!r} does not match project version {expected!r}.')
+          print(f'package version check: PASS ({expected})')
           PY
       - name: Install release validation dependencies
         run: python -m pip install -e ".[dev,docs]"
@@ -62,6 +90,7 @@ jobs:
           python -m build
           python -m twine check dist/*
       - name: Upload release distributions
+        if: steps.release-meta.outputs.release_needed == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: python-package-distributions
@@ -70,6 +99,7 @@ jobs:
 
   github-release:
     needs: build-and-validate
+    if: needs.build-and-validate.outputs.release_needed == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -79,20 +109,22 @@ jobs:
         with:
           name: python-package-distributions
           path: dist/
-      - name: Create GitHub release
+      - name: Create GitHub release and tag
         env:
           GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ needs.build-and-validate.outputs.tag }}
+          RELEASE_VERSION: ${{ needs.build-and-validate.outputs.version }}
         shell: bash
         run: |
-          version="${GITHUB_REF_NAME#v}"
-          gh release create "$GITHUB_REF_NAME" dist/* \
+          gh release create "$RELEASE_TAG" dist/* \
             --repo "$GITHUB_REPOSITORY" \
-            --verify-tag \
-            --title "gp3mlpy $version" \
+            --target "$GITHUB_SHA" \
+            --title "gp3mlpy $RELEASE_VERSION" \
             --generate-notes
 
-  publish:
+  publish-pypi:
     needs: [build-and-validate, github-release]
+    if: needs.build-and-validate.outputs.release_needed == 'true'
     runs-on: ubuntu-latest
     environment:
       name: pypi
