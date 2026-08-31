@@ -1,4 +1,5 @@
 site_name: gp3mlpy
+site_author: Stefanos Balaskas
 site_description: Governance-first, leakage-resistant predictive modelling for Gazepoint research workflows in Python
 site_url: https://stefanosbalaskas.github.io/gp3mlpy/
 repo_url: https://github.com/stefanosbalaskas/gp3mlpy
@@ -15,15 +16,19 @@ theme:
     repo: fontawesome/brands/github
   features:
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
     - navigation.expand
     - navigation.path
     - navigation.top
     - navigation.footer
+    - navigation.indexes
     - search.suggest
     - search.highlight
+    - search.share
     - content.code.copy
     - content.code.annotate
+    - content.tabs.link
     - toc.follow
   palette:
     - media: "(prefers-color-scheme: light)"
@@ -57,35 +62,40 @@ extra_css:
   - stylesheets/extra.css
 
 extra:
+  generator: false
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/stefanosbalaskas/gp3mlpy
       name: gp3mlpy on GitHub
     - icon: fontawesome/brands/python
-      link: https://www.python.org/
-      name: Python
+      link: https://pypi.org/project/gp3mlpy/
+      name: gp3mlpy on PyPI
+    - icon: fontawesome/solid/archive
+      link: https://doi.org/10.5281/zenodo.22206729
+      name: gp3mlpy on Zenodo
 
 nav:
   - Home: index.md
-  - Key concepts: key-concepts.md
-  - Plot gallery: plots.md
-  - Articles:
+  - Start:
+      - Quickstart: getting-started.md
+      - Key concepts: key-concepts.md
+  - Workflows:
       - Overview: articles/index.md
       - Start here:
           - Integrated research workflow: articles/integrated-research-workflow.md
           - Assigned-condition discrimination: articles/assigned-condition-discrimination.md
-          - Participant generalization: articles/participant-generalization.md
           - Recording-quality review: articles/recording-quality-review.md
+      - Generalization and resampling:
+          - Participant generalization: articles/participant-generalization.md
+          - Stimulus generalization: articles/stimulus-generalization.md
+          - Participant-stimulus generalization: articles/participant-stimulus-generalization.md
+          - Nested grouped resampling: articles/nested-grouped-resampling.md
+          - Group-aware conformal prediction: articles/group-aware-conformal-prediction.md
       - Governance and planning:
           - Analysis-plan governance: articles/analysis-plan-governance.md
           - Governance standards profile: articles/governance-standards-profile.md
           - Decision governance: articles/decision-governance.md
           - API stability contracts: articles/api-stability-contracts.md
-      - Generalization and resampling:
-          - Nested grouped resampling: articles/nested-grouped-resampling.md
-          - Stimulus generalization: articles/stimulus-generalization.md
-          - Participant-stimulus generalization: articles/participant-stimulus-generalization.md
-          - Group-aware conformal prediction: articles/group-aware-conformal-prediction.md
       - Validation and robustness:
           - External validation reporting: articles/external-validation-reporting.md
           - Dataset shift and robustness: articles/dataset-shift-and-robustness.md
@@ -96,6 +106,8 @@ nav:
           - Portable research artifacts: articles/portable-research-artifacts.md
           - Cross-package interoperability: articles/cross-package-interoperability.md
           - Optional-engine portability: articles/optional-engine-portability.md
-  - API reference:
-      - Workflow map: api-map.md
-      - Complete alphabetical index: reference/index.md
+  - Diagnostics:
+      - Plot gallery: plots.md
+  - Reference:
+      - Workflow API map: api-map.md
+      - Complete API index: reference/index.md
