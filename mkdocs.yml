@@ -18,17 +18,21 @@ theme:
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.sections
-    - navigation.expand
     - navigation.path
     - navigation.top
     - navigation.footer
     - navigation.indexes
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
     - search.suggest
     - search.highlight
     - search.share
     - content.code.copy
+    - content.code.select
     - content.code.annotate
     - content.tabs.link
+    - content.tooltips
     - toc.follow
   palette:
     - media: "(prefers-color-scheme: light)"
@@ -60,6 +64,8 @@ markdown_extensions:
 
 extra_css:
   - stylesheets/extra.css
+  - stylesheets/polish.css
+  - stylesheets/contrast.css
 
 extra:
   generator: false

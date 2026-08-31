@@ -1,5 +1,33 @@
 # API reference
 
+<div class="gp-reference-hero" markdown>
+<div markdown>
+<span class="gp-kicker">Complete compatibility surface</span>
+## 127 public exports, one searchable reference
+
+Every compatibility export has a dedicated page. Use the workflow map when you know the research stage; use this alphabetical index when you know the function name.
+
+<div class="gp-actions gp-actions-dark" markdown>
+[Browse by workflow](../api-map.md){ .gp-button .gp-button-primary }
+[Open Quickstart](../getting-started.md){ .gp-button }
+</div>
+</div>
+<div class="gp-reference-stats" markdown>
+<div><strong>127</strong><span>public exports</span></div>
+<div><strong>71</strong><span>stable</span></div>
+<div><strong>56</strong><span>experimental</span></div>
+<div><strong>100%</strong><span>statement + branch coverage</span></div>
+</div>
+</div>
+
+<div class="gp-reference-tip" markdown>
+**Fastest lookup:** use the site search in the header for a function, object, or concept. If you are choosing an API rather than looking up an exact name, start with the [workflow API map](../api-map.md).
+</div>
+
+## Alphabetical index
+
+<div class="gp-reference-list" markdown>
+
 - [`apply_gazepoint_calibrator`](apply_gazepoint_calibrator.md)
 - [`apply_gazepoint_decision_rule`](apply_gazepoint_decision_rule.md)
 - [`as_gp3ml_data`](as_gp3ml_data.md)
@@ -127,3 +155,5 @@
 - [`write_gazepoint_transportability_report`](write_gazepoint_transportability_report.md)
 - [`write_gp3ml_api_contracts`](write_gp3ml_api_contracts.md)
 - [`write_gp3ml_governance_profile`](write_gp3ml_governance_profile.md)
+
+</div>
