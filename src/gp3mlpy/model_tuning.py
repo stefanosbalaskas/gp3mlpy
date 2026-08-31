@@ -19,6 +19,12 @@ def _as_values(value: Any) -> list[Any]:
     return [value]
 
 
+def _r_arg_text(value: Any) -> str:
+    if isinstance(value, (bool, np.bool_)):
+        return "TRUE" if bool(value) else "FALSE"
+    return str(value)
+
+
 def _expand_grid_list(grid: dict[str, Any] | None) -> list[dict[str, Any]]:
     if grid is None or len(grid) == 0:
         return [{}]
@@ -42,7 +48,7 @@ def _collapse_args(x: dict[str, Any]) -> str:
     parts = []
     for name, value in x.items():
         values = _as_values(value)
-        parts.append(f"{name}=" + "/".join(str(v) for v in values))
+        parts.append(f"{name}=" + "/".join(_r_arg_text(v) for v in values))
     return ",".join(parts)
 
 
@@ -359,7 +365,7 @@ def validate_gazepoint_model_tuning(x: GP3MLModelTuning) -> GP3MLModelTuningVali
 def _flatten_args(x: dict[str, Any]) -> str:
     if not x:
         return ""
-    return ";".join(f"{name}=" + "/".join(str(v) for v in _as_values(value)) for name, value in x.items())
+    return ";".join(f"{name}=" + "/".join(_r_arg_text(v) for v in _as_values(value)) for name, value in x.items())
 
 
 def write_gazepoint_model_tuning(
