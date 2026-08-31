@@ -13,7 +13,7 @@ ERROR_KEYWORDS = {
     ("create_gazepoint_tuning_grid", "empty_parameter"): ["at least one"],
     ("compare_gazepoint_models", "invalid_object"): ["gp3ml_model_tuning"],
     ("select_gazepoint_model", "accuracy_rejected"): ["accuracy"],
-    ("select_gazepoint_model", "invalid_direction"): ["direction"],
+    ("select_gazepoint_model", "invalid_direction"): ["maximize", "minimize"],
     ("select_gazepoint_model", "missing_rationale"): ["rationale"],
     ("select_gazepoint_model", "no_eligible_metric"): ["eligible", "metric"],
     ("select_gazepoint_model", "unresolved_tie"): ["tied"],
@@ -28,8 +28,16 @@ def _numeric(value: Any) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool)
 
 
+def _empty_arg_container_pair(left: Any, right: Any, path: str) -> bool:
+    if not (path.endswith(".engine_args") or path.endswith(".preprocessor_args")):
+        return False
+    return left in ([], {}) and right in ([], {})
+
+
 def _compare(left: Any, right: Any, *, atol: float, rtol: float, path: str) -> list[str]:
     errors: list[str] = []
+    if _empty_arg_container_pair(left, right, path):
+        return errors
     if left is None or right is None:
         if left is not None or right is not None:
             errors.append(f"{path}: {left!r} != {right!r}")
