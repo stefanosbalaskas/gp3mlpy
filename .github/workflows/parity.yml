@@ -264,7 +264,6 @@ jobs:
         run: >-
           python parity/compare_target_uncertainty.py
           parity/fixtures/target_uncertainty.json
-          parity/target_uncertainty_cases.csv
           parity/results/r-target-uncertainty.json
           parity/results/python-target-uncertainty.json
           parity/results/target-uncertainty-report.json
@@ -286,7 +285,6 @@ jobs:
         run: >-
           python parity/compare_metrics_engines.py
           parity/fixtures/metrics_engines.json
-          parity/metrics_engines_cases.csv
           parity/results/r-metrics-engines.json
           parity/results/python-metrics-engines.json
           parity/results/metrics-engines-report.json
@@ -308,7 +306,6 @@ jobs:
         run: >-
           python parity/compare_resample_outputs.py
           parity/fixtures/resample_outputs.json
-          parity/resample_outputs_cases.csv
           parity/results/r-resample-outputs.json
           parity/results/python-resample-outputs.json
           parity/results/resample-outputs-report.json
