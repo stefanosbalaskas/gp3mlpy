@@ -9,19 +9,26 @@
 - Stable exports: 71
 - Experimental exports: 56
 - Stable public classes: 38
-- Included Python tests: 122 passing in the finalized coverage-hardening suite
-- Statement coverage: 4,004 / 4,004 executable statements (100%)
-- Branch coverage: 1,690 / 1,690 branches with 0 partial branches (100%)
+- Included Python tests: 125 passing
+- Statement coverage: 4,020 / 4,020 executable statements (100%)
+- Branch coverage: 1,700 / 1,700 branches with 0 partial branches (100%)
 - Coverage enforcement: permanent `--cov-fail-under=100` CI gate with branch coverage enabled
 - Runtime matrix: Ubuntu, Windows, and macOS on Python 3.11, 3.12, and 3.13
 - Package gates: Ruff, public-stub mypy, strict MkDocs, build, Twine, and installed-wheel API smoke
-- Behavioral parity campaign: **in progress on `parity/r-0.3.0-behavioral-freeze`**
-- First executable parity tranche: prohibited-use registry plus deterministic classification/regression metrics
-- R-runtime behavioural fixture parity: **not yet completed**
-- `r_parity_tested`: `false`
+- Behavioral parity campaign: **completed and frozen on `parity/r-0.3.0-behavioral-freeze`**
+- R-runtime behavioral fixture parity: **completed for all 71 stable exports**
+- Stable matrix: **67 PASS / 4 EXPECTED-DIFFERENCE / 0 PENDING / 0 FAIL**
+- `r_parity_tested`: `true`
 
-The behavioral campaign uses the exact upstream `gp3ml_0.3.0.tar.gz` release archive as the R oracle. GitHub Actions verifies its SHA-256 before installation, executes shared fixtures through both runtimes, compares normalized outputs under declared rules, and emits a machine-readable stable-API parity matrix.
+The behavioral campaign uses the exact upstream `gp3ml_0.3.0.tar.gz` release archive as the R oracle. GitHub Actions verifies its SHA-256 before installation, executes shared fixtures through both runtimes, compares normalized outputs under declared rules, and emits the machine-readable stable-API parity matrix.
 
-The current candidate has comprehensive Python-side behavioral/contract coverage and a frozen governance/API/documentation compatibility layer. **100% Python line and branch coverage is not equivalent to completed R-versus-Python numerical or algorithmic parity.**
+The four `EXPECTED-DIFFERENCE` functions represent explicit safety/reference-defect boundaries rather than unresolved parity failures:
 
-API, semantic, numerical, and algorithmic parity remain separate claims. Python-native backend adapters must not be described as bitwise or algorithmically identical to the R implementation when their underlying engines differ. `r_parity_tested` will remain `false` until the defined stable-API behavioral acceptance criteria are satisfied and the resulting evidence is frozen.
+1. `assess_gazepoint_calibration` — frozen R 0.3.0 recycles unequal truth/probability vectors with warnings; gp3mlpy rejects unequal lengths.
+2. `gazepoint_performance_metrics` — frozen R 0.3.0 recycles a shortened classification-probability vector; gp3mlpy rejects row misalignment.
+3. `summarize_gazepoint_resample_uncertainty` — frozen R 0.3.0 fails for repeat-level uncertainty because of its reserved `repeat` formula path; gp3mlpy returns the intended repeat-level summary.
+4. `write_gazepoint_release_model_card` — frozen R 0.3.0 has a NULL-selection partial-matching defect in Markdown writing; gp3mlpy retains the functioning writer.
+
+No stable export remains `PENDING` or `FAIL`. The 56 experimental exports are represented by the compatibility layer but are outside this 71-export stable behavioral freeze.
+
+API, semantic, numerical, and algorithmic parity remain separate claims. Python-native backend adapters must not be described as bitwise or algorithmically identical to the R implementation when their underlying engines differ. The completed behavioral freeze establishes the declared stable-API contract while preserving documented safer or functioning Python behavior at the four reference-defect boundaries.

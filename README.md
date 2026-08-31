@@ -43,16 +43,19 @@ The port tracks gp3ml 0.3.0 as its frozen reference layer:
 
 The development baseline is continuously checked rather than described informally:
 
-- **122 passing Python tests**;
-- **100% statement coverage** — 4,004 / 4,004 executable statements;
-- **100% branch coverage** — 1,690 / 1,690 branches with zero partial branches;
+- **125 passing Python tests**;
+- **100% statement coverage** — 4,020 / 4,020 executable statements;
+- **100% branch coverage** — 1,700 / 1,700 branches with zero partial branches;
 - permanent CI enforcement with `--cov-branch --cov-fail-under=100`;
 - Ubuntu, Windows, and macOS across Python 3.11, 3.12, and 3.13;
 - Ruff semantic lint and public-stub mypy validation;
-- strict MkDocs build and generated documentation assets; and
-- sdist/wheel build, Twine checks, and fresh installed-wheel frozen-API smoke testing.
+- strict MkDocs build and generated documentation assets;
+- sdist/wheel build, Twine checks, and fresh installed-wheel frozen-API smoke testing; and
+- completed stable-API R/Python behavioral freeze against the SHA-256-verified gp3ml 0.3.0 release archive.
 
-Coverage is a Python-side quality property, not a claim of completed R/Python numerical or algorithmic parity. `r_parity_tested` remains `false` until real cross-language behavioral fixtures are executed and frozen.
+The frozen 71-export stable matrix is **67 PASS / 4 EXPECTED-DIFFERENCE / 0 PENDING / 0 FAIL**. The four expected differences are documented safety/reference-defect boundaries: unequal calibration-vector recycling, shortened classification-probability recycling, the frozen-R repeat-level uncertainty defect, and the frozen-R release-model-card Markdown writer defect. Python retains the safer or functioning behavior rather than reproducing those reference defects.
+
+Coverage is a Python-side quality property and stable-API behavioral parity is not a blanket claim of bitwise or algorithmic identity. API, semantic, numerical, and algorithmic parity remain separate claims, especially where Python-native backends differ from the R engines.
 
 ## Why gp3mlpy
 
