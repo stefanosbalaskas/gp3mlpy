@@ -28,6 +28,24 @@ ERROR_KEYWORDS = {
     ("fit_gazepoint_deep_model", "backend_precedes_validation"): ["install", "backend"],
 }
 
+EXPECTED_DIFFERENCES = {
+    ("write_gazepoint_release_model_card", "markdown_success"): (
+        "Frozen R 0.3.0 removes the NULL `selection` list element when creating a release "
+        "model card. The Markdown writer later accesses `card$selection`, which partially "
+        "matches the logical `selection_procedure_recorded` field; it then treats that "
+        "logical as a selection object and fails with `$ operator is invalid for atomic "
+        "vectors`. gp3mlpy retains the functioning Markdown writer rather than porting the "
+        "frozen R reference defect."
+    ),
+    ("write_gazepoint_release_model_card", "overwrite_rejected"): (
+        "Frozen R 0.3.0 removes the NULL `selection` list element when creating a release "
+        "model card. Its first Markdown write therefore fails through partial matching of "
+        "`card$selection` to `selection_procedure_recorded`, before overwrite refusal can "
+        "be reached. gp3mlpy retains the functioning writer and rejects the second write "
+        "because the destination already exists."
+    ),
+}
+
 EMPTY_MAPPING_SUFFIXES = (
     ".file_checksums",
     ".file_basenames",
@@ -38,6 +56,14 @@ EMPTY_MAPPING_SUFFIXES = (
 def _normalize(value: Any, path: str) -> Any:
     if path.endswith(EMPTY_MAPPING_SUFFIXES) and value in ([], {}):
         return {}
+    if path.endswith((".basename", ".return_basename")) and isinstance(value, str):
+        return Path(value).suffix.lower()
+    if path.endswith(".file_checksum_names") and isinstance(value, list):
+        return ["checksum"] * len(value)
+    if path.endswith(".file_checksums") and isinstance(value, dict):
+        return sorted(str(item) for item in value.values())
+    if path.endswith(".file_basenames") and isinstance(value, dict):
+        return sorted(Path(str(item)).suffix.lower() for item in value.values())
     return value
 
 
@@ -94,6 +120,47 @@ def _error_contract(function: str, case_id: str, r_case: dict[str, Any], py_case
     return errors
 
 
+def _expected_difference(
+    function: str,
+    case_id: str,
+    r_case: dict[str, Any],
+    py_case: dict[str, Any],
+    path: str,
+) -> tuple[str, list[str], str]:
+    reason = EXPECTED_DIFFERENCES[(function, case_id)]
+    errors: list[str] = []
+    r_status = r_case.get("status")
+    py_status = py_case.get("status")
+
+    if r_status != "error":
+        errors.append(f"{path}: expected frozen R Markdown-writer defect, got status={r_status!r}")
+    else:
+        message = str(r_case.get("message", ""))
+        if "$ operator is invalid for atomic vectors" not in message:
+            errors.append(f"{path}: frozen R failed for an unexpected reason: {message!r}")
+
+    if case_id == "markdown_success":
+        if py_status != "success":
+            errors.append(f"{path}: expected gp3mlpy Markdown writer to succeed, got status={py_status!r}")
+        else:
+            value = py_case.get("value")
+            if not isinstance(value, dict):
+                errors.append(f"{path}: Python Markdown evidence is not an object")
+            else:
+                if value.get("line_count_positive") is not True:
+                    errors.append(f"{path}: Python Markdown output is empty")
+                headings = value.get("headings")
+                if not isinstance(headings, list) or "## Model-selection procedure" not in headings:
+                    errors.append(f"{path}: Python Markdown output lacks model-selection section")
+    elif case_id == "overwrite_rejected":
+        if py_status != "error":
+            errors.append(f"{path}: expected gp3mlpy second write to be rejected, got status={py_status!r}")
+        elif "file exists" not in str(py_case.get("message", "")).lower():
+            errors.append(f"{path}: Python overwrite rejection lacks 'file exists' message")
+
+    return ("FAIL" if errors else "EXPECTED-DIFFERENCE", errors, reason)
+
+
 def main() -> int:
     if len(sys.argv) != 6:
         raise SystemExit(
@@ -131,6 +198,8 @@ def main() -> int:
         r_case = r_cases.get(key)
         py_case = py_cases.get(key)
         errors: list[str] = []
+        reason: str | None = None
+        status = "PASS"
 
         if not isinstance(r_case, dict):
             errors.append(f"{key}: missing R evidence")
@@ -138,8 +207,11 @@ def main() -> int:
             errors.append(f"{key}: missing Python evidence")
 
         if not errors:
-            if comparison == "error_contract":
+            if (function, case_id) in EXPECTED_DIFFERENCES:
+                status, errors, reason = _expected_difference(function, case_id, r_case, py_case, key)
+            elif comparison == "error_contract":
                 errors.extend(_error_contract(function, case_id, r_case, py_case, key))
+                status = "PASS" if not errors else "FAIL"
             else:
                 if r_case.get("status") != "success" or py_case.get("status") != "success":
                     errors.append(
@@ -148,17 +220,20 @@ def main() -> int:
                     )
                 else:
                     errors.extend(_compare(r_case.get("value"), py_case.get("value"), key))
+                status = "PASS" if not errors else "FAIL"
+        else:
+            status = "FAIL"
 
-        status = "PASS" if not errors else "FAIL"
-        report_cases.append(
-            {
-                "function": function,
-                "case_id": case_id,
-                "comparison": comparison,
-                "status": status,
-                "errors": errors,
-            }
-        )
+        entry = {
+            "function": function,
+            "case_id": case_id,
+            "comparison": comparison,
+            "status": status,
+            "errors": errors,
+        }
+        if reason is not None:
+            entry["expected_difference_reason"] = reason
+        report_cases.append(entry)
         failures.extend(errors)
 
     registered = {f"{row['function']}::{row['case_id']}" for row in registry}
