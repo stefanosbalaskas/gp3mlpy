@@ -1,226 +1,192 @@
-<div class="gp-hero" markdown>
-<div markdown>
-<span class="gp-kicker" style="color:#bfe9ff">Python port of gp3ml 0.3.0</span>
-
-# Governance-first predictive modelling for Gazepoint research
-
-`gp3mlpy` brings gp3ml's leakage-resistant, group-aware modelling contracts to Python: explicit scientific tasks, provenance-aware predictors, participant/stimulus generalization, fold-local preprocessing, governed tuning and thresholds, uncertainty, transportability, reproducibility, and auditable release artifacts.
-
-<div class="gp-actions">
-<a href="key-concepts/">Start with the key concepts</a>
-<a href="articles/">Browse articles</a>
-<a href="api-map/">Open the API map</a>
-<a href="https://github.com/stefanosbalaskas/gp3mlpy">GitHub</a>
-</div>
-</div>
-</div>
-
-<div class="gp-stats">
-<div class="gp-stat"><strong>127</strong><span>compatibility exports</span></div>
-<div class="gp-stat"><strong>71</strong><span>stable exports</span></div>
-<div class="gp-stat"><strong>38</strong><span>stable public classes</span></div>
-<div class="gp-stat"><strong>20</strong><span>article companions</span></div>
-<div class="gp-stat"><strong>125</strong><span>passing tests</span></div>
-<div class="gp-stat"><strong>100%</strong><span>line + branch coverage</span></div>
-</div>
-
-<div class="gp-note" markdown>
-**Validated 0.1.0 behavioral-freeze baseline.** The package covers all 4,020 executable statements and all 1,700 measured branches, with zero partial branches. CI permanently enforces `--cov-branch --cov-fail-under=100` and runs the core suite on Ubuntu, Windows, and macOS across Python 3.11–3.13. Stable-API R/Python behavioral parity is complete for all 71 stable exports against the SHA-256-verified gp3ml 0.3.0 release archive: **67 PASS / 4 EXPECTED-DIFFERENCE / 0 PENDING / 0 FAIL**. The four expected differences are documented safety/reference-defect boundaries, not unresolved failures.
-</div>
-
-## What makes gp3mlpy different
-
-<div class="gp-card-grid" markdown>
-
-<div class="gp-card" markdown>
-<span class="gp-kicker">Scientific target first</span>
-### Generalization is declared, not inferred
-Participant, stimulus, and combined generalization targets determine which overlaps are permissible. A split that violates the scientific target is rejected rather than silently accepted.
-</div>
-
-<div class="gp-card" markdown>
-<span class="gp-kicker">Leakage resistance</span>
-### Fitted operations stay inside the right partition
-Preprocessing, tuning, calibration, threshold selection, and uncertainty estimation remain tied to the correct analysis/fold structure.
+<div class="gp-home-hero">
+  <div class="gp-home-copy">
+    <div class="gp-release-line">
+      <span>gp3mlpy 0.1.0</span>
+      <span>Python 3.11+</span>
+      <span>gp3ml 0.3.0 parity target</span>
+    </div>
+    <p class="gp-eyebrow">Governance-first predictive modelling</p>
+    <h1>Build models whose validation logic matches the scientific claim.</h1>
+    <p class="gp-lead">Leakage-resistant, group-aware modelling for Gazepoint research workflows in Python — with explicit generalization targets, auditable predictors, governed decisions, external validation, and reproducible release evidence.</p>
+    <div class="gp-home-actions">
+      <a class="gp-button gp-button-primary" href="getting-started/">Get started</a>
+      <a class="gp-button" href="articles/">Explore workflows</a>
+      <a class="gp-button" href="api-map/">Find an API</a>
+    </div>
+    <div class="gp-proof-row">
+      <span><strong>100%</strong> statements</span>
+      <span><strong>100%</strong> branches</span>
+      <span><strong>125</strong> tests</span>
+      <span><strong>0</strong> parity failures</span>
+    </div>
+  </div>
+  <div class="gp-terminal" aria-label="Install gp3mlpy from PyPI">
+    <div class="gp-terminal-bar"><span></span><span></span><span></span><small>terminal</small></div>
+    <div class="gp-terminal-body">
+      <div><span class="gp-prompt">$</span> python -m pip install gp3mlpy</div>
+      <div class="gp-terminal-muted">Successfully installed gp3mlpy-0.1.0</div>
+      <div>&nbsp;</div>
+      <div><span class="gp-prompt">›</span> import gp3mlpy as gp</div>
+      <div><span class="gp-prompt">›</span> gp.__version__</div>
+      <div class="gp-terminal-output">'0.1.0'</div>
+      <div><span class="gp-prompt">›</span> gp.r_reference_version</div>
+      <div class="gp-terminal-output">'0.3.0'</div>
+    </div>
+    <div class="gp-terminal-footer">
+      <a href="https://pypi.org/project/gp3mlpy/">PyPI</a>
+      <a href="https://doi.org/10.5281/zenodo.22206729">DOI 10.5281/zenodo.22206729</a>
+    </div>
+  </div>
 </div>
 
-<div class="gp-card" markdown>
-<span class="gp-kicker">Auditability</span>
-### Every important modelling choice can leave evidence
-Feature manifests, fold diagnostics, model cards, external-validation reports, environment capture, checksums, handoffs, RO-Crate export, and release evidence are first-class workflow objects.
+## Predictive modelling with explicit scientific contracts
+
+`gp3mlpy` is the Python port of **gp3ml 0.3.0**. Instead of treating validation as a generic train/test operation, it makes the target of generalization, feature provenance, fitted operations, uncertainty, and reporting evidence visible parts of the analysis.
+
+<div class="gp-feature-grid" markdown>
+<div class="gp-feature-card" markdown>
+<span class="gp-number">01</span>
+### Declare what must generalize
+Choose new participants, new stimuli, or both from the scientific claim. Splits that violate that target are rejected.
+</div>
+<div class="gp-feature-card" markdown>
+<span class="gp-number">02</span>
+### Keep fitted operations local
+Preprocessing, tuning, calibration, thresholds, and related operations remain inside the correct analysis or fold structure.
+</div>
+<div class="gp-feature-card" markdown>
+<span class="gp-number">03</span>
+### Make predictors auditable
+Feature manifests record source, role, and permission before model performance is known.
+</div>
+<div class="gp-feature-card" markdown>
+<span class="gp-number">04</span>
+### Leave an evidence trail
+Diagnostics, model cards, external-validation reports, checksums, environment capture, handoffs, and release evidence remain inspectable.
+</div>
 </div>
 
-<div class="gp-card" markdown>
-<span class="gp-kicker">Governance boundary</span>
-### Explicitly observed, non-sensitive outcomes only
-The package retains gp3ml's prohibited-use boundary and is not intended for identity, protected-attribute, health, biometric-authentication, or mental-state inference.
+## The governed lifecycle
+
+<div class="gp-lifecycle">
+  <div class="gp-life-step"><span>01</span><strong>Declare</strong><small>outcome · unit · use · target</small></div>
+  <div class="gp-life-step"><span>02</span><strong>Audit</strong><small>provenance · roles · leakage</small></div>
+  <div class="gp-life-step"><span>03</span><strong>Split</strong><small>group-aware holdout or resampling</small></div>
+  <div class="gp-life-step"><span>04</span><strong>Fit</strong><small>fold-local preprocessing and tuning</small></div>
+  <div class="gp-life-step"><span>05</span><strong>Evaluate</strong><small>performance · uncertainty · robustness</small></div>
+  <div class="gp-life-step"><span>06</span><strong>Report</strong><small>validation · provenance · release evidence</small></div>
 </div>
 
-<div class="gp-card" markdown>
-<span class="gp-kicker">Parity without overclaiming</span>
-### API, semantic, numerical, and algorithmic parity are separated
-Python-native adapters preserve gp3ml workflow semantics without falsely claiming bitwise or algorithmic identity when the backend differs from R.
+<div class="gp-inline-cta" markdown>
+**New to the package?** The [Quickstart](getting-started.md) takes you from installation to a validated grouped workflow, then points to the next layer only when you need it.
 </div>
 
-<div class="gp-card" markdown>
-<span class="gp-kicker">No hidden AutoML</span>
-### Selection remains visible
-`gp3mlpy` does not silently choose a winner, relax grouping, tune on assessment data, or invent a default threshold to make a model appear successful.
+## Choose the route that matches your study
+
+<div class="gp-route-grid" markdown>
+<div class="gp-route-card" markdown>
+<span class="gp-route-tag">Generalization</span>
+### New participants
+Keep assessment participants completely unseen during fitting.
+
+[Participant workflow →](articles/participant-generalization.md)
+</div>
+<div class="gp-route-card" markdown>
+<span class="gp-route-tag">Model selection</span>
+### Nested grouped resampling
+Separate inner tuning from outer assessment while retaining grouping.
+
+[Nested workflow →](articles/nested-grouped-resampling.md)
+</div>
+<div class="gp-route-card" markdown>
+<span class="gp-route-tag">Transportability</span>
+### External validation
+Declare an external dataset, quantify shift, and report transportability explicitly.
+
+[External validation →](articles/external-validation-reporting.md)
+</div>
+<div class="gp-route-card" markdown>
+<span class="gp-route-tag">Decision layer</span>
+### Governed thresholds
+Keep threshold origin, error costs, calibration source, and abstention visible.
+
+[Decision governance →](articles/decision-governance.md)
+</div>
 </div>
 
+## A validated release, not just a feature list
+
+<div class="gp-evidence-layout" markdown>
+<div class="gp-evidence-panel" markdown>
+<span class="gp-kicker">Python quality floor</span>
+### 100% statement and branch coverage
+
+- **4,020 / 4,020** executable statements
+- **1,700 / 1,700** measured branches
+- **0** partial branches
+- **125** passing Python tests
+- Ubuntu, Windows, macOS × Python 3.11, 3.12, 3.13
+- Ruff, mypy, strict MkDocs, build/Twine, installed-wheel API checks
+
+CI permanently enforces `--cov-branch --cov-fail-under=100`.
+</div>
+<div class="gp-evidence-panel gp-evidence-accent" markdown>
+<span class="gp-kicker">Frozen stable API</span>
+### 67 PASS · 4 expected differences · 0 FAIL
+
+All **71 stable exports** were exercised against the SHA-256-verified `gp3ml 0.3.0` release archive.
+
+The four expected differences preserve safer or functioning Python behavior instead of reproducing frozen-R recycling or reference defects.
+
+[Read the parity status →](https://github.com/stefanosbalaskas/gp3mlpy/blob/main/PARITY_STATUS.md)
+</div>
 </div>
 
-## The governed workflow
+## Diagnostics are part of the evidence
 
-<div class="gp-pipeline">
-<div class="gp-step"><strong>1 · Declare</strong><span>Outcome, use case, unit, IDs, and generalization target.</span></div>
-<div class="gp-step"><strong>2 · Audit</strong><span>Feature provenance, role validity, and leakage risks.</span></div>
-<div class="gp-step"><strong>3 · Split</strong><span>Group-aware holdout or repeated/nested resampling.</span></div>
-<div class="gp-step"><strong>4 · Fit</strong><span>Fold-local preprocessing, governed engines, tuning, calibration.</span></div>
-<div class="gp-step"><strong>5 · Evaluate</strong><span>Performance, uncertainty, thresholds, conformal coverage, robustness.</span></div>
-<div class="gp-step"><strong>6 · Report</strong><span>External validation, model cards, provenance, checksums, bundles.</span></div>
-</div>
+The documentation build regenerates synthetic plot fixtures from the current package. The plots visualize declared analysis objects; plotting does not perform hidden model selection.
 
-## Minimal governed workflow
-
-```python
-import gp3mlpy as gp
-
-predictors = [
-    "tracking_ratio",
-    "blink_rate",
-    "fixation_duration",
-    "gaze_dispersion",
-    "pupil_change",
-]
-
-data = gp.simulate_gazepoint_governed_data(
-    n_participants=18,
-    n_stimuli=4,
-    trials_per_cell=1,
-    seed=17,
-)
-
-task = gp.create_gazepoint_synthetic_task(
-    data,
-    workflow="assigned_condition",
-    generalization_target="new_participants",
-)
-
-manifest = gp.create_gazepoint_synthetic_manifest(task.outcome, predictors)
-
-folds = gp.create_gazepoint_group_folds(
-    data=data,
-    outcome=task.outcome,
-    predictors=predictors,
-    feature_manifest=manifest,
-    generalization_target=task.generalization_target,
-    participant_id=task.participant_id,
-    trial_id=task.unit_id,
-    stimulus_id=task.stimulus_id,
-    v=3,
-    repeats=1,
-    seed=17,
-)
-
-evaluation = gp.evaluate_gazepoint_group_folds(
-    folds,
-    task,
-    predictors,
-    engine="glm",
-    seed=17,
-)
-
-assert gp.validate_gazepoint_resample_evaluation(evaluation).status == "pass"
-```
-
-## Plot contracts
-
-The documentation build regenerates example figures from the current Python package. These are synthetic rendering fixtures, not scientific results.
-
-<div class="gp-plot-grid">
+<div class="gp-plot-grid gp-home-plots">
 <div class="gp-plot-card">
 <img src="assets/plots/threshold-evaluation.svg" alt="Decision-threshold evaluation plot">
-<div><strong>Decision thresholds</strong><br>Inspect explicitly declared candidate thresholds without hidden optimization.</div>
+<div><strong>Decision thresholds</strong><br><span>Inspect declared candidate thresholds and decision consequences.</span></div>
 </div>
 <div class="gp-plot-card">
 <img src="assets/plots/dataset-shift.svg" alt="Dataset-shift audit plot">
-<div><strong>Dataset shift</strong><br>Visualize predictor-distribution differences separately from calibration and performance.</div>
-</div>
-<div class="gp-plot-card">
-<img src="assets/plots/engine-capabilities.svg" alt="Engine capability plot">
-<div><strong>Engine portability</strong><br>Make optional backend availability visible before fitting.</div>
+<div><strong>Dataset shift</strong><br><span>Separate predictor shift from calibration and performance change.</span></div>
 </div>
 <div class="gp-plot-card">
 <img src="assets/plots/governance-profile.svg" alt="Governance profile audit plot">
-<div><strong>Governance evidence</strong><br>Surface controls with evidence and controls that still require review.</div>
+<div><strong>Governance evidence</strong><br><span>Surface controls with evidence and controls that still need review.</span></div>
 </div>
 </div>
 
-[Open the complete plot gallery →](plots.md)
+<div class="gp-center-link"><a href="plots/">Open the complete plot gallery →</a></div>
 
-## Choose a learning path
+## Where to go next
 
-<div class="gp-card-grid" markdown>
-
-<div class="gp-card" markdown>
-### I am new to gp3mlpy
-Read [Key concepts](key-concepts.md), then work through the [Integrated research workflow](articles/integrated-research-workflow.md).
+<div class="gp-next-grid" markdown>
+<div markdown>
+<span class="gp-kicker">Learn</span>
+### [Key concepts](key-concepts.md)
+Understand generalization targets, provenance, leakage resistance, parity, and the scientific boundary.
+</div>
+<div markdown>
+<span class="gp-kicker">Apply</span>
+### [Workflow articles](articles/index.md)
+Follow end-to-end, generalization, governance, validation, and reproducibility workflows.
+</div>
+<div markdown>
+<span class="gp-kicker">Inspect</span>
+### [Workflow API map](api-map.md)
+Find functions by research stage rather than alphabetically.
+</div>
+<div markdown>
+<span class="gp-kicker">Reference</span>
+### [Complete API index](reference/index.md)
+Browse all 127 compatibility exports and their dedicated reference pages.
+</div>
 </div>
 
-<div class="gp-card" markdown>
-### I need participant-safe validation
-Start with [Participant generalization](articles/participant-generalization.md) and [Nested grouped resampling](articles/nested-grouped-resampling.md).
-</div>
-
-<div class="gp-card" markdown>
-### I am preparing a reproducible study
-Use [Analysis-plan governance](articles/analysis-plan-governance.md), [Reproducibility hardening](articles/reproducibility-hardening.md), and [Portable research artifacts](articles/portable-research-artifacts.md).
-</div>
-
-<div class="gp-card" markdown>
-### I need external validation
-See [External validation reporting](articles/external-validation-reporting.md) and [Dataset shift and robustness](articles/dataset-shift-and-robustness.md).
-</div>
-
-<div class="gp-card" markdown>
-### I need governed classification decisions
-See [Decision governance](articles/decision-governance.md) and [Group-aware conformal prediction](articles/group-aware-conformal-prediction.md).
-</div>
-
-<div class="gp-card" markdown>
-### I need a function quickly
-Use the [workflow API map](api-map.md), the [complete alphabetical index](reference/index.md), or the site search. All 127 compatibility exports have dedicated reference pages.
-</div>
-
-</div>
-
-## Installation
-
-=== "PyPI"
-
-    ```bash
-    python -m pip install gp3mlpy
-    ```
-
-=== "GitHub"
-
-    ```bash
-    python -m pip install "git+https://github.com/stefanosbalaskas/gp3mlpy.git@main"
-    ```
-
-=== "Development checkout"
-
-    ```bash
-    git clone https://github.com/stefanosbalaskas/gp3mlpy.git
-    cd gp3mlpy
-    python -m pip install -e .
-    ```
-
-=== "uv"
-
-    ```bash
-    uv sync --extra dev --extra docs
-    ```
-
-Optional extras include `xgboost`, `deep`, `conformal`, `rocrate`, and `artifact`.
+!!! danger "Hard scientific boundary"
+    `gp3mlpy` is for explicitly observed, non-sensitive outcomes. It must not be used for person identification, biometric authentication, health/diagnosis inference, protected-attribute inference, or direct/indirect inference of emotion, stress, personality, deception, cognition, comprehension, intent, or other mental states.
