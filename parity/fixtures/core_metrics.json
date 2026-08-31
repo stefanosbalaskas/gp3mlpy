@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "r_reference": {
+    "package": "gp3ml",
+    "version": "0.3.0",
+    "tag": "v0.3.0",
+    "commit": "0e23684f32a44417827aa0e7fee9fefc9e6c35d3",
+    "archive": "gp3ml_0.3.0.tar.gz",
+    "archive_sha256": "04c5fdb017c63ecbf6f5e85c29fff6492880201a2f2aa5c3c1d3fe998e60bae6"
+  },
+  "numeric_tolerance": {
+    "absolute": 1e-12,
+    "relative": 1e-12
+  },
+  "classification_cases": [
+    {
+      "id": "classification_primary",
+      "truth": [
+        "pass", "review", "pass", "review", "pass", "review",
+        "pass", "review", "pass", "review", "pass", "review"
+      ],
+      "probability": [0.20, 0.70, 0.60, 0.55, 0.30, 0.80, 0.65, 0.45, 0.40, 0.75, 0.50, 0.60],
+      "predicted": [
+        "pass", "review", "review", "review", "pass", "review",
+        "review", "pass", "pass", "review", "review", "review"
+      ],
+      "positive": "review",
+      "threshold": 0.5
+    },
+    {
+      "id": "classification_threshold_ties",
+      "truth": ["no", "yes", "no", "yes", "no", "yes"],
+      "probability": [0.50, 0.50, 0.80, 0.20, 0.50, 0.90],
+      "predicted": null,
+      "positive": "yes",
+      "threshold": 0.5
+    }
+  ],
+  "regression_cases": [
+    {
+      "id": "regression_primary",
+      "truth": [1.0, 2.0, 3.0, 4.0, 5.0],
+      "prediction": [1.1, 1.8, 3.2, 3.9, 4.8]
+    },
+    {
+      "id": "regression_constant_truth",
+      "truth": [2.0, 2.0, 2.0, 2.0],
+      "prediction": [1.8, 2.1, 2.2, 1.9]
+    }
+  ]
+}

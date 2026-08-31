@@ -154,7 +154,15 @@ def validate_gazepoint_ml_roles(
         predictor_list = list(dict.fromkeys(str(x) for x in predictors))
     missing_predictors = [p for p in predictor_list if p not in data.columns]
     identifiers = [x for x in [task.unit_id, task.participant_id, task.stimulus_id] if x]
-    class_counts = data[task.outcome].value_counts(dropna=True) if task.task_type == "classification" else None
+    identifier_predictors = [p for p in predictor_list if p in identifiers]
+    class_counts = None
+    if task.task_type == "classification":
+        class_values = data[task.outcome].astype("string")
+        class_counts = pd.Series(
+            [int((class_values == level).sum()) for level in task.levels],
+            index=task.levels,
+            dtype=int,
+        )
     grouping_column = {
         "new_trials_known_participants": task.unit_id,
         "new_participants": task.participant_id,
@@ -178,7 +186,7 @@ def validate_gazepoint_ml_roles(
     checks = pd.DataFrame([
         ("predictors_exist", "fail" if missing_predictors else "pass", ", ".join(missing_predictors)),
         ("outcome_not_predictor", "fail" if task.outcome in predictor_list else "pass", task.outcome if task.outcome in predictor_list else ""),
-        ("identifiers_not_predictors", "fail" if set(predictor_list) & set(identifiers) else "pass", ", ".join(sorted(set(predictor_list) & set(identifiers)))),
+        ("identifiers_not_predictors", "fail" if identifier_predictors else "pass", ", ".join(identifier_predictors)),
         ("outcome_complete", "fail" if data[task.outcome].isna().any() else "pass", str(int(data[task.outcome].isna().sum()))),
         ("sufficient_group_levels", "fail" if grouping_column is None or n_groups < 2 else "pass", "missing grouping role" if grouping_column is None else str(n_groups)),
         ("classification_level_support", cls_status, cls_detail),

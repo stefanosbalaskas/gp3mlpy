@@ -1,0 +1,469 @@
+name: R/Python behavioral parity
+
+on:
+  push:
+    branches:
+      - parity/r-0.3.0-behavioral-freeze
+    paths:
+      - 'parity/**'
+      - 'reference/r_api_inventory.csv'
+      - 'src/gp3mlpy/**'
+      - 'tests/test_r_parity_*.py'
+      - 'pyproject.toml'
+      - '.github/workflows/parity.yml'
+  pull_request:
+    paths:
+      - 'parity/**'
+      - 'reference/r_api_inventory.csv'
+      - 'src/gp3mlpy/**'
+      - 'tests/test_r_parity_*.py'
+      - 'pyproject.toml'
+      - '.github/workflows/parity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          use-public-rspm: true
+
+      - name: Install gp3mlpy
+        run: python -m pip install -e .
+
+      - name: Install R parity helper
+        shell: bash
+        run: Rscript -e 'install.packages("jsonlite", repos="https://cloud.r-project.org")'
+
+      - name: Download frozen gp3ml 0.3.0 archive
+        shell: bash
+        run: |
+          curl --fail --location --retry 3 \
+            --output /tmp/gp3ml_0.3.0.tar.gz \
+            https://github.com/stefanosbalaskas/gp3ml/releases/download/v0.3.0/gp3ml_0.3.0.tar.gz
+          echo '04c5fdb017c63ecbf6f5e85c29fff6492880201a2f2aa5c3c1d3fe998e60bae6  /tmp/gp3ml_0.3.0.tar.gz' | sha256sum --check
+
+      - name: Install frozen gp3ml reference
+        shell: bash
+        run: R CMD INSTALL /tmp/gp3ml_0.3.0.tar.gz
+
+      - name: Execute Python deterministic core fixtures
+        run: >-
+          python parity/run_python_core.py
+          parity/fixtures/core_metrics.json
+          parity/results/python-core.json
+
+      - name: Execute R deterministic core fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_core.R
+          parity/fixtures/core_metrics.json
+          parity/results/r-core.json
+
+      - name: Compare deterministic core behavior
+        run: >-
+          python parity/compare_core.py
+          parity/fixtures/core_metrics.json
+          parity/results/r-core.json
+          parity/results/python-core.json
+          parity/results/core-report.json
+
+      - name: Execute Python governance fixtures
+        run: >-
+          python parity/run_python_governance.py
+          parity/fixtures/governance.json
+          parity/results/python-governance.json
+
+      - name: Execute R governance fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_governance.R
+          parity/fixtures/governance.json
+          parity/results/r-governance.json
+
+      - name: Compare governance behavior
+        run: >-
+          python parity/compare_governance.py
+          parity/fixtures/governance.json
+          parity/results/r-governance.json
+          parity/results/python-governance.json
+          parity/results/governance-report.json
+
+      - name: Execute Python leakage fixtures
+        run: >-
+          python parity/run_python_leakage.py
+          parity/fixtures/leakage.json
+          parity/results/python-leakage.json
+
+      - name: Execute R leakage fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_leakage.R
+          parity/fixtures/leakage.json
+          parity/results/r-leakage.json
+
+      - name: Compare leakage behavior
+        run: >-
+          python parity/compare_leakage.py
+          parity/fixtures/leakage.json
+          parity/results/r-leakage.json
+          parity/results/python-leakage.json
+          parity/results/leakage-report.json
+
+      - name: Execute Python splitting fixtures
+        run: >-
+          python parity/run_python_splitting.py
+          parity/fixtures/splitting.json
+          parity/results/python-splitting.json
+
+      - name: Execute R splitting fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_splitting.R
+          parity/fixtures/splitting.json
+          parity/results/r-splitting.json
+
+      - name: Compare splitting behavior
+        run: >-
+          python parity/compare_splitting.py
+          parity/fixtures/splitting.json
+          parity/results/r-splitting.json
+          parity/results/python-splitting.json
+          parity/results/splitting-report.json
+
+      - name: Execute Python group-resampling fixtures
+        run: >-
+          python parity/run_python_resampling.py
+          parity/fixtures/resampling.json
+          parity/results/python-resampling.json
+
+      - name: Execute R group-resampling fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_resampling.R
+          parity/fixtures/resampling.json
+          parity/results/r-resampling.json
+
+      - name: Compare group-resampling behavior
+        run: >-
+          python parity/compare_resampling.py
+          parity/fixtures/resampling.json
+          parity/results/r-resampling.json
+          parity/results/python-resampling.json
+          parity/results/resampling-report.json
+
+      - name: Execute Python fold-diagnostics fixtures
+        run: >-
+          python parity/run_python_diagnostics.py
+          parity/fixtures/diagnostics.json
+          parity/results/python-diagnostics.json
+
+      - name: Execute R fold-diagnostics fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_diagnostics.R
+          parity/fixtures/diagnostics.json
+          parity/results/r-diagnostics.json
+
+      - name: Compare fold-diagnostics behavior
+        run: >-
+          python parity/compare_diagnostics.py
+          parity/fixtures/diagnostics.json
+          parity/results/r-diagnostics.json
+          parity/results/python-diagnostics.json
+          parity/results/diagnostics-report.json
+
+      - name: Execute Python calibration fixtures
+        run: >-
+          python parity/run_python_calibration.py
+          parity/fixtures/calibration.json
+          parity/results/python-calibration.json
+
+      - name: Execute R calibration fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_calibration.R
+          parity/fixtures/calibration.json
+          parity/results/r-calibration.json
+
+      - name: Compare calibration behavior
+        run: >-
+          python parity/compare_calibration.py
+          parity/fixtures/calibration.json
+          parity/results/r-calibration.json
+          parity/results/python-calibration.json
+          parity/results/calibration-report.json
+
+      - name: Execute Python preprocessing fixtures
+        run: >-
+          python parity/run_python_preprocessing.py
+          parity/fixtures/preprocessing.json
+          parity/results/python-preprocessing.json
+
+      - name: Execute R preprocessing fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_preprocessing.R
+          parity/fixtures/preprocessing.json
+          parity/results/r-preprocessing.json
+
+      - name: Compare preprocessing behavior
+        run: >-
+          python parity/compare_preprocessing.py
+          parity/fixtures/preprocessing.json
+          parity/results/r-preprocessing.json
+          parity/results/python-preprocessing.json
+          parity/results/preprocessing-report.json
+
+      - name: Execute Python synthetic workflows fixtures
+        run: >-
+          python parity/run_python_synthetic.py
+          parity/fixtures/synthetic.json
+          parity/results/python-synthetic.json
+
+      - name: Execute R synthetic workflows fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_synthetic.R
+          parity/fixtures/synthetic.json
+          parity/results/r-synthetic.json
+
+      - name: Compare synthetic workflows behavior
+        run: >-
+          python parity/compare_synthetic.py
+          parity/fixtures/synthetic.json
+          parity/results/r-synthetic.json
+          parity/results/python-synthetic.json
+          parity/results/synthetic-report.json
+
+      - name: Execute Python target-uncertainty fixtures
+        run: >-
+          python parity/run_python_target_uncertainty.py
+          parity/fixtures/target_uncertainty.json
+          parity/results/python-target-uncertainty.json
+
+      - name: Execute R target-uncertainty fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_target_uncertainty.R
+          parity/fixtures/target_uncertainty.json
+          parity/results/r-target-uncertainty.json
+
+      - name: Compare target-uncertainty behavior
+        run: >-
+          python parity/compare_target_uncertainty.py
+          parity/fixtures/target_uncertainty.json
+          parity/results/r-target-uncertainty.json
+          parity/results/python-target-uncertainty.json
+          parity/results/target-uncertainty-report.json
+
+      - name: Execute Python metrics/engines fixtures
+        run: >-
+          python parity/run_python_metrics_engines.py
+          parity/fixtures/metrics_engines.json
+          parity/results/python-metrics-engines.json
+
+      - name: Execute R metrics/engines fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_metrics_engines.R
+          parity/fixtures/metrics_engines.json
+          parity/results/r-metrics-engines.json
+
+      - name: Compare metrics/engines behavior
+        run: >-
+          python parity/compare_metrics_engines.py
+          parity/fixtures/metrics_engines.json
+          parity/results/r-metrics-engines.json
+          parity/results/python-metrics-engines.json
+          parity/results/metrics-engines-report.json
+
+      - name: Execute Python resample-output fixtures
+        run: >-
+          python parity/run_python_resample_outputs.py
+          parity/fixtures/resample_outputs.json
+          parity/results/python-resample-outputs.json
+
+      - name: Execute R resample-output fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_resample_outputs.R
+          parity/fixtures/resample_outputs.json
+          parity/results/r-resample-outputs.json
+
+      - name: Compare resample-output behavior
+        run: >-
+          python parity/compare_resample_outputs.py
+          parity/fixtures/resample_outputs.json
+          parity/results/r-resample-outputs.json
+          parity/results/python-resample-outputs.json
+          parity/results/resample-outputs-report.json
+
+      - name: Execute Python tuning-object fixtures
+        run: >-
+          python parity/run_python_tuning_objects.py
+          parity/fixtures/tuning_objects.json
+          parity/results/python-tuning-objects.json
+
+      - name: Execute R tuning-object fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_tuning_objects.R
+          parity/fixtures/tuning_objects.json
+          parity/results/r-tuning-objects.json
+
+      - name: Compare tuning-object behavior
+        run: >-
+          python parity/compare_tuning_objects.py
+          parity/fixtures/tuning_objects.json
+          parity/tuning_objects_cases.csv
+          parity/results/r-tuning-objects.json
+          parity/results/python-tuning-objects.json
+          parity/results/tuning-objects-report.json
+
+      - name: Execute Python model-execution fixtures
+        run: >-
+          python parity/run_python_model_execution.py
+          parity/fixtures/model_execution.json
+          parity/results/python-model-execution.json
+
+      - name: Execute R model-execution fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_model_execution.R
+          parity/fixtures/model_execution.json
+          parity/results/r-model-execution.json
+
+      - name: Compare model-execution behavior
+        run: >-
+          python parity/compare_model_execution.py
+          parity/fixtures/model_execution.json
+          parity/model_execution_cases.csv
+          parity/results/r-model-execution.json
+          parity/results/python-model-execution.json
+          parity/results/model-execution-report.json
+
+      - name: Execute Python nested-resampling fixtures
+        run: >-
+          python parity/run_python_nested_resampling.py
+          parity/fixtures/nested_resampling.json
+          parity/results/python-nested-resampling.json
+
+      - name: Execute R nested-resampling fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_nested_resampling.R
+          parity/fixtures/nested_resampling.json
+          parity/results/r-nested-resampling.json
+
+      - name: Compare nested-resampling behavior
+        run: >-
+          python parity/compare_nested_resampling.py
+          parity/fixtures/nested_resampling.json
+          parity/nested_resampling_cases.csv
+          parity/results/r-nested-resampling.json
+          parity/results/python-nested-resampling.json
+          parity/results/nested-resampling-report.json
+
+      - name: Execute Python external-validation fixtures
+        run: >-
+          python parity/run_python_external_validation.py
+          parity/fixtures/external_validation.json
+          parity/results/python-external-validation.json
+
+      - name: Execute R external-validation fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_external_validation.R
+          parity/fixtures/external_validation.json
+          parity/results/r-external-validation.json
+
+      - name: Compare external-validation behavior
+        run: >-
+          python parity/compare_external_validation.py
+          parity/fixtures/external_validation.json
+          parity/external_validation_cases.csv
+          parity/results/r-external-validation.json
+          parity/results/python-external-validation.json
+          parity/results/external-validation-report.json
+
+      - name: Execute Python final-reporting fixtures
+        run: >-
+          python parity/run_python_final_reporting.py
+          parity/fixtures/final_reporting.json
+          parity/results/python-final-reporting.json
+
+      - name: Execute R final-reporting fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_final_reporting.R
+          parity/fixtures/final_reporting.json
+          parity/results/r-final-reporting.json
+
+      - name: Compare final-reporting behavior
+        run: >-
+          python parity/compare_final_reporting.py
+          parity/fixtures/final_reporting.json
+          parity/final_reporting_cases.csv
+          parity/results/r-final-reporting.json
+          parity/results/python-final-reporting.json
+          parity/results/final-reporting-report.json
+
+      - name: Build stable API parity matrix
+        run: >-
+          python parity/build_matrix.py
+          reference/r_api_inventory.csv
+          parity/results/stable-api-matrix.csv
+          parity/core_cases.csv
+          parity/results/core-report.json
+          parity/governance_cases.csv
+          parity/results/governance-report.json
+          parity/leakage_cases.csv
+          parity/results/leakage-report.json
+          parity/splitting_cases.csv
+          parity/results/splitting-report.json
+          parity/resampling_cases.csv
+          parity/results/resampling-report.json
+          parity/diagnostics_cases.csv
+          parity/results/diagnostics-report.json
+          parity/calibration_cases.csv
+          parity/results/calibration-report.json
+          parity/preprocessing_cases.csv
+          parity/results/preprocessing-report.json
+          parity/synthetic_cases.csv
+          parity/results/synthetic-report.json
+          parity/target_uncertainty_cases.csv
+          parity/results/target-uncertainty-report.json
+          parity/metrics_engines_cases.csv
+          parity/results/metrics-engines-report.json
+          parity/resample_outputs_cases.csv
+          parity/results/resample-outputs-report.json
+          parity/tuning_objects_cases.csv
+          parity/results/tuning-objects-report.json
+          parity/model_execution_cases.csv
+          parity/results/model-execution-report.json
+          parity/nested_resampling_cases.csv
+          parity/results/nested-resampling-report.json
+          parity/external_validation_cases.csv
+          parity/results/external-validation-report.json
+          parity/final_reporting_cases.csv
+          parity/results/final-reporting-report.json
+
+      - name: Upload parity evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gp3ml-r-python-parity
+          path: parity/results/
+          if-no-files-found: warn

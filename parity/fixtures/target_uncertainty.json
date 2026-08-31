@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "r_reference": {
+    "package": "gp3ml",
+    "version": "0.3.0",
+    "archive_sha256": "04c5fdb017c63ecbf6f5e85c29fff6492880201a2f2aa5c3c1d3fe998e60bae6"
+  },
+  "classification": {
+    "truth": ["pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review"],
+    "prediction": ["pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review", "pass", "review"],
+    "probability": [0.2, 0.8, 0.2, 0.8, 0.2, 0.8, 0.2, 0.8, 0.2, 0.8, 0.2, 0.8, 0.2, 0.8, 0.2, 0.8, 0.2, 0.8, 0.2, 0.8, 0.2, 0.8, 0.2, 0.8],
+    "participant_id": ["P01", "P01", "P01", "P01", "P01", "P01", "P02", "P02", "P02", "P02", "P02", "P02", "P03", "P03", "P03", "P03", "P03", "P03", "P04", "P04", "P04", "P04", "P04", "P04"],
+    "stimulus_id": ["S01", "S01", "S02", "S02", "S03", "S03", "S01", "S01", "S02", "S02", "S03", "S03", "S01", "S01", "S02", "S02", "S03", "S03", "S01", "S01", "S02", "S02", "S03", "S03"],
+    "bootstrap": 40,
+    "conf_level": 0.90,
+    "seed": 707
+  },
+  "regression": {
+    "truth": [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0, 10.5, 11.0, 11.5, 12.0, 12.5],
+    "prediction": [1.2, 1.4, 2.1, 2.3, 3.2, 3.4, 4.1, 4.3, 5.2, 5.4, 6.1, 6.3, 7.2, 7.4, 8.1, 8.3, 9.2, 9.4, 10.1, 10.3, 11.2, 11.4, 12.1, 12.3],
+    "bootstrap": 120,
+    "conf_level": 0.90,
+    "seed": 909
+  },
+  "resample_metrics": [
+    {"repeat": 1, "fold": 1, "fold_id": "Repeat1_Fold1", "metric": "roc_auc", "value": 0.80},
+    {"repeat": 1, "fold": 2, "fold_id": "Repeat1_Fold2", "metric": "roc_auc", "value": 0.82},
+    {"repeat": 1, "fold": 3, "fold_id": "Repeat1_Fold3", "metric": "roc_auc", "value": 0.78},
+    {"repeat": 2, "fold": 1, "fold_id": "Repeat2_Fold1", "metric": "roc_auc", "value": 0.85},
+    {"repeat": 2, "fold": 2, "fold_id": "Repeat2_Fold2", "metric": "roc_auc", "value": 0.81},
+    {"repeat": 2, "fold": 3, "fold_id": "Repeat2_Fold3", "metric": "roc_auc", "value": 0.83},
+    {"repeat": 1, "fold": 1, "fold_id": "Repeat1_Fold1", "metric": "brier", "value": 0.20},
+    {"repeat": 1, "fold": 2, "fold_id": "Repeat1_Fold2", "metric": "brier", "value": 0.18},
+    {"repeat": 1, "fold": 3, "fold_id": "Repeat1_Fold3", "metric": "brier", "value": 0.22},
+    {"repeat": 2, "fold": 1, "fold_id": "Repeat2_Fold1", "metric": "brier", "value": 0.16},
+    {"repeat": 2, "fold": 2, "fold_id": "Repeat2_Fold2", "metric": "brier", "value": 0.19},
+    {"repeat": 2, "fold": 3, "fold_id": "Repeat2_Fold3", "metric": "brier", "value": 0.17}
+  ],
+  "regression_interval_tolerance": {
+    "rmse": 0.08,
+    "mae": 0.08,
+    "r_squared": 0.01,
+    "correlation": 0.01
+  }
+}

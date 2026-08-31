@@ -1,0 +1,254 @@
+{
+  "schema_version": 2,
+  "r_reference": {
+    "package": "gp3ml",
+    "version": "0.3.0",
+    "tag": "v0.3.0",
+    "commit": "0e23684f32a44417827aa0e7fee9fefc9e6c35d3",
+    "archive": "gp3ml_0.3.0.tar.gz",
+    "archive_sha256": "04c5fdb017c63ecbf6f5e85c29fff6492880201a2f2aa5c3c1d3fe998e60bae6"
+  },
+  "numeric_tolerance": {
+    "absolute": 1e-12,
+    "relative": 1e-12
+  },
+  "datasets": {
+    "classification": {
+      "kind": "classification_governance",
+      "n": 22,
+      "pass_n": 10,
+      "outcome_levels": ["pass", "review"]
+    },
+    "regression": {
+      "kind": "regression_governance",
+      "n": 8
+    }
+  },
+  "task_cases": [
+    {
+      "id": "task_classification_safe",
+      "dataset": "classification",
+      "args": {
+        "outcome": "quality_status",
+        "purpose": "Predict predefined recording-quality review status",
+        "task_type": "classification",
+        "unit_id": "trial_id",
+        "participant_id": "participant_id",
+        "stimulus_id": "stimulus_id",
+        "generalization_target": "new_participants",
+        "positive": "review"
+      }
+    },
+    {
+      "id": "task_regression_safe",
+      "dataset": "regression",
+      "args": {
+        "outcome": "score",
+        "purpose": "Predict an explicitly observed continuous task score",
+        "task_type": "regression",
+        "unit_id": "trial_id",
+        "participant_id": "participant_id",
+        "stimulus_id": "stimulus_id",
+        "generalization_target": "new_participants"
+      }
+    },
+    {
+      "id": "task_prohibited_purpose",
+      "dataset": "classification",
+      "args": {
+        "outcome": "quality_status",
+        "purpose": "Infer participant emotion from gaze measurements",
+        "task_type": "classification",
+        "unit_id": "trial_id",
+        "participant_id": "participant_id",
+        "stimulus_id": "stimulus_id",
+        "generalization_target": "new_participants",
+        "positive": "review"
+      }
+    },
+    {
+      "id": "task_unobserved_outcome",
+      "dataset": "classification",
+      "args": {
+        "outcome": "quality_status",
+        "purpose": "Predict predefined recording-quality review status",
+        "task_type": "classification",
+        "unit_id": "trial_id",
+        "participant_id": "participant_id",
+        "stimulus_id": "stimulus_id",
+        "generalization_target": "new_participants",
+        "positive": "review",
+        "observed_outcome": false
+      }
+    },
+    {
+      "id": "task_missing_participant",
+      "dataset": "classification",
+      "args": {
+        "outcome": "quality_status",
+        "purpose": "Predict predefined recording-quality review status",
+        "task_type": "classification",
+        "unit_id": "trial_id",
+        "participant_id": null,
+        "stimulus_id": "stimulus_id",
+        "generalization_target": "new_participants",
+        "positive": "review"
+      }
+    },
+    {
+      "id": "task_unknown_positive",
+      "dataset": "classification",
+      "args": {
+        "outcome": "quality_status",
+        "purpose": "Predict predefined recording-quality review status",
+        "task_type": "classification",
+        "unit_id": "trial_id",
+        "participant_id": "participant_id",
+        "stimulus_id": "stimulus_id",
+        "generalization_target": "new_participants",
+        "positive": "alert"
+      }
+    }
+  ],
+  "assert_cases": [
+    {"id": "assert_safe", "task_case": "task_classification_safe"},
+    {"id": "assert_invalid_object", "plain_object": true},
+    {
+      "id": "assert_sensitive",
+      "task_case": "task_classification_safe",
+      "mutations": {"sensitive_outcome": true}
+    },
+    {
+      "id": "assert_unobserved",
+      "task_case": "task_classification_safe",
+      "mutations": {"observed_outcome": false}
+    },
+    {
+      "id": "assert_crossed_missing_stimulus",
+      "task_case": "task_classification_safe",
+      "mutations": {
+        "generalization_target": "new_participants_and_new_stimuli",
+        "stimulus_id": null
+      }
+    }
+  ],
+  "manifest_cases": [
+    {
+      "id": "manifest_clean",
+      "operation": "create_validate",
+      "args": {
+        "features": ["fixation_duration", "pupil_change"],
+        "scientific_source": ["Gazepoint fixation export", "Gazepoint all-gaze export"],
+        "source_table": ["fixations", "all_gaze"],
+        "transformation": ["Trial-level mean", "Baseline-adjusted change"],
+        "availability_stage": "during_exposure",
+        "prediction_time_available": true,
+        "outcome_derived": false,
+        "post_outcome": false,
+        "identifier": false,
+        "preprocessing_scope": ["none", "resampling_fold"],
+        "fold_local_required": [false, true],
+        "reviewer_notes": ""
+      }
+    },
+    {
+      "id": "manifest_default_review",
+      "operation": "create_validate",
+      "args": {"features": "fixation_duration"}
+    },
+    {
+      "id": "manifest_outcome_derived_fail",
+      "operation": "create_validate",
+      "args": {
+        "features": ["fixation_duration", "pupil_change"],
+        "scientific_source": ["Gazepoint fixation export", "Gazepoint all-gaze export"],
+        "source_table": ["fixations", "all_gaze"],
+        "transformation": ["Trial-level mean", "Baseline-adjusted change"],
+        "availability_stage": "during_exposure",
+        "prediction_time_available": true,
+        "outcome_derived": [true, false],
+        "post_outcome": false,
+        "identifier": false,
+        "preprocessing_scope": ["none", "resampling_fold"],
+        "fold_local_required": [false, true]
+      }
+    },
+    {
+      "id": "manifest_post_outcome_fail",
+      "operation": "create_validate",
+      "args": {
+        "features": ["fixation_duration", "pupil_change"],
+        "scientific_source": ["Gazepoint fixation export", "Gazepoint all-gaze export"],
+        "source_table": ["fixations", "all_gaze"],
+        "transformation": ["Trial-level mean", "Baseline-adjusted change"],
+        "availability_stage": ["post_outcome", "during_exposure"],
+        "prediction_time_available": [false, true],
+        "outcome_derived": false,
+        "post_outcome": [true, false],
+        "identifier": false,
+        "preprocessing_scope": ["none", "resampling_fold"],
+        "fold_local_required": [false, true]
+      }
+    },
+    {
+      "id": "manifest_fold_scope_fail",
+      "operation": "create_validate",
+      "args": {
+        "features": ["fixation_duration", "pupil_change"],
+        "scientific_source": ["Gazepoint fixation export", "Gazepoint all-gaze export"],
+        "source_table": ["fixations", "all_gaze"],
+        "transformation": ["Trial-level mean", "Baseline-adjusted change"],
+        "availability_stage": "during_exposure",
+        "prediction_time_available": true,
+        "outcome_derived": false,
+        "post_outcome": false,
+        "identifier": false,
+        "preprocessing_scope": ["none", "global"],
+        "fold_local_required": [false, true]
+      }
+    },
+    {
+      "id": "manifest_duplicate_error",
+      "operation": "create",
+      "args": {"features": ["feature_a", "feature_a"]}
+    },
+    {
+      "id": "manifest_invalid_stage_error",
+      "operation": "create",
+      "args": {"features": "feature_a", "availability_stage": "after_everything"}
+    },
+    {
+      "id": "manifest_invalid_scope_error",
+      "operation": "create",
+      "args": {"features": "feature_a", "preprocessing_scope": "whole_dataset"}
+    },
+    {
+      "id": "manifest_missing_columns_error",
+      "operation": "validate_raw",
+      "raw_manifest": {"feature": ["feature_a"]}
+    }
+  ],
+  "role_cases": [
+    {
+      "id": "roles_without_manifest",
+      "dataset": "classification",
+      "task_case": "task_classification_safe",
+      "predictors": ["fixation_duration", "pupil_change"],
+      "manifest_case": null
+    },
+    {
+      "id": "roles_safe_manifest",
+      "dataset": "classification",
+      "task_case": "task_classification_safe",
+      "predictors": ["fixation_duration", "pupil_change"],
+      "manifest_case": "manifest_clean"
+    },
+    {
+      "id": "roles_predictor_failures",
+      "dataset": "classification",
+      "task_case": "task_classification_safe",
+      "predictors": ["trial_id", "participant_id", "quality_status", "missing_feature"],
+      "manifest_case": "manifest_clean"
+    }
+  ]
+}

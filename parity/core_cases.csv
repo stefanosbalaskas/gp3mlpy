@@ -1,0 +1,6 @@
+function,stability,case_id,comparison,status,r_reference_version
+gp3ml_prohibited_uses,stable,prohibited_uses_exact,exact_ordered_strings,PENDING,0.3.0
+gazepoint_classification_metrics,stable,classification_primary,schema_and_numeric_tolerance,PENDING,0.3.0
+gazepoint_classification_metrics,stable,classification_threshold_ties,schema_and_numeric_tolerance,PENDING,0.3.0
+gazepoint_regression_metrics,stable,regression_primary,schema_and_numeric_tolerance,PENDING,0.3.0
+gazepoint_regression_metrics,stable,regression_constant_truth,schema_and_numeric_tolerance,PENDING,0.3.0

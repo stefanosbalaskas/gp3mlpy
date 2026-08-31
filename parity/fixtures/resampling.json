@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "r_reference": {
+    "package": "gp3ml",
+    "version": "0.3.0"
+  },
+  "numeric_tolerance": {
+    "absolute": 1e-12,
+    "relative": 1e-12
+  },
+  "success_cases": [
+    {"id": "folds_new_participants", "target": "new_participants", "v": 3, "repeats": 2, "seed": 77},
+    {"id": "folds_new_stimuli", "target": "new_stimuli", "v": 2, "repeats": 2, "seed": 83},
+    {"id": "folds_new_trials", "target": "new_trials_known_participants", "v": 3, "repeats": 2, "seed": 91},
+    {"id": "folds_crossed", "target": "new_participants_and_new_stimuli", "v": [3, 2], "repeats": 2, "seed": 101}
+  ],
+  "error_cases": [
+    {"id": "folds_missing_manifest", "kind": "missing_manifest"},
+    {"id": "folds_missing_participant", "kind": "missing_participant"},
+    {"id": "folds_v_vector_single_target", "kind": "v_vector_single_target"},
+    {"id": "folds_v_too_many_participants", "kind": "v_too_many_participants"},
+    {"id": "folds_v_too_many_stimuli", "kind": "v_too_many_stimuli"},
+    {"id": "folds_insufficient_trials", "kind": "insufficient_trials"}
+  ],
+  "audit_cases": [
+    {"id": "audit_clean", "kind": "clean"},
+    {"id": "audit_invalid_object", "kind": "invalid_object"},
+    {"id": "audit_empty_folds", "kind": "empty_folds"}
+  ],
+  "validation_cases": [
+    {"id": "validation_clean", "kind": "clean"},
+    {"id": "validation_assignment_damage", "kind": "assignment_damage"},
+    {"id": "validation_invalid_object", "kind": "invalid_object"},
+    {"id": "validation_missing_component", "kind": "missing_component"}
+  ],
+  "writer_cases": [
+    {"id": "writer_summary_tables", "kind": "summary_tables"},
+    {"id": "writer_include_fold_data", "kind": "include_fold_data"},
+    {"id": "writer_overwrite", "kind": "overwrite"},
+    {"id": "writer_bad_table", "kind": "bad_table"},
+    {"id": "writer_bad_prefix", "kind": "bad_prefix"}
+  ]
+}

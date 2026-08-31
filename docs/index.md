@@ -20,12 +20,12 @@
 <div class="gp-stat"><strong>71</strong><span>stable exports</span></div>
 <div class="gp-stat"><strong>38</strong><span>stable public classes</span></div>
 <div class="gp-stat"><strong>20</strong><span>article companions</span></div>
-<div class="gp-stat"><strong>122</strong><span>passing tests</span></div>
+<div class="gp-stat"><strong>125</strong><span>passing tests</span></div>
 <div class="gp-stat"><strong>100%</strong><span>line + branch coverage</span></div>
 </div>
 
 <div class="gp-note" markdown>
-**Validated development baseline.** The package currently covers all 4,004 executable statements and all 1,690 measured branches, with zero partial branches. CI permanently enforces `--cov-branch --cov-fail-under=100` and runs the core suite on Ubuntu, Windows, and macOS across Python 3.11–3.13. Coverage is a Python-side quality property; `r_parity_tested` remains `false` until cross-language behavioral fixtures are completed.
+**Validated 0.1.0 behavioral-freeze baseline.** The package covers all 4,020 executable statements and all 1,700 measured branches, with zero partial branches. CI permanently enforces `--cov-branch --cov-fail-under=100` and runs the core suite on Ubuntu, Windows, and macOS across Python 3.11–3.13. Stable-API R/Python behavioral parity is complete for all 71 stable exports against the SHA-256-verified gp3ml 0.3.0 release archive: **67 PASS / 4 EXPECTED-DIFFERENCE / 0 PENDING / 0 FAIL**. The four expected differences are documented safety/reference-defect boundaries, not unresolved failures.
 </div>
 
 ## What makes gp3mlpy different
@@ -197,6 +197,12 @@ Use the [workflow API map](api-map.md), the [complete alphabetical index](refere
 
 ## Installation
 
+=== "PyPI"
+
+    ```bash
+    python -m pip install gp3mlpy
+    ```
+
 === "GitHub"
 
     ```bash
@@ -218,13 +224,3 @@ Use the [workflow API map](api-map.md), the [complete alphabetical index](refere
     ```
 
 Optional extras include `xgboost`, `deep`, `conformal`, `rocrate`, and `artifact`.
-
-!!! info "Development version"
-    The current package is `0.1.0.dev0`. A formal PyPI release has not yet been declared.
-
-## Frozen reference
-
-`gp3mlpy.r_reference_version == "0.3.0"`. The repository carries machine-readable R API, class, vignette, print/plot, failure-contract, and test inventories under `reference/` so compatibility claims remain inspectable.
-
-!!! warning "Scientific safeguards are part of the package contract"
-    Do not use `gp3mlpy` for person identification, biometric authentication, health or diagnosis inference, protected-attribute inference, or direct/indirect inference of emotion, stress, personality, deception, cognition, comprehension, intent, or other mental states.

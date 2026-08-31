@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "r_reference": {
+    "package": "gp3ml",
+    "version": "0.3.0",
+    "archive_sha256": "04c5fdb017c63ecbf6f5e85c29fff6492880201a2f2aa5c3c1d3fe998e60bae6"
+  },
+  "primary_simulation": {
+    "n_participants": 30,
+    "n_stimuli": 8,
+    "trials_per_cell": 2,
+    "seed": 101
+  },
+  "coercion_simulation": {
+    "n_participants": 4.9,
+    "n_stimuli": 2.9,
+    "trials_per_cell": 1.9,
+    "seed": 101
+  },
+  "distribution_tolerance": {
+    "tracking_ratio_mean": 0.03,
+    "tracking_ratio_sd": 0.02,
+    "blink_rate_mean": 0.55,
+    "blink_rate_sd": 0.35,
+    "fixation_duration_mean": 7.0,
+    "fixation_duration_sd": 5.0,
+    "gaze_dispersion_mean": 0.06,
+    "gaze_dispersion_sd": 0.04,
+    "pupil_change_mean": 0.09,
+    "pupil_change_sd": 0.06,
+    "observed_duration_mean": 0.9,
+    "observed_duration_sd": 0.65,
+    "quality_review_rate": 0.12,
+    "response_yes_rate": 0.12
+  },
+  "distribution_ranges": {
+    "tracking_ratio_mean": [0.82, 0.99],
+    "tracking_ratio_sd": [0.015, 0.09],
+    "blink_rate_mean": [4.0, 8.0],
+    "blink_rate_sd": [0.7, 2.0],
+    "fixation_duration_mean": [205.0, 245.0],
+    "fixation_duration_sd": [14.0, 32.0],
+    "gaze_dispersion_mean": [0.65, 0.95],
+    "gaze_dispersion_sd": [0.07, 0.20],
+    "pupil_change_mean": [-0.15, 0.25],
+    "pupil_change_sd": [0.12, 0.30],
+    "observed_duration_mean": [4.0, 9.0],
+    "observed_duration_sd": [0.8, 3.5],
+    "quality_review_rate": [0.03, 0.40],
+    "response_yes_rate": [0.20, 0.80]
+  }
+}

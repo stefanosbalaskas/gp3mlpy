@@ -7,7 +7,7 @@ from .task_governance import (
 from .feature_provenance import (
     create_gazepoint_feature_manifest, validate_gazepoint_feature_manifest, write_gazepoint_feature_manifest_csv,
 )
-__version__ = "0.1.0.dev0"
+__version__ = "0.1.0"
 r_reference_version = "0.3.0"
 
 from .leakage import audit_gazepoint_ml_leakage, write_gazepoint_ml_leakage_audit_csv

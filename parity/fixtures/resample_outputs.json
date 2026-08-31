@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "r_reference": {
+    "package": "gp3ml",
+    "version": "0.3.0",
+    "tag": "v0.3.0",
+    "commit": "0e23684f32a44417827aa0e7fee9fefc9e6c35d3",
+    "archive": "gp3ml_0.3.0.tar.gz",
+    "archive_sha256": "04c5fdb017c63ecbf6f5e85c29fff6492880201a2f2aa5c3c1d3fe998e60bae6"
+  },
+  "numeric_tolerance": {
+    "absolute": 1e-12,
+    "relative": 1e-12
+  },
+  "classification": {
+    "truth": ["pass", "review", "pass", "review"],
+    "prediction": ["pass", "review", "review", "review"],
+    "probability": [0.1, 0.8, 0.6, 0.7],
+    "threshold": 0.5
+  },
+  "metrics": [
+    {"repeat": 1, "fold": 1, "fold_id": "Repeat01_Fold01", "metric": "accuracy", "value": 0.75, "n": 2, "threshold": 0.5},
+    {"repeat": 1, "fold": 1, "fold_id": "Repeat01_Fold01", "metric": "brier", "value": 0.12, "n": 2, "threshold": 0.5},
+    {"repeat": 1, "fold": 2, "fold_id": "Repeat01_Fold02", "metric": "accuracy", "value": 1.0, "n": 2, "threshold": 0.5},
+    {"repeat": 1, "fold": 2, "fold_id": "Repeat01_Fold02", "metric": "brier", "value": 0.08, "n": 2, "threshold": 0.5}
+  ],
+  "manifest": {
+    "features": ["fixation_duration", "pupil_change"],
+    "scientific_source": ["Gazepoint fixation export", ""],
+    "source_table": ["fixations", "pupil"],
+    "transformation": ["Trial-level mean", "Trial-level change"],
+    "availability_stage": ["during_exposure", "unknown"],
+    "prediction_time_available": [true, true],
+    "preprocessing_scope": ["none", "unknown"],
+    "fold_local_required": [false, false]
+  }
+}
