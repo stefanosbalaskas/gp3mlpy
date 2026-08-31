@@ -1,0 +1,84 @@
+name: R/Python model execution parity tranche
+
+on:
+  push:
+    branches:
+      - parity/r-0.3.0-behavioral-freeze
+    paths:
+      - 'parity/model_execution_cases.csv'
+      - 'parity/fixtures/model_execution.json'
+      - 'parity/run_python_model_execution.py'
+      - 'parity/run_r_model_execution.R'
+      - 'parity/compare_model_execution.py'
+      - '.github/workflows/parity-model-execution.yml'
+      - 'src/gp3mlpy/model_engines.py'
+      - 'src/gp3mlpy/resample_evaluation.py'
+      - 'src/gp3mlpy/model_tuning.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  model-execution:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          use-public-rspm: true
+
+      - name: Install gp3mlpy
+        run: python -m pip install -e .
+
+      - name: Install R parity helper
+        shell: bash
+        run: Rscript -e 'install.packages("jsonlite", repos="https://cloud.r-project.org")'
+
+      - name: Download frozen gp3ml 0.3.0 archive
+        shell: bash
+        run: |
+          curl --fail --location --retry 3 \
+            --output /tmp/gp3ml_0.3.0.tar.gz \
+            https://github.com/stefanosbalaskas/gp3ml/releases/download/v0.3.0/gp3ml_0.3.0.tar.gz
+          echo '04c5fdb017c63ecbf6f5e85c29fff6492880201a2f2aa5c3c1d3fe998e60bae6  /tmp/gp3ml_0.3.0.tar.gz' | sha256sum --check
+
+      - name: Install frozen gp3ml reference
+        shell: bash
+        run: R CMD INSTALL /tmp/gp3ml_0.3.0.tar.gz
+
+      - name: Execute Python model-execution fixtures
+        run: >-
+          python parity/run_python_model_execution.py
+          parity/fixtures/model_execution.json
+          parity/results/python-model-execution.json
+
+      - name: Execute R model-execution fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_model_execution.R
+          parity/fixtures/model_execution.json
+          parity/results/r-model-execution.json
+
+      - name: Compare model-execution behavior
+        run: >-
+          python parity/compare_model_execution.py
+          parity/fixtures/model_execution.json
+          parity/model_execution_cases.csv
+          parity/results/r-model-execution.json
+          parity/results/python-model-execution.json
+          parity/results/model-execution-report.json
+
+      - name: Upload model-execution evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gp3ml-r-python-model-execution
+          path: parity/results/
+          if-no-files-found: warn
