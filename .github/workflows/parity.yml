@@ -398,6 +398,28 @@ jobs:
           parity/results/python-external-validation.json
           parity/results/external-validation-report.json
 
+      - name: Execute Python final-reporting fixtures
+        run: >-
+          python parity/run_python_final_reporting.py
+          parity/fixtures/final_reporting.json
+          parity/results/python-final-reporting.json
+
+      - name: Execute R final-reporting fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_final_reporting.R
+          parity/fixtures/final_reporting.json
+          parity/results/r-final-reporting.json
+
+      - name: Compare final-reporting behavior
+        run: >-
+          python parity/compare_final_reporting.py
+          parity/fixtures/final_reporting.json
+          parity/final_reporting_cases.csv
+          parity/results/r-final-reporting.json
+          parity/results/python-final-reporting.json
+          parity/results/final-reporting-report.json
+
       - name: Build stable API parity matrix
         run: >-
           python parity/build_matrix.py
@@ -435,6 +457,8 @@ jobs:
           parity/results/nested-resampling-report.json
           parity/external_validation_cases.csv
           parity/results/external-validation-report.json
+          parity/final_reporting_cases.csv
+          parity/results/final-reporting-report.json
 
       - name: Upload parity evidence
         if: always()
