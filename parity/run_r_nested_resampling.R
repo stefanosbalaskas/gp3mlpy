@@ -8,6 +8,8 @@ output_path <- args[[2L]]
 fixture <- jsonlite::fromJSON(fixture_path, simplifyVector = FALSE)
 seed <- as.integer(fixture$seed)
 
+suppressPackageStartupMessages(library(gp3ml))
+
 predictors <- c("tracking_ratio", "blink_rate")
 
 capture_case <- function(fun) {
