@@ -1,8 +1,9 @@
-name: Publish release to PyPI
+name: Publish gp3mlpy release
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'v*'
 
 permissions: {}
 
@@ -14,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ github.ref_name }}
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
@@ -67,8 +68,31 @@ jobs:
           path: dist/
           if-no-files-found: error
 
-  publish:
+  github-release:
     needs: build-and-validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download release distributions
+        uses: actions/download-artifact@v5
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag \
+            --title "gp3mlpy $version" \
+            --generate-notes
+
+  publish:
+    needs: [build-and-validate, github-release]
     runs-on: ubuntu-latest
     environment:
       name: pypi

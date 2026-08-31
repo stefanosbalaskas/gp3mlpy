@@ -25,7 +25,7 @@
 </div>
 
 <div class="gp-note" markdown>
-**Validated behavioral-freeze baseline.** The package covers all 4,020 executable statements and all 1,700 measured branches, with zero partial branches. CI permanently enforces `--cov-branch --cov-fail-under=100` and runs the core suite on Ubuntu, Windows, and macOS across Python 3.11–3.13. Stable-API R/Python behavioral parity is complete for all 71 stable exports against the SHA-256-verified gp3ml 0.3.0 release archive: **67 PASS / 4 EXPECTED-DIFFERENCE / 0 PENDING / 0 FAIL**. The four expected differences are documented safety/reference-defect boundaries, not unresolved failures.
+**Validated 0.1.0 behavioral-freeze baseline.** The package covers all 4,020 executable statements and all 1,700 measured branches, with zero partial branches. CI permanently enforces `--cov-branch --cov-fail-under=100` and runs the core suite on Ubuntu, Windows, and macOS across Python 3.11–3.13. Stable-API R/Python behavioral parity is complete for all 71 stable exports against the SHA-256-verified gp3ml 0.3.0 release archive: **67 PASS / 4 EXPECTED-DIFFERENCE / 0 PENDING / 0 FAIL**. The four expected differences are documented safety/reference-defect boundaries, not unresolved failures.
 </div>
 
 ## What makes gp3mlpy different
@@ -196,6 +196,12 @@ Use the [workflow API map](api-map.md), the [complete alphabetical index](refere
 </div>
 
 ## Installation
+
+=== "PyPI"
+
+    ```bash
+    python -m pip install gp3mlpy
+    ```
 
 === "GitHub"
 

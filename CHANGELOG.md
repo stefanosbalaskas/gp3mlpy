@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.1.0.dev0
+## 0.1.0 - 2026-08-31
 
-- Initial Python compatibility implementation targeting frozen gp3ml 0.3.0.
+- Initial formal Python release targeting frozen gp3ml 0.3.0.
 - 127/127 R exports represented: 71 stable and 56 experimental.
 - 38 stable public object classes represented.
 - Governance, provenance, leakage, splitting, resampling, modelling, uncertainty, calibration, external validation, decision governance, conformal prediction, shift auditing, analysis plans, model artifacts, robustness, reproducibility, interoperability, RO-Crate, and API contracts implemented.
@@ -16,4 +16,4 @@
 - Added a permanent CI coverage floor using `--cov-branch --cov-fail-under=100`.
 - Retained the full Ubuntu/Windows/macOS × Python 3.11/3.12/3.13 runtime matrix alongside Ruff, mypy, strict documentation, package build, Twine, and installed-wheel API gates.
 - Fixed Keras backend-readiness validation so confirmed NumPy/pandas boolean scalars are accepted correctly.
-- Refreshed public documentation, parity status, validation evidence, and release-readiness messaging for the completed behavioral freeze.
+- Refreshed public documentation, parity status, citation metadata, Zenodo metadata, and release automation for the 0.1.0 release.

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "gp3mlpy"
-version = "0.1.0.dev0"
+version = "0.1.0"
 description = "Governance-first leakage-resistant predictive modelling for Gazepoint research workflows; Python port of gp3ml 0.3.0."
 readme = "README.md"
 requires-python = ">=3.11"

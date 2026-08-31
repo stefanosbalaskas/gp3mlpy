@@ -1,6 +1,6 @@
 # gp3mlpy parity status
 
-- Python package: `gp3mlpy` 0.1.0.dev0
+- Python package: `gp3mlpy` 0.1.0
 - Frozen R reference: `gp3ml` 0.3.0
 - Frozen R release tag: `v0.3.0`
 - Frozen R release commit: `0e23684f32a44417827aa0e7fee9fefc9e6c35d3`

@@ -1,0 +1,22 @@
+{
+  "title": "gp3mlpy",
+  "description": "Governance-first, leakage-resistant predictive modelling for Gazepoint research workflows in Python; Python port of gp3ml 0.3.0.",
+  "creators": [
+    {
+      "name": "Balaskas, Stefanos"
+    }
+  ],
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "keywords": [
+    "gazepoint",
+    "eye-tracking",
+    "machine-learning",
+    "predictive-modeling",
+    "data-leakage",
+    "model-governance",
+    "nested-cross-validation",
+    "reproducible-research"
+  ]
+}

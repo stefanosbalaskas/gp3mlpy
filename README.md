@@ -7,7 +7,7 @@
   [![Coverage](https://img.shields.io/badge/line%20%2B%20branch%20coverage-100%25-2ea44f.svg)](https://github.com/stefanosbalaskas/gp3mlpy/actions/workflows/ci.yml)
   [![Python](https://img.shields.io/badge/Python-%E2%89%A53.11-3776AB?logo=python&logoColor=white)](https://www.python.org/)
   [![R reference](https://img.shields.io/badge/R%20reference-gp3ml%200.3.0-276DC3?logo=r&logoColor=white)](https://CRAN.R-project.org/package=gp3ml)
-  [![Development status](https://img.shields.io/badge/status-0.1.0.dev0-orange.svg)](https://github.com/stefanosbalaskas/gp3mlpy)
+  [![Release](https://img.shields.io/badge/release-0.1.0-blue.svg)](https://github.com/stefanosbalaskas/gp3mlpy/releases/tag/v0.1.0)
   [![License](https://img.shields.io/badge/license-MIT-2f855a.svg)](LICENSE)
 </div>
 
@@ -41,7 +41,7 @@ The port tracks gp3ml 0.3.0 as its frozen reference layer:
 
 ## Current quality floor
 
-The development baseline is continuously checked rather than described informally:
+The release baseline is continuously checked rather than described informally:
 
 - **125 passing Python tests**;
 - **100% statement coverage** — 4,020 / 4,020 executable statements;
@@ -83,6 +83,12 @@ Participant overlap is a failure when the declared target requires new-participa
 
 ## Installation
 
+### PyPI
+
+```bash
+python -m pip install gp3mlpy
+```
+
 ### Install directly from GitHub
 
 ```bash
@@ -104,8 +110,6 @@ uv sync --extra dev --extra docs
 ```
 
 Optional extras include `xgboost`, `deep`, `conformal`, `rocrate`, and `artifact`.
-
-> `gp3mlpy` is currently a development candidate (`0.1.0.dev0`) and has not yet been published as a formal PyPI release.
 
 ## Minimal governed workflow
 

@@ -1,11 +1,12 @@
 cff-version: 1.2.0
-message: "If you use this gp3mlpy development version, please cite this software and the upstream gp3ml package."
+message: "If you use gp3mlpy, please cite this software and the upstream gp3ml package."
 title: "gp3mlpy"
 type: software
 authors:
   - family-names: Balaskas
     given-names: Stefanos
-version: 0.1.0.dev0
+version: 0.1.0
+date-released: 2026-08-31
 repository-code: "https://github.com/stefanosbalaskas/gp3mlpy"
 url: "https://stefanosbalaskas.github.io/gp3mlpy/"
 license: MIT
