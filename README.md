@@ -8,6 +8,8 @@
   [![Python](https://img.shields.io/badge/Python-%E2%89%A53.11-3776AB?logo=python&logoColor=white)](https://www.python.org/)
   [![R reference](https://img.shields.io/badge/R%20reference-gp3ml%200.3.0-276DC3?logo=r&logoColor=white)](https://CRAN.R-project.org/package=gp3ml)
   [![Release](https://img.shields.io/badge/release-0.1.0-blue.svg)](https://github.com/stefanosbalaskas/gp3mlpy/releases/tag/v0.1.0)
+  [![PyPI](https://img.shields.io/pypi/v/gp3mlpy.svg)](https://pypi.org/project/gp3mlpy/)
+  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22206729.svg)](https://doi.org/10.5281/zenodo.22206729)
   [![License](https://img.shields.io/badge/license-MIT-2f855a.svg)](LICENSE)
 </div>
 
@@ -20,6 +22,8 @@ It is designed for **explicitly observed, non-sensitive outcomes and declared sc
 | Start here | Link |
 |---|---|
 | Documentation | **https://stefanosbalaskas.github.io/gp3mlpy/** |
+| PyPI | https://pypi.org/project/gp3mlpy/ |
+| Zenodo DOI | https://doi.org/10.5281/zenodo.22206729 |
 | Key concepts | https://stefanosbalaskas.github.io/gp3mlpy/key-concepts/ |
 | Plot gallery | https://stefanosbalaskas.github.io/gp3mlpy/plots/ |
 | Articles | https://stefanosbalaskas.github.io/gp3mlpy/articles/ |
