@@ -310,6 +310,28 @@ jobs:
           parity/results/python-resample-outputs.json
           parity/results/resample-outputs-report.json
 
+      - name: Execute Python tuning-object fixtures
+        run: >-
+          python parity/run_python_tuning_objects.py
+          parity/fixtures/tuning_objects.json
+          parity/results/python-tuning-objects.json
+
+      - name: Execute R tuning-object fixtures
+        shell: bash
+        run: >-
+          Rscript parity/run_r_tuning_objects.R
+          parity/fixtures/tuning_objects.json
+          parity/results/r-tuning-objects.json
+
+      - name: Compare tuning-object behavior
+        run: >-
+          python parity/compare_tuning_objects.py
+          parity/fixtures/tuning_objects.json
+          parity/tuning_objects_cases.csv
+          parity/results/r-tuning-objects.json
+          parity/results/python-tuning-objects.json
+          parity/results/tuning-objects-report.json
+
       - name: Build stable API parity matrix
         run: >-
           python parity/build_matrix.py
@@ -339,6 +361,8 @@ jobs:
           parity/results/metrics-engines-report.json
           parity/resample_outputs_cases.csv
           parity/results/resample-outputs-report.json
+          parity/tuning_objects_cases.csv
+          parity/results/tuning-objects-report.json
 
       - name: Upload parity evidence
         if: always()
