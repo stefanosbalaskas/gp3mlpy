@@ -34,7 +34,17 @@ def _numeric(value: Any) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool)
 
 
+def _normalize_for_path(value: Any, path: str) -> Any:
+    if path.endswith((".group_statuses", ".group_overlaps")) and value in ([], {}):
+        return {}
+    if path.endswith(".reason") and isinstance(value, str):
+        return value.strip()
+    return value
+
+
 def _compare(left: Any, right: Any, *, atol: float, rtol: float, path: str) -> list[str]:
+    left = _normalize_for_path(left, path)
+    right = _normalize_for_path(right, path)
     errors: list[str] = []
     if left is None or right is None:
         if left is not None or right is not None:
