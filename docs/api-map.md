@@ -2,6 +2,28 @@
 
 The compatibility layer contains 127 public exports. This page groups the most important entry points by workflow so you can find the right family quickly. The [complete alphabetical index](reference/index.md) remains available for exact-name lookup, and every compatibility export has its own reference page.
 
+<div class="gp-api-intro" markdown>
+<div markdown>
+<span class="gp-kicker">Find by research stage</span>
+## Start with the decision you are making
+Use these fast paths instead of scanning 127 names. Each section pairs the core functions with the scientific role they play.
+</div>
+<div class="gp-api-jump">
+<a href="#1-task-and-use-case-governance"><span>01</span>Task</a>
+<a href="#2-feature-provenance-and-leakage"><span>02</span>Provenance</a>
+<a href="#3-splitting-grouping-and-resampling"><span>03</span>Resampling</a>
+<a href="#4-preprocessing-and-model-fitting"><span>04</span>Fit</a>
+<a href="#5-tuning-and-nested-evaluation"><span>05</span>Tuning</a>
+<a href="#6-performance-calibration-and-uncertainty"><span>06</span>Metrics</a>
+<a href="#7-decision-thresholds-and-abstention"><span>07</span>Decisions</a>
+<a href="#8-conformal-prediction"><span>08</span>Conformal</a>
+<a href="#9-external-validation-shift-and-robustness"><span>09</span>External</a>
+<a href="#10-analysis-plans-and-reproducibility"><span>10</span>Reproducibility</a>
+<a href="#11-artifacts-handoffs-and-governance-evidence"><span>11</span>Artifacts</a>
+<a href="#12-api-and-object-contracts"><span>12</span>Contracts</a>
+</div>
+</div>
+
 ## 1. Task and use-case governance
 
 | Function | Purpose |
