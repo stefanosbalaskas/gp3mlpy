@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "r_reference": {
+    "package": "gp3ml",
+    "version": "0.3.0",
+    "archive_sha256": "04c5fdb017c63ecbf6f5e85c29fff6492880201a2f2aa5c3c1d3fe998e60bae6"
+  },
+  "numeric_tolerance": {"absolute": 1e-12, "relative": 1e-12},
+  "grid": {
+    "engine": ["glm", "lm"],
+    "engine_grid": {"penalty": [0, 1]},
+    "preprocessor_grid": {"center": [true, false]},
+    "thresholds": [0.4],
+    "complexity": 2,
+    "interpretability": "high"
+  }
+}
