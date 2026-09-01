@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="https://raw.githubusercontent.com/stefanosbalaskas/gp3mlpy/main/docs/assets/python-suite-logo.png" width="260" alt="Python Suite research packages logo">
+
 # gp3mlpy
 
 **Governance-first, leakage-resistant predictive modelling for Gazepoint research workflows in Python.**
