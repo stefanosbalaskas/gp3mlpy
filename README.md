@@ -108,7 +108,7 @@ The full workflow extends from task declaration and feature provenance through g
 
 | Release property | Validated baseline |
 |---|---:|
-| **gp3mlpy release** | `0.1.0` |
+| **gp3mlpy release** | `0.1.1` |
 | **Frozen R reference** | `gp3ml 0.3.0` |
 | **Compatibility exports** | 127 |
 | **Stable exports** | 71 |
@@ -157,7 +157,7 @@ See [PROHIBITED-USE.md](PROHIBITED-USE.md) and [GOVERNANCE.md](GOVERNANCE.md) be
 
 If you use `gp3mlpy`, cite the software release and the upstream `gp3ml` package.
 
-> Balaskas, S. (2026). **gp3mlpy** (Version 0.1.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22206729
+> Balaskas, S. (2026). **gp3mlpy** (Version 0.1.1) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.22206729
 
 Machine-readable citation metadata are provided in [`CITATION.cff`](CITATION.cff).
 

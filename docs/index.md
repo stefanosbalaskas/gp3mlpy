@@ -1,7 +1,7 @@
 <div class="gp-home-hero">
   <div class="gp-home-copy">
     <div class="gp-release-line">
-      <span>gp3mlpy 0.1.0</span>
+      <span>gp3mlpy 0.1.1</span>
       <span>Python 3.11+</span>
       <span>gp3ml 0.3.0 parity target</span>
     </div>
@@ -24,11 +24,11 @@
     <div class="gp-terminal-bar"><span></span><span></span><span></span><small>terminal</small></div>
     <div class="gp-terminal-body">
       <div><span class="gp-prompt">$</span> python -m pip install gp3mlpy</div>
-      <div class="gp-terminal-muted">Successfully installed gp3mlpy-0.1.0</div>
+      <div class="gp-terminal-muted">Successfully installed gp3mlpy-0.1.1</div>
       <div>&nbsp;</div>
       <div><span class="gp-prompt">›</span> import gp3mlpy as gp</div>
       <div><span class="gp-prompt">›</span> gp.__version__</div>
-      <div class="gp-terminal-output">'0.1.0'</div>
+      <div class="gp-terminal-output">'0.1.1'</div>
       <div><span class="gp-prompt">›</span> gp.r_reference_version</div>
       <div class="gp-terminal-output">'0.3.0'</div>
     </div>

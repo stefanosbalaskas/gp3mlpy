@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.1 - 2026-09-21
+
+- Documentation and release-engineering maintenance release; scientific algorithms, stable API contracts, and frozen R/Python behavioral parity remain unchanged.
+- Includes the post-0.1.0 documentation, navigation, accessibility, visual-design, citation, and ecosystem-documentation improvements already merged to `main`.
+- Revalidated 125/125 Python tests with 4,020/4,020 executable statements and 1,700/1,700 measured branches covered, with zero partial branches.
+- Retains 127 compatibility exports: 71 stable and 56 experimental.
+- Retains the frozen behavioral matrix of 67 PASS / 4 EXPECTED-DIFFERENCE / 0 PENDING / 0 FAIL against `gp3ml 0.3.0`.
+- Hardens release governance so version tags run the complete CI suite and PyPI publication uses exact, checksum-verified stable GitHub release assets.
+
 ## 0.1.0 - 2026-08-31
 
 - Initial formal Python release targeting frozen gp3ml 0.3.0.
