@@ -1,141 +1,213 @@
-name: Publish gp3mlpy release
+name: Publish validated gp3mlpy release to PyPI
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'pyproject.toml'
-      - '.github/workflows/publish.yml'
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Stable GitHub release tag, e.g. v0.1.1"
+        required: true
+        type: string
 
 permissions: {}
 
 jobs:
-  build-and-validate:
+  verify-release:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+
     outputs:
-      version: ${{ steps.release-meta.outputs.version }}
-      tag: ${{ steps.release-meta.outputs.tag }}
-      release_needed: ${{ steps.release-meta.outputs.release_needed }}
+      version: ${{ steps.meta.outputs.version }}
+      tag: ${{ steps.meta.outputs.tag }}
+
     steps:
-      - uses: actions/checkout@v7
+      - name: Checkout exact release tag
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag }}
+          fetch-depth: 0
+
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
-      - name: Resolve release metadata
-        id: release-meta
+
+      - name: Verify stable release identity
+        id: meta
         env:
           GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
         shell: bash
         run: |
+          set -euo pipefail
+
           version=$(python - <<'PY'
           import tomllib
           from pathlib import Path
-          print(tomllib.loads(Path('pyproject.toml').read_text(encoding='utf-8'))['project']['version'])
+          print(
+              tomllib.loads(
+                  Path("pyproject.toml").read_text(encoding="utf-8")
+              )["project"]["version"]
+          )
           PY
           )
-          tag="v${version}"
-          if [[ "$version" == *dev* || "$version" == *a* || "$version" == *b* || "$version" == *rc* ]]; then
-            echo "Refusing to publish non-final version: $version" >&2
+
+          if [[ "$RELEASE_TAG" != "v${version}" ]]; then
+            echo "Tag/version mismatch." >&2
             exit 1
           fi
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "tag=$tag" >> "$GITHUB_OUTPUT"
-          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            echo "release_needed=false" >> "$GITHUB_OUTPUT"
-            echo "GitHub release $tag already exists; publication jobs will be skipped."
-          else
-            echo "release_needed=true" >> "$GITHUB_OUTPUT"
-            echo "Release candidate: $tag"
-          fi
-      - name: Verify runtime version matches package metadata
-        run: |
-          python -m pip install -e .
-          python - <<'PY'
-          import tomllib
-          from pathlib import Path
-          import gp3mlpy
-          expected = tomllib.loads(Path('pyproject.toml').read_text(encoding='utf-8'))['project']['version']
-          if gp3mlpy.__version__ != expected:
-              raise SystemExit(f'Runtime version {gp3mlpy.__version__!r} does not match project version {expected!r}.')
-          print(f'package version check: PASS ({expected})')
-          PY
-      - name: Install release validation dependencies
-        run: python -m pip install -e ".[dev,docs]"
-      - name: Enforce 100% line and branch coverage
-        env:
-          MPLBACKEND: Agg
-        run: >-
-          python -m pytest
-          --cov=gp3mlpy
-          --cov-branch
-          --cov-report=term-missing
-          --cov-fail-under=100
-          -q
-      - name: Ruff semantic lint
-        run: ruff check src tests examples scripts/build_doc_assets.py
-      - name: Public typing contract
-        run: mypy --follow-imports=skip src/gp3mlpy/__init__.pyi
-      - name: Build strict documentation
-        env:
-          MPLBACKEND: Agg
-        run: |
-          python scripts/build_doc_assets.py
-          mkdocs build --strict
-      - name: Build distributions
-        run: |
-          python -m pip install build twine
-          python -m build
-          python -m twine check dist/*
-      - name: Upload release distributions
-        if: steps.release-meta.outputs.release_needed == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: python-package-distributions
-          path: dist/
-          if-no-files-found: error
 
-  github-release:
-    needs: build-and-validate
-    if: needs.build-and-validate.outputs.release_needed == 'true'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Download release distributions
-        uses: actions/download-artifact@v5
-        with:
-          name: python-package-distributions
-          path: dist/
-      - name: Create GitHub release and tag
+          tag_commit=$(git rev-parse "${RELEASE_TAG}^{commit}")
+          head_commit=$(git rev-parse HEAD)
+
+          if [[ "$tag_commit" != "$head_commit" ]]; then
+            echo "Tag/checkout commit mismatch." >&2
+            exit 1
+          fi
+
+          draft=$(
+            gh release view "$RELEASE_TAG" \
+              --repo "$GITHUB_REPOSITORY" \
+              --json isDraft \
+              --jq '.isDraft'
+          )
+
+          prerelease=$(
+            gh release view "$RELEASE_TAG" \
+              --repo "$GITHUB_REPOSITORY" \
+              --json isPrerelease \
+              --jq '.isPrerelease'
+          )
+
+          if [[ "$draft" != "false" ]]; then
+            echo "Release is still draft." >&2
+            exit 1
+          fi
+
+          if [[ "$prerelease" != "false" ]]; then
+            echo "Release is still prerelease." >&2
+            exit 1
+          fi
+
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Refuse immutable-version overwrite
         env:
-          GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ needs.build-and-validate.outputs.tag }}
-          RELEASE_VERSION: ${{ needs.build-and-validate.outputs.version }}
+          RELEASE_VERSION: ${{ steps.meta.outputs.version }}
         shell: bash
         run: |
-          gh release create "$RELEASE_TAG" dist/* \
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          version = os.environ["RELEASE_VERSION"]
+
+          with urllib.request.urlopen(
+              "https://pypi.org/pypi/gp3mlpy/json"
+          ) as response:
+              data = json.load(response)
+
+          if data.get("releases", {}).get(version):
+              raise SystemExit(
+                  f"gp3mlpy {version} already exists on PyPI"
+              )
+
+          print("PyPI immutable-version check: PASS")
+          PY
+
+      - name: Download exact GitHub release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.meta.outputs.tag }}
+          RELEASE_VERSION: ${{ steps.meta.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+
+          gh release download "$RELEASE_TAG" \
             --repo "$GITHUB_REPOSITORY" \
-            --target "$GITHUB_SHA" \
-            --title "gp3mlpy $RELEASE_VERSION" \
-            --generate-notes
+            --dir dist \
+            --pattern "gp3mlpy-${RELEASE_VERSION}-*.whl" \
+            --pattern "gp3mlpy-${RELEASE_VERSION}.tar.gz" \
+            --pattern "SHA256SUMS.txt"
+
+          test -f dist/SHA256SUMS.txt
+
+          (
+            cd dist
+            sha256sum -c SHA256SUMS.txt
+          )
+
+      - name: Validate exact release assets
+        env:
+          RELEASE_VERSION: ${{ steps.meta.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          python -m pip install twine
+          python -m twine check --strict dist/*.whl dist/*.tar.gz
+
+          wheel=$(
+            find dist -maxdepth 1 \
+              -name "gp3mlpy-${RELEASE_VERSION}-*.whl" \
+              -print -quit
+          )
+
+          python -m venv /tmp/gp3mlpy-publish-check
+          /tmp/gp3mlpy-publish-check/bin/python -m pip install "$wheel"
+
+          cd /tmp
+
+          RELEASE_VERSION="$RELEASE_VERSION" \
+          /tmp/gp3mlpy-publish-check/bin/python - <<'PY'
+          import os
+          from importlib.metadata import version
+          import gp3mlpy
+
+          expected = os.environ["RELEASE_VERSION"]
+
+          assert version("gp3mlpy") == expected
+          assert gp3mlpy.__version__ == expected
+          assert gp3mlpy.r_reference_version == "0.3.0"
+
+          exports = gp3mlpy.gp3ml_api_contracts().exports
+
+          assert len(exports) == 127
+          assert int((exports["stability"] == "stable").sum()) == 71
+          assert int((exports["stability"] == "experimental").sum()) == 56
+
+          print("exact release asset validation: PASS")
+          PY
+
+      - name: Preserve exact distributions for PyPI job
+        uses: actions/upload-artifact@v4
+        with:
+          name: validated-pypi-distributions
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
+          if-no-files-found: error
 
   publish-pypi:
-    needs: [build-and-validate, github-release]
-    if: needs.build-and-validate.outputs.release_needed == 'true'
+    needs: verify-release
     runs-on: ubuntu-latest
+
     environment:
       name: pypi
       url: https://pypi.org/p/gp3mlpy
+
     permissions:
       id-token: write
+
     steps:
-      - name: Download release distributions
-        uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v5
         with:
-          name: python-package-distributions
+          name: validated-pypi-distributions
           path: dist/
-      - name: Publish distributions to PyPI
+
+      - name: Publish exact validated artifacts
         uses: pypa/gh-action-pypi-publish@release/v1

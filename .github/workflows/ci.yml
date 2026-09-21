@@ -3,6 +3,8 @@ name: CI
 on:
   push:
     branches: [main, source-tree]
+    tags:
+      - 'v*'
   pull_request:
     branches: [main]
 
@@ -87,9 +89,12 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
-      - run: python -m pip install build twine
-      - run: python -m build
-      - run: python -m twine check dist/*
+      - name: Install build tools
+        run: python -m pip install build twine
+      - name: Build distributions
+        run: python -m build
+      - name: Validate distributions
+        run: python -m twine check --strict dist/*
       - name: Install built wheel and verify frozen API
         shell: bash
         run: |
@@ -99,11 +104,39 @@ jobs:
           /tmp/gp3mlpy-wheel/bin/python -m pip install "$wheel"
           cd /tmp
           /tmp/gp3mlpy-wheel/bin/python - <<'PY'
+          from importlib.metadata import version
           import gp3mlpy
+          assert version("gp3mlpy") == gp3mlpy.__version__
           exports = gp3mlpy.gp3ml_api_contracts().exports
           assert len(exports) == 127
-          assert int((exports['stability'] == 'stable').sum()) == 71
-          assert int((exports['stability'] == 'experimental').sum()) == 56
-          assert gp3mlpy.r_reference_version == '0.3.0'
-          print('installed-wheel API smoke: PASS')
+          assert int((exports["stability"] == "stable").sum()) == 71
+          assert int((exports["stability"] == "experimental").sum()) == 56
+          assert gp3mlpy.r_reference_version == "0.3.0"
+          print("installed-wheel API smoke: PASS")
           PY
+      - name: Install built sdist and verify frozen API
+        shell: bash
+        run: |
+          set -euo pipefail
+          sdist=$(find dist -maxdepth 1 -name '*.tar.gz' -print -quit)
+          python -m venv /tmp/gp3mlpy-sdist
+          /tmp/gp3mlpy-sdist/bin/python -m pip install "$sdist"
+          cd /tmp
+          /tmp/gp3mlpy-sdist/bin/python - <<'PY'
+          from importlib.metadata import version
+          import gp3mlpy
+          assert version("gp3mlpy") == gp3mlpy.__version__
+          exports = gp3mlpy.gp3ml_api_contracts().exports
+          assert len(exports) == 127
+          assert int((exports["stability"] == "stable").sum()) == 71
+          assert int((exports["stability"] == "experimental").sum()) == 56
+          assert gp3mlpy.r_reference_version == "0.3.0"
+          print("installed-sdist API smoke: PASS")
+          PY
+      - name: Preserve tagged candidate distributions
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-artifact@v4
+        with:
+          name: tagged-distributions-${{ github.ref_name }}
+          path: dist/
+          if-no-files-found: error
