@@ -114,6 +114,6 @@ Declare a second dataset, quantify transportability, and report it without conta
 
 ## Runnable and visual companions
 
-Every article has a corresponding Python script under the repository's `examples/` directory. CI executes the example suite so article-facing workflows remain coupled to the package implementation.
+Each of the twenty frozen-parity companion articles has a corresponding Python script under the repository's `examples/` directory; the additional October source-only research note has its experiment and SVG plot source under `research/october_2026/`. CI executes the example suite so article-facing workflows remain coupled to the package implementation.
 
 Several workflow families also produce auditable plot objects. The [plot gallery](../plots.md) shows generated examples for decision thresholds, dataset shift, engine portability, governance evidence, and other registered plot contracts.
