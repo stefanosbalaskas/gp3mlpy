@@ -108,6 +108,10 @@ Declare a second dataset, quantify transportability, and report it without conta
 | [Cross-package interoperability](cross-package-interoperability.md) | Create typed handoffs between gp3mlpy and adjacent research tooling. |
 | [Optional-engine portability](optional-engine-portability.md) | Check engine capabilities and make optional-backend assumptions explicit. |
 
+## October 2026: original-data methods demonstration
+
+[**Participant identity leakage: a synthetic split-level falsification**](participant-identity-leakage-demonstration.md) combines a reproducible, research-only Python experiment, four regression tests, a complete repeat-level audit ledger, and an original plotted figure. It distinguishes observation-level from participant-level holdouts using deliberately nontransportable synthetic participant labels. This is a **source-only research note**, outside the frozen twenty-article R 0.3.0 parity companion set and the installed 0.1.1 public API.
+
 ## Runnable and visual companions
 
 Every article has a corresponding Python script under the repository's `examples/` directory. CI executes the example suite so article-facing workflows remain coupled to the package implementation.
