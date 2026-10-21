@@ -153,6 +153,10 @@ These are **not unresolved parity failures**. See [PARITY_STATUS.md](PARITY_STAT
 
 See [PROHIBITED-USE.md](PROHIBITED-USE.md) and [GOVERNANCE.md](GOVERNANCE.md) before adapting the package to a new research context.
 
+## October 2026 research and original scientific plot
+
+The [participant identity leakage demonstration](https://stefanosbalaskas.github.io/gp3mlpy/articles/participant-identity-leakage-demonstration/) is a **source-only** synthetic methodology article with an original repeat-level plot and regression contracts. A random observation split can reuse participant identity, unlike a participant-disjoint holdout. This illustration is **not** a real-data benchmark, an independent-replication coverage study, a new public estimator, or a 0.1.2 release. The validated, published package remains **0.1.1**.
+
 ## Citation
 
 If you use `gp3mlpy`, cite the software release and the upstream `gp3ml` package.
