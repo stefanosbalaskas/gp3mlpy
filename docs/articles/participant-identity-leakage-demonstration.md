@@ -50,10 +50,11 @@ Check out the repository source and install its pinned or compatible development
 
 ```bash
 python research/october_2026/participant_leakage_demo.py
+python research/october_2026/plot_participant_leakage_demo.py
 python -m pytest tests/test_october_2026_participant_leakage.py -q
 ```
 
-The script writes `research/october_2026/split_audit.csv` locally. Every row records the strategy, repeat index, held-out accuracy, training and test participant counts, and the **exact shared-participant count**. The script does not modify the frozen installed `gp3mlpy` API.
+The first script writes `research/october_2026/split_audit.csv` locally. The second regenerates a two-panel SVG from that exact ledger (the regenerated figure has independent Matplotlib styling but identical plotted values). Every row records the strategy, repeat index, held-out accuracy, training and test participant counts, and the **exact shared-participant count**. The script does not modify the frozen installed `gp3mlpy` API.
 
 [Browse reproducible source and regression tests on GitHub](https://github.com/stefanosbalaskas/gp3mlpy/tree/main/research/october_2026) (available on `main` only after the reviewed change is merged).
 
