@@ -107,7 +107,7 @@ nav:
           - External validation reporting: articles/external-validation-reporting.md
           - Dataset shift and robustness: articles/dataset-shift-and-robustness.md
           - Contaminated-manifest leakage: articles/contaminated-manifest-leakage.md
-          - Participant identity leakage (synthetic audit): articles/participant-identity-leakage-demonstration.md
+          - Participant identity leakage (synthetic audit): research/participant-identity-leakage-demonstration.md
           - Observed behavioral endpoint: articles/observed-behavioral-endpoint.md
       - Reproducibility and interoperability:
           - Reproducibility hardening: articles/reproducibility-hardening.md
