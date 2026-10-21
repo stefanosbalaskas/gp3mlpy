@@ -155,7 +155,7 @@ See [PROHIBITED-USE.md](PROHIBITED-USE.md) and [GOVERNANCE.md](GOVERNANCE.md) be
 
 ## October 2026 research and original scientific plot
 
-The [participant identity leakage demonstration](https://stefanosbalaskas.github.io/gp3mlpy/articles/participant-identity-leakage-demonstration/) is a **source-only** synthetic methodology article with an original repeat-level plot and regression contracts. A random observation split can reuse participant identity, unlike a participant-disjoint holdout. This illustration is **not** a real-data benchmark, an independent-replication coverage study, a new public estimator, or a 0.1.2 release. The validated, published package remains **0.1.1**.
+The [participant identity leakage demonstration](https://stefanosbalaskas.github.io/gp3mlpy/research/participant-identity-leakage-demonstration/) is a **source-only** synthetic methodology article with an original repeat-level plot and regression contracts. A random observation split can reuse participant identity, unlike a participant-disjoint holdout. This illustration is **not** a real-data benchmark, an independent-replication coverage study, a new public estimator, or a 0.1.2 release. The validated, published package remains **0.1.1**.
 
 ## Citation
 
