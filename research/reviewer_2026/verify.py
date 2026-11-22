@@ -234,6 +234,70 @@ def independent_participant_audit(root: Path):
     assert sum(summary["prediction_set_size_counts"].values())==len(audit)
     return summary
 
+def dependence_missingness_sensitivity(root: Path):
+    # 3 dependence levels x 3 MCAR proportions x 8 generated sources.
+    # One participant-level binary label is randomized independently of
+    # participant-specific feature fingerprints. Repeats are separate sources.
+    from sklearn.neighbors import KNeighborsClassifier
+    from sklearn.model_selection import train_test_split, GroupShuffleSplit
+    raw=[]
+    for dependence in (0.0, .35, 1.0):
+        for missingness in (0.0, .10, .30):
+            for replicate in range(8):
+                seed=20261122 + 1000*int(dependence*100) + 100*int(missingness*100) + replicate
+                rng=np.random.default_rng(seed)
+                groups=np.repeat(np.arange(30), 16)
+                stimuli=np.tile(np.repeat(np.arange(8),2),30)
+                outcome=rng.permutation(np.tile([0,1],15))[groups]
+                fingerprints=rng.standard_normal((30,8))
+                X=dependence*fingerprints[groups]+.5*rng.standard_normal((480,8))
+                X[rng.random(X.shape)<missingness]=np.nan
+                features=[f"f{i}" for i in range(8)]
+                frame=pd.DataFrame(X,columns=features)
+                frame["participant_id"]=[f"P{i+1:02d}" for i in groups]
+                frame["stimulus_id"]=[f"S{i+1:02d}" for i in stimuli]
+                frame["trial_id"]=[f"T{i+1:05d}" for i in range(len(frame))]
+                frame["outcome"]=np.where(outcome==1,"review","pass")
+                index=np.arange(len(frame))
+                train_row,test_row=train_test_split(index,test_size=.25,random_state=99+replicate,stratify=outcome)
+                train_participant,test_participant=next(GroupShuffleSplit(n_splits=1,test_size=.25,random_state=99+replicate).split(frame,outcome,groups))
+                for design,train,test in (("row",train_row,test_row),("participant",train_participant,test_participant)):
+                    model=make_pipeline(SimpleImputer(strategy="median"),StandardScaler(),KNeighborsClassifier(n_neighbors=1))
+                    model.fit(frame.iloc[train][features],outcome[train])
+                    predicted=model.predict(frame.iloc[test][features])
+                    audit=gp3mlpy.audit_gazepoint_ml_leakage(
+                        analysis=frame.iloc[train], assessment=frame.iloc[test],
+                        outcome="outcome",predictors=features,
+                        participant_id="participant_id",trial_id="trial_id",
+                        stimulus_id="stimulus_id",generalization_target="new_participants")
+                    check=audit.checks.set_index("check_id").loc["participant_partition_compatibility","status"]
+                    assert check==("fail" if design=="row" else "pass")
+                    overlap=len(set(groups[train])&set(groups[test]))
+                    assert (overlap>0)==(design=="row")
+                    raw.append({"dependence":dependence,"missingness":missingness,"replicate":replicate,
+                                "design":design,"balanced_accuracy":float(balanced_accuracy_score(outcome[test],predicted)),
+                                "shared_participants":overlap,"gp3mlpy_participant_check":check,
+                                "overall_audit":audit.status})
+    data=pd.DataFrame(raw)
+    data.to_csv(root/"dependence_missingness_sensitivity.csv",index=False)
+    invalid=data[data.design=="row"]
+    valid=data[data.design=="participant"]
+    assert len(invalid)==72 and len(valid)==72
+    assert (invalid.gp3mlpy_participant_check=="fail").all()
+    assert (valid.gp3mlpy_participant_check=="pass").all()
+    means=[]
+    for (d,m,s),z in data.groupby(["dependence","missingness","design"],sort=True):
+        means.append({"dependence":float(d),"missingness":float(m),"design":s,
+                      "n_independent_synthetic_sources":len(z),
+                      "mean_balanced_accuracy":float(z.balanced_accuracy.mean()),
+                      "mean_overlap":float(z.shared_participants.mean())})
+    return {"status":"PASS","generated_sources":72,"pipeline_evaluations":144,
+            "intentionally_invalid_participant_splits_flagged":72,
+            "participant-disjoint_splits_falsely_flagged":0,
+            "prohibited_group_overlap_detection": "structural participant-ID check only",
+            "ordinary_sklearn_pipeline":"no automatic participant-ID governance audit",
+            "aggregate":means}
+
 def main():
     if len(sys.argv)!=2: raise SystemExit("Usage: python verify.py <output_directory>")
     root=Path(sys.argv[1]);root.mkdir(parents=True,exist_ok=True)
@@ -243,6 +307,7 @@ def main():
         "negative_controls":audit_negative_controls(root),
         "numerical_oracles":independent_oracles(),
         "independent_audit":independent_participant_audit(root),
+        "dependence_missingness_sensitivity":dependence_missingness_sensitivity(root),
         "versions":{"gp3mlpy":gp3mlpy.__version__,"gp3ml_R":"0.3.0"}
     }
     dump(root/"reviewer_validation_summary.json",result)
