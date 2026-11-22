@@ -54,7 +54,7 @@ for (design in names(specifications)) {
         n_review=sum(frame$quality_status == "review", na.rm=TRUE),
         participant_overlap=n_part_overlap,
         stimulus_overlap=n_stim_overlap,
-        stringsAsFactors=FALSE)
+        stringsAsFactors=FALSE, check.names=FALSE)
     }
     record[[i]] <- do.call(rbind, list(tr(an,"analysis"),tr(as,"assessment"),tr(ex,"excluded")))
   }
