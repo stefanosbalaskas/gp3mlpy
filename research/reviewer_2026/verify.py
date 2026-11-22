@@ -127,14 +127,20 @@ def independent_oracles():
     # not from an R-generated golden file.
     truth = np.array([0,0,1,1], dtype=int)
     label = np.array([0,1,1,1], dtype=int)
-    probs = np.array([.1,.7,.8,.4], dtype=float)
+    probs = np.array([.1,.7,.8,.6], dtype=float)
     tn, fp, tp, fn = 1,1,2,0
     expected_ba = (tp/(tp+fn) + tn/(tn+fp))/2
-    expected_brier = (.01 + .49 + .04 + .36)/4
-    expected_logloss = -sum(math.log(x) for x in [.9,.3,.8,.4])/4
+    expected_brier = (.01 + .49 + .04 + .16)/4
+    expected_logloss = -sum(math.log(x) for x in [.9,.3,.8,.6])/4
     assert math.isclose(expected_ba,.75,abs_tol=1e-15)
-    assert math.isclose(expected_brier,.225,abs_tol=1e-15)
+    assert math.isclose(expected_brier,.175,abs_tol=1e-15)
     assert math.isclose(expected_logloss, -float(np.mean(truth*np.log(probs)+(1-truth)*np.log(1-probs))),abs_tol=1e-14)
+    pkg_metrics=gp3mlpy.gazepoint_classification_metrics(
+        truth=["pass","pass","review","review"],probability=probs.tolist(),
+        positive="review",threshold=.5)
+    assert math.isclose(float(pkg_metrics.iloc[0].balanced_accuracy),expected_ba,abs_tol=1e-12)
+    assert math.isclose(float(pkg_metrics.iloc[0].brier),expected_brier,abs_tol=1e-12)
+    assert math.isclose(float(pkg_metrics.iloc[0].log_loss),expected_logloss,abs_tol=1e-12)
     # Participant maxima = [.4, .5, .6, .2, .25]; m=5 and level=.8.
     scores=np.array([.1,.4,.2,.5,.3,.6,.1,.2,.05,.25])
     unit=[f"P{i}" for i in [1,1,2,2,3,3,4,4,5,5]]
