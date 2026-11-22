@@ -5,6 +5,7 @@ R gp3ml 0.3.0, preserving separate model/policy/audit cohort IDs.
 """
 from __future__ import annotations
 import csv
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -236,6 +237,41 @@ def independent_participant_audit(root: Path):
         "decision_error_rate":n_err/n_kept if n_kept else None,
         "audit_participant_ancestry_overlap":0,
     }
+    source_path = root/"synthetic_source.csv"
+    provenance = {
+      "schema":"gp3ml-reviewer-synthetic-lineage-v1",
+      "scope":"Executed supplemental pipeline; does not verify arbitrary upstream user transformations",
+      "source":{"generator":"gp3ml 0.3.0 R/synthetic-workflows.R",
+                "generator_seed":1, "missingness_seed":951,
+                "input_sha256":hashlib.sha256(source_path.read_bytes()).hexdigest(),
+                "source_trial_ids":data.trial_id.to_list()},
+      "cohorts":{
+         name:{"participants":cohort[name], "trial_ids":parts[name].trial_id.to_list(),
+               "n_rows":len(parts[name])}
+         for name in cohort},
+      "fit":{
+         "estimator":"scikit-learn LogisticRegression(random_state=20261122,max_iter=1000)",
+         "feature_columns":xcols,
+         "imputer":"SimpleImputer(strategy=median), fitted on fit cohort only",
+         "imputer_statistics":fit.named_steps["simpleimputer"].statistics_.tolist(),
+         "scaler":"StandardScaler, fitted on fit cohort only",
+         "scaler_mean":fit.named_steps["standardscaler"].mean_.tolist(),
+         "scaler_scale":fit.named_steps["standardscaler"].scale_.tolist(),
+         "model_coef":fit.named_steps["logisticregression"].coef_.tolist(),
+         "model_intercept":fit.named_steps["logisticregression"].intercept_.tolist()},
+      "calibration":{"fit_model_cohort":"fit","conformity_cohort":"conformal",
+                     "calibration_unit":"participant","q":float(conformal.conformity_quantile),
+                     "m":int(conformal.n_calibration_units)},
+      "policy":{"model_cohort":"fit","threshold_cohort":"threshold",
+                "objective":"balanced_accuracy","candidate_grid":candidate,
+                "tie_break":"minimum threshold","selected":chosen,
+                "abstention_halfwidth":bound},
+      "audit":{"model_cohort":"fit","frozen_calibration_cohort":"conformal",
+               "frozen_policy_cohort":"threshold","audit_cohort":"audit",
+               "audit_participants_in_fit_calibration_policy":0},
+      "provenance_level":"EXECUTED: source bytes, fit parameters, participant and source trial ID dependencies recorded"
+    }
+    dump(root/"model_execution_lineage.json",provenance)
     assert n_kept+n_abstain==len(audit)
     assert sum(summary["prediction_set_size_counts"].values())==len(audit)
     return summary
