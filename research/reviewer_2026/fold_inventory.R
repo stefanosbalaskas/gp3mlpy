@@ -45,7 +45,7 @@ for (design in names(specifications)) {
     i <- i + 1L
     tr <- function(frame, label) {
       data.frame(
-        design=design, target=spec$target, repeat=fold[["repeat"]],
+        design=design, target=spec$target, `repeat`=fold[["repeat"]],
         fold=fold$fold, fold_id=fold$fold_id, partition=label,
         n_rows=nrow(frame),
         n_participants=length(unique(frame$participant_id)),
@@ -60,7 +60,7 @@ for (design in names(specifications)) {
   }
   a <- plan$assignments
   coverage <- stats::aggregate(as.integer(a$partition == "assessment"),
-    by=list(repeat=a[["repeat"]], source_row=a$source_row), FUN=sum)
+    by=list(`repeat`=a[["repeat"]], source_row=a$source_row), FUN=sum)
   stopifnot(nrow(coverage) == 2L * nrow(dat), all(coverage$x == 1L))
   a$design <- design
   j <- j + 1L
