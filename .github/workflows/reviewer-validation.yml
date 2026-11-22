@@ -1,0 +1,56 @@
+name: Reviewer-specific independent validation
+
+on:
+  pull_request:
+    paths:
+      - 'research/reviewer_2026/**'
+      - '.github/workflows/reviewer-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reviewer-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          use-public-rspm: true
+      - name: Install frozen Python and analysis requirements
+        run: |
+          python -m pip install "gp3mlpy==0.1.0" numpy pandas scipy "scikit-learn>=1.4,<1.9"
+      - name: Install R JSON helper
+        run: Rscript -e 'install.packages("jsonlite", repos="https://cloud.r-project.org")'
+      - name: Pin and install frozen R reference
+        run: |
+          curl --fail --location --retry 3 -o /tmp/gp3ml_0.3.0.tar.gz https://github.com/stefanosbalaskas/gp3ml/releases/download/v0.3.0/gp3ml_0.3.0.tar.gz
+          echo '04c5fdb017c63ecbf6f5e85c29fff6492880201a2f2aa5c3c1d3fe998e60bae6  /tmp/gp3ml_0.3.0.tar.gz' | sha256sum --check
+          R CMD INSTALL /tmp/gp3ml_0.3.0.tar.gz
+      - name: Create original-package R synthetic fold inventory
+        run: Rscript research/reviewer_2026/fold_inventory.R research/reviewer_2026/output
+      - name: Run existing R frozen leakage negatives
+        run: |
+          Rscript parity/run_r_leakage.R parity/fixtures/leakage.json research/reviewer_2026/output/r-leakage.json
+      - name: Run existing Python frozen leakage negatives
+        run: |
+          python parity/run_python_leakage.py parity/fixtures/leakage.json research/reviewer_2026/output/python-leakage.json
+      - name: Compare the original paired negative fixtures
+        run: |
+          python parity/compare_leakage.py parity/fixtures/leakage.json research/reviewer_2026/output/r-leakage.json research/reviewer_2026/output/python-leakage.json research/reviewer_2026/output/leakage-parity.json
+      - name: Execute specification oracles and disjoint policy audit
+        run: |
+          python research/reviewer_2026/verify.py research/reviewer_2026/output
+      - name: Upload reviewer evidence ledgers
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reviewer-validation-evidence
+          path: research/reviewer_2026/output/
+          if-no-files-found: warn
