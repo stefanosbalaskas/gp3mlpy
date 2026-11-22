@@ -72,6 +72,29 @@ stopifnot(nrow(inventory) == (10L + 40L) * 3L,
           all(inventory$n_pass + inventory$n_review == inventory$n_rows),
           all(inventory$participant_overlap == 0L),
           all(inventory$stimulus_overlap[inventory$design == "crossed"] == 0L))
+# Independent specification oracles: expected values from arithmetic, not
+# from the frozen R implementation or a Python-generated reference.
+metric_truth <- c("pass","pass","review","review")
+metric_prob <- c(0.1,0.7,0.8,0.6)
+metric_obj <- gp3ml::gazepoint_classification_metrics(
+  truth=metric_truth, probability=metric_prob, positive="review", threshold=0.5)
+expected_ba <- (2/2+1/2)/2
+expected_brier <- (0.01+0.49+0.04+0.16)/4
+expected_ll <- -mean(log(c(0.9,0.3,0.8,0.6)))
+stopifnot(abs(metric_obj$balanced_accuracy[[1L]]-expected_ba)<1e-12,
+          abs(metric_obj$brier[[1L]]-expected_brier)<1e-12,
+          abs(metric_obj$log_loss[[1L]]-expected_ll)<1e-12)
+scores <- c(0.1,0.4,0.2,0.5,0.3,0.6,0.1,0.2,0.05,0.25)
+cal_truth <- rep(c("pass","review"),5L)
+cal_prob <- ifelse(cal_truth=="review",1-scores,scores)
+cal_unit <- rep(paste0("P",1:5),each=2L)
+cf <- gp3ml::fit_gazepoint_conformal(
+ truth=cal_truth, probability=cal_prob, task_type="classification",
+ positive="review", level=0.8, calibration_unit="participant",
+ unit=cal_unit, generalization_target="new_participants")
+stopifnot(abs(cf$conformity_quantile-0.6)<1e-12,
+          abs(cf$quantile_probability-1.0)<1e-12)
+cat("R_SPEC_ORACLES=PASS; BA=0.75; BRIER=0.175; GROUPED_Q=0.6\\n")
 write.csv(inventory, file.path(args[[1L]], "fold_inventory.csv"), row.names=FALSE)
 write.csv(assignments, file.path(args[[1L]], "fold_assignments.csv"), row.names=FALSE)
 write.csv(dat, file.path(args[[1L]], "synthetic_source.csv"), row.names=FALSE)
